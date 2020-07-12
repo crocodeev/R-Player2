@@ -32,6 +32,7 @@ class Sound extends EventEmmitter  {
             this.emit('play', currentTrackName);
           },
           onend: () => {
+            this.emit('end');
             this.next();
           },
           onseek:() => {
@@ -57,12 +58,17 @@ class Sound extends EventEmmitter  {
   seek(){
     const sound = this.playlist[this.index].howl
     if(sound.playing()){
-      return Math.floor(sound.seek());
+      return (sound.seek()/60).toFixed(2);
     }
   }
 
-  step(){
+  getDuration(){
+    let rawDuration = this.playlist[this.index].howl.duration()
+    return (rawDuration/60).toFixed(2);
+  }
 
+  getPlaylist(){
+    return this.playlist;
   }
 
 

@@ -15,6 +15,9 @@ const mapDispatchToProps = (dispatch) => {
       user.logout(data);
       dispatch(push('/'));
     },
+    onPlayer:() => {
+      dispatch('/player')
+    }
   };
 };
 

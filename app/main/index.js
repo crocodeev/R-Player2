@@ -1,5 +1,18 @@
+
 import path from 'path';
 import { app, crashReporter, BrowserWindow, Menu } from 'electron';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+//store works
+
+import { forwardToRenderer, replayActionMain } from 'electron-redux';
+import player from '../renderer/reducers/player';
+
+const initialState = {
+}
+
+const store = createStore(combineReducers({player}), initialState, applyMiddleware(forwardToRenderer));
+
+replayActionMain(store);
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -101,3 +114,7 @@ app.on('ready', async () => {
     });
   }
 });
+
+console.log("this state is " + JSON.stringify(store.getState()));
+
+

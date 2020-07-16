@@ -18,11 +18,16 @@ class TrackList extends Component {
 
   listRef = React.createRef();
 
-  /*componentDidUpdate(){
-    this.listRef.current.scrollToItem(this.props.currentPosition, 'smart')
-  }*/
+  shouldComponentUpdate(nextProps){
+    return this.props.currentPosition !== nextProps.currentPosition;
+  }
+
+  componentDidUpdate(){
+    this.listRef.current.scrollToItem(this.props.currentPosition, 'center')
+  }
 
   render(){
+
 
     return(
       <AutoSizer>

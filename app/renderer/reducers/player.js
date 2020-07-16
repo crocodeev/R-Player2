@@ -1,13 +1,20 @@
 import {  PLAYLIST_POSITION,
-          TRACK_POSITION } from '../actions/actionTypes';
+          TEST } from '../actions/actionTypes';
 
 
-export default function playerReducer(state = initialState, action){
+export default function playerReducer(state = {}, action){
+
   switch (action.type) {
     case PLAYLIST_POSITION:
       return ({
         ...state,
         currentTrack: action.payload
+      });
+    //add next session for test storage communication between render and main
+    case TEST:
+      return({
+        ...state,
+        isConnected: action.payload
       });
     default:
       return state;

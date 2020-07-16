@@ -41,13 +41,16 @@ export default class Player extends Component {
     sound.play();
   };
 
+  handleLogOut = () => {
+    this.props.logout();
+  }
+
   increaseCurrentPosition (){
     this.setState((state)=>{
       return {currentPosition: state.currentPosition + 1}
     })
   }
 
-  //потеря this в рекурсирвной функции ?
   renderSeekPos () {
     this.setState({
       seek: sound.seek()
@@ -66,17 +69,36 @@ export default class Player extends Component {
   render() {
 
     return (
-      <div>
+      <div className="container">
+
+      <div className ="row">
         <CurrentTrack
-        play={this.handlePlay}
         currentTrack={this.props.player.currentTrack}
         currentTime={this.state.seek}
         duration={this.duration || 0}
         />
-      <TrackList
+      </div>
+
+      <div className="row scrolist">
+        <TrackList
         playlist={sound.playlist}
         currentTrack={this.props.player.currentTrack}
         currentPosition={this.state.currentPosition} />
+      </div>
+
+      <div className="row">
+        <div className="col">
+          <a className="waves-effect waves-light btn-small" onClick={this.handlePlay}>
+          PLAY
+          </a>
+        </div>
+        <div className="col">
+          <a className="waves-effect waves-light btn-small" onClick={this.handleLogOut}>
+          LOGOUT
+          </a>
+        </div>
+      </div>
+
       </div>
     );
   }

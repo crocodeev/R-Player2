@@ -1,4 +1,9 @@
 .scrolist{
-    height: 70vh;
-    overflow: auto;
+    height: 350px;
+}
+
+.auth{
+    position: absolute;
+    top: 25%;
+    left: 34%;
 }

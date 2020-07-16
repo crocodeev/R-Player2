@@ -12,9 +12,6 @@ export default function CurrentTrack(props)  {
         <div className="progress">
           <div className="determinate" style={{width: progress() +'%'}}></div>
         </div>
-        <a className="waves-effect waves-light btn-small" onClick={props.play}>
-          PLAY
-        </a>
       </div>
     );
 }

@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import { connectRouter, routerMiddleware, push } from 'connected-react-router';
+import { forwardToMain } from 'electron-redux';
 import persistState from 'redux-localstorage';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
@@ -19,6 +20,7 @@ export default function configureStore(initialState, routerHistory) {
   };
 
   const reducers = {
+    forwardToMain,
     router: connectRouter(routerHistory),
     user,
     player

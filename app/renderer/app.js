@@ -5,6 +5,8 @@ import { ConnectedRouter } from 'connected-react-router';
 import { createMemoryHistory } from 'history';
 import routes from './routes';
 import configureStore from './store';
+import { replayActionRenderer, getInitialStateRenderer } from 'electron-redux'
+
 
 const syncHistoryWithStore = (store, history) => {
   const { router } = store.getState();
@@ -13,9 +15,12 @@ const syncHistoryWithStore = (store, history) => {
   }
 };
 
-const initialState = {};
+const initialState = getInitialStateRenderer();
+
+//const initialState = {};
 const routerHistory = createMemoryHistory();
 const store = configureStore(initialState, routerHistory);
+replayActionRenderer(store);
 syncHistoryWithStore(store, routerHistory);
 
 const rootElement = document.querySelector(document.currentScript.getAttribute('data-container'));

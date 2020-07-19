@@ -1,16 +1,13 @@
 const {session} = require('electron');
 const fetch = require('electron-fetch').default;
 const fs = require('fs');
+const { EventEmitter } = require('events');
 
-class Api {
+class Api extends EventEmitter {
 
     constructor(obj){
-
+        super();
         Object.assign(this,  obj);
-
-        //this.token;
-        //this.channels;
-        //this.schedule;
 
     }
 
@@ -19,18 +16,18 @@ class Api {
         this.id = obj.projectId;
         this.code = obj.playerCode;
 
-        let requestOptions = {
+        const requestOptions = {
         method: 'GET',
         redirect: 'follow'
         };
 
             try {
-                let responce = await fetch(`http://${this.domaiName}/api/account/signin/?id=${this.id}&code=${this.code}&name=${this.name}&guid=${this.guid}`, requestOptions);
-                let result =  await responce.json();
+                const responce = await fetch(`http://${this.domaiName}/api/account/signin/?id=${this.id}&code=${this.code}&name=${this.name}&guid=${this.guid}`, requestOptions);
+                const result =  await responce.json();
                 console.log("REQUEST RESULT :" + result.data.token);
-
                 this.token = result.data.token;
                 this.setCookies(result.data.token);
+                this.emit('gottoken');
 
             } catch (error) {
                 console.log("ERROR :" + error);
@@ -48,9 +45,11 @@ class Api {
         };
 
         try {
-            let responce = await fetch(`http://${this.domaiName}/api/channel/getchannels/`, requestOptions);
-            let result =  await responce.json();
+            const responce = await fetch(`http://${this.domaiName}/api/channel/getchannels/`, requestOptions);
+            const result =  await responce.json();
             this.channels = result.data;
+
+            this.emit('gotchannels');
 
         } catch (error) {
             console.log(error);
@@ -59,7 +58,7 @@ class Api {
 
     async getSchedule(channelId){
 
-            let requestOptions = {
+            const requestOptions = {
             method: 'GET',
             headers: {
                 Cookie: `uid=${this.token}`
@@ -68,8 +67,8 @@ class Api {
             };
 
             try {
-                let responce = await fetch(`http://${this.domaiName}/api/campaign/getschedule/?channel=${channelId}`, requestOptions);
-                let result = await responce.json();
+                const responce = await fetch(`http://${this.domaiName}/api/campaign/getschedule/?channel=${channelId}`, requestOptions);
+                const result = await responce.json();
                 this.schedule = result.data[0].playlists[0]; //нет проверки данных
                 //console.log(this.schedule);
                 this.emit('gotschedule');
@@ -81,8 +80,8 @@ class Api {
     async downloadTrack(obj){
         const name = obj.name;
             try {
-                let responce = await fetch(obj.url);
-                let dest = fs.createWriteStream(this.storage + name);
+                const responce = await fetch(obj.url);
+                const dest = fs.createWriteStream(this.storage + name);
                 responce.body.pipe(dest);
                 dest.on('close', () => {
                     console.log("file success wrote");
@@ -98,8 +97,8 @@ class Api {
     async downloadTrackBuffer(obj){
         const name = obj.name;
             try {
-                let responce = await fetch(obj.url);
-                let dest = fs.createWriteStream(this.storage + name);
+                const responce = await fetch(obj.url);
+                const dest = fs.createWriteStream(this.storage + name);
                 responce.body.pipe(dest);
                 dest.on('close', () => {
                     console.log("file success wrote");

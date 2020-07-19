@@ -1,6 +1,9 @@
 import React from 'react';
 import { useForm } from "react-hook-form";
 import { connect } from 'react-redux';
+import RPC from '../../customModules/renderProccessConnector';
+
+const rpc = new RPC();
 
 
 function Authorize (props){
@@ -8,8 +11,7 @@ function Authorize (props){
   const { register, handleSubmit, errors } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
-
+    rpc.getToken(data);
   }
 
 

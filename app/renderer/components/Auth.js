@@ -8,6 +8,8 @@ const rpc = new RPC();
 
 function Authorize (props){
 
+  console.log(props);
+
   const { register, handleSubmit, errors } = useForm();
 
   const onSubmit = (data) => {

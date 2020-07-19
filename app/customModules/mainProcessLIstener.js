@@ -2,6 +2,8 @@ const {ipcMain} = require('electron');
 import { getToken,
          getChannels } from '../renderer/actions/action'
 
+import { push } from 'connected-react-router';
+
 class MPC {
 
     init(api, store){
@@ -23,6 +25,7 @@ class MPC {
             });
             api.on('gotchannels', () => {
               store.dispatch(getChannels(api.channels));
+              store.dispatch(push("/player"));
             })
         });
 

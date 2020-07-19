@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import CurrentTrack from './CurrentTrack';
 import TrackList from './TrackList';
+import Channels from './Channels';
 import raf from 'raf';
 
 //sound works
@@ -79,11 +80,19 @@ export default class Player extends Component {
         />
       </div>
 
-      <div className="row scrolist">
+      <div className="row">
+
+      <div className="col s3">
+        <Channels channels={this.props.player.channels} />
+      </div>
+
+      <div className="col s9 scrolist">
         <TrackList
         playlist={sound.playlist}
         currentTrack={this.props.player.currentTrack}
         currentPosition={this.state.currentPosition} />
+      </div>
+
       </div>
 
       <div className="row">

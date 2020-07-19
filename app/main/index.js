@@ -1,16 +1,24 @@
-
 import path from 'path';
 import { app, crashReporter, BrowserWindow, Menu } from 'electron';
-import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { createStore,
+         applyMiddleware,
+         combineReducers } from 'redux';
+
 //store works
 
-import { forwardToRenderer, replayActionMain } from 'electron-redux';
+import { forwardToRenderer,
+         replayActionMain,
+         triggerAlias } from 'electron-redux';
 import player from '../renderer/reducers/player';
+import thunk from 'redux-thunk';
 
 const initialState = {
 }
 
-const store = createStore(combineReducers({player}), initialState, applyMiddleware(forwardToRenderer));
+const store = createStore(combineReducers({player}),
+                          initialState,
+                          applyMiddleware(thunk,
+                                          forwardToRenderer));
 
 replayActionMain(store);
 

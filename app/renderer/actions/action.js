@@ -1,5 +1,6 @@
-import { PLAYLIST_POSITION,
-         TRACK_POSITION } from './actionTypes';
+
+import { PLAYLIST_POSITION } from './actionTypes';
+
 
 export function setPlaylistPosition(trackName){
   return {

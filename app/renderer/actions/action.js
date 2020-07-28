@@ -1,7 +1,9 @@
 
 import { PLAYLIST_POSITION,
          GET_TOKEN,
-         GET_CHANNELS } from './actionTypes';
+         GET_CHANNELS,
+         GET_SCHEDULE,
+         SET_CURRENT_CHANNEL } from './actionTypes';
 
 
 export function setPlaylistPosition(trackName){
@@ -22,5 +24,19 @@ export function getChannels(channels){
   return {
     type: GET_CHANNELS,
     payload: channels
+  }
+}
+
+export function getSchedule(schedule){
+  return {
+    type: GET_SCHEDULE,
+    payload: schedule
+  }
+}
+
+export function setCurrentChannel(channelId){
+  return{
+    type: SET_CURRENT_CHANNEL,
+    payload: channelId
   }
 }

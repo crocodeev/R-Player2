@@ -1,7 +1,9 @@
 import {  PLAYLIST_POSITION,
           GET_TOKEN,
           TEST,
-          GET_CHANNELS} from '../actions/actionTypes';
+          GET_CHANNELS,
+          GET_SCHEDULE,
+          SET_CURRENT_CHANNEL } from '../actions/actionTypes';
 
 
 export default function playerReducer(state = {}, action){
@@ -23,7 +25,17 @@ export default function playerReducer(state = {}, action){
             ...state,
             channels: action.payload
           });
-        case TEST:
+    case GET_SCHEDULE:
+          return({
+           ...state,
+            schedule: action.payload
+            });
+    case SET_CURRENT_CHANNEL:
+          return({
+          ...state,
+            currentChannel: action.payload
+            });
+    case TEST:
           return({
             ...state,
             isConnected: action.payload

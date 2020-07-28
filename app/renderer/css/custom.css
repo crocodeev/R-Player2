@@ -7,3 +7,22 @@
     top: 25%;
     left: 34%;
 }
+
+.download{
+  height: 20px;
+  margin: auto;
+}
+
+.downloadrow{
+  margin-bottom: 5px;
+}
+
+.buttonrow{
+  margin-bottom: 0px;
+}
+
+.supersmall{
+  height: 20px;
+  line-height: 20px;
+  font-size: 15px;
+}

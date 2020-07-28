@@ -1,6 +1,7 @@
 const {ipcMain} = require('electron');
 import { getToken,
-         getChannels } from '../renderer/actions/action'
+         getChannels,
+         getSchedule } from '../renderer/actions/action'
 
 import { push } from 'connected-react-router';
 
@@ -32,7 +33,8 @@ class MPC {
         ipcMain.on('schedule', (event, arg) => {
             api.getSchedule(arg);
             api.on('gotschedule', () => {
-                event.reply('schedule-reply', api.schedule);
+                console.log(api.schedule);
+                store.dispatch(getSchedule(api.schedule));
             });
         });
 

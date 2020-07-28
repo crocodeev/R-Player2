@@ -70,7 +70,6 @@ class Api extends EventEmitter {
                 const responce = await fetch(`http://${this.domaiName}/api/campaign/getschedule/?channel=${channelId}`, requestOptions);
                 const result = await responce.json();
                 this.schedule = result.data[0].playlists[0]; //нет проверки данных
-                //console.log(this.schedule);
                 this.emit('gotschedule');
             } catch (e) {
                 console.log(e);

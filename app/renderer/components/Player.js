@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import CurrentTrack from './CurrentTrack';
 import TrackList from './TrackList';
 import Channels from './Channels';
+import Download from './Download';
 import raf from 'raf';
 
 //sound works
@@ -9,12 +10,17 @@ import tracks from '../../hardcode/tracks';
 import Sound from '../sound/soundEmmiter';
 const sound = new Sound(tracks);
 
+//inter proccess communication
 
+import RPC from '../../customModules/renderProccessConnector';
+
+const rpc = new RPC();
 
 export default class Player extends Component {
 
   //нужно перенести state в store, а может и не нужно
   constructor(props) {
+
     super(props);
     this.state = {
       seek: 0,
@@ -22,7 +28,10 @@ export default class Player extends Component {
       currentPosition: 0,
       isPlaying: true
     }
+    this.currentChannel = this.props.player.currentChannel != null ? this.props.player.currentChannel : null;
     this.renderSeekPos = this.renderSeekPos.bind(this);
+    this.getSchedule  = this.getSchedule.bind(this);
+
   }
 
   componentDidMount(){
@@ -44,6 +53,13 @@ export default class Player extends Component {
 
   handleLogOut = () => {
     this.props.logout();
+  }
+
+  getSchedule(event){
+    const channelId = event.target.getAttribute("value");
+    console.log(channelId);
+    this.props.channel(channelId);
+    //rpc.getSchedule(channelId);
   }
 
   increaseCurrentPosition (){
@@ -83,7 +99,10 @@ export default class Player extends Component {
       <div className="row">
 
       <div className="col s3">
-        <Channels channels={this.props.player.channels} />
+        <Channels
+          channels={this.props.player.channels}
+          currentChannel={this.props.player.currentChannel}
+          onClick={this.getSchedule} />
       </div>
 
       <div className="col s9 scrolist">
@@ -95,14 +114,18 @@ export default class Player extends Component {
 
       </div>
 
-      <div className="row">
+
+      <Download />
+
+
+      <div className="row buttonrow">
         <div className="col">
-          <a className="waves-effect waves-light btn-small" onClick={this.handlePlay}>
+          <a className="waves-effect waves-light btn-small supersmall" onClick={this.handlePlay}>
           PLAY
           </a>
         </div>
         <div className="col">
-          <a className="waves-effect waves-light btn-small" onClick={this.handleLogOut}>
+          <a className="waves-effect waves-light btn-small supersmall" onClick={this.handleLogOut}>
           LOGOUT
           </a>
         </div>
@@ -112,3 +135,4 @@ export default class Player extends Component {
     );
   }
 }
+

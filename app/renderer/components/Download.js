@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 export default function Download(props)  {
+
+  console.log(props.downloadCount * 100 / props.totalTracks );
 
     return (
       <div className="row teal lighten-5 valign-wrapper downloadrow">
@@ -11,7 +13,9 @@ export default function Download(props)  {
        </div>
       <div className="col s9">
        <div className="progress download">
-        <div className="determinate" style={{width: 50 +'%'}}></div>
+        <div className="determinate" style={
+          {width: (props.downloadCount * 100/props.totalTracks ) +'%'}
+        }></div>
       </div>
       </div>
       </div>

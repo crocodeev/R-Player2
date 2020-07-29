@@ -76,14 +76,16 @@ class Api extends EventEmitter {
             }
     }
 
-    async downloadTrack(obj){
-        const name = obj.name;
+    async contentDownload(trackArray){
+
+      for(const item of trackArray){
+
+         const name = item.name;
             try {
-                const responce = await fetch(obj.url);
+                const responce = await fetch(item.url);
                 const dest = fs.createWriteStream(this.storage + name);
                 responce.body.pipe(dest);
                 dest.on('close', () => {
-                    console.log("file success wrote");
                     this.emit('gottrack');
                 });
             } catch (error) {
@@ -91,6 +93,7 @@ class Api extends EventEmitter {
 
             }
 
+      }
     }
 
     async downloadTrackBuffer(obj){

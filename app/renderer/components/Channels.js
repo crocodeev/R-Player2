@@ -17,9 +17,6 @@ class Channels extends Component {
 
 
     render(){
-      console.log("i render this");
-      console.log(this.props.currentChannel);
-
       return (
         <ul className="collection" onClick={(e) => this.getSchedule(e)}>
         {this.channels.map((item) => <Channel

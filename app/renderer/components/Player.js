@@ -59,7 +59,7 @@ export default class Player extends Component {
     const channelId = event.target.getAttribute("value");
     console.log(channelId);
     this.props.channel(channelId);
-    //rpc.getSchedule(channelId);
+    rpc.getSchedule(channelId);
   }
 
   increaseCurrentPosition (){
@@ -115,7 +115,10 @@ export default class Player extends Component {
       </div>
 
 
-      <Download />
+      <Download
+        totalTracks={this.props.player.schedule.tracks.length}
+        downloadCount={this.props.player.downloadCount}
+      />
 
 
       <div className="row buttonrow">

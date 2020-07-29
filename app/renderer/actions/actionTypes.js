@@ -4,4 +4,6 @@ export const GET_TOKEN = "GET_TOKEN";
 export const GET_CHANNELS = "GET_CHANNELS";
 export const GET_SCHEDULE = "GET_SCHEDULE";
 export const SET_CURRENT_CHANNEL = "SET_CURRENT_CHANNEL";
+export const GET_TRACK = "GET_TRACK";
+export const RESET_DOWNLOAD_COUNTER = "RESET_DOWNLOAD_COUNTER";
 export const TEST = "TEST";

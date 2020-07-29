@@ -1,7 +1,9 @@
 const {ipcMain} = require('electron');
 import { getToken,
          getChannels,
-         getSchedule } from '../renderer/actions/action'
+         getSchedule,
+         getTrack,
+         downloadCountReset } from '../renderer/actions/action'
 
 import { push } from 'connected-react-router';
 
@@ -33,9 +35,14 @@ class MPC {
         ipcMain.on('schedule', (event, arg) => {
             api.getSchedule(arg);
             api.on('gotschedule', () => {
-                console.log(api.schedule);
+                store.dispatch(downloadCountReset());
+                console.log(api.schedule.tracks);
                 store.dispatch(getSchedule(api.schedule));
+                api.contentDownload(api.schedule.tracks);
             });
+            api.on('gottrack', () => {
+              store.dispatch(getTrack());
+            })
         });
 
         ipcMain.on('track', (event, arg) => {

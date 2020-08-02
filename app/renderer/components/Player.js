@@ -26,7 +26,7 @@ export default class Player extends Component {
       seek: 0,
       duration: 0,
       currentPosition: 0,
-      isPlaying: true
+      isPlaying: false
     }
     this.currentChannel = this.props.player.currentChannel != null ? this.props.player.currentChannel : null;
     this.renderSeekPos = this.renderSeekPos.bind(this);
@@ -35,8 +35,9 @@ export default class Player extends Component {
   }
 
   componentDidMount(){
+
       sound.on('play', (trackName) => {
-      this.setState({isPlaying: true});
+      //this.setState({isPlaying: true});
       this.props.track(trackName);
       this.duration = sound.getDuration();
       this.increaseCurrentPosition();
@@ -47,17 +48,26 @@ export default class Player extends Component {
     })
   }
 
+  componentWillReceiveProps(nextProps){
+
+    if (nextProps.player.downloadCompleted && !this.state.isPlaying){
+      this.setState({isPlaying: true});
+      sound.play();
+    }
+  }
+
+
   handlePlay = () => {
     sound.play();
   };
 
   handleLogOut = () => {
     this.props.logout();
+    this.props.downloadStatus(false);
   }
 
   getSchedule(event){
     const channelId = event.target.getAttribute("value");
-    console.log(channelId);
     this.props.channel(channelId);
     rpc.getSchedule(channelId);
   }
@@ -106,10 +116,17 @@ export default class Player extends Component {
       </div>
 
       <div className="col s9 scrolist">
-        <TrackList
-        playlist={sound.playlist}
-        currentTrack={this.props.player.currentTrack}
-        currentPosition={this.state.currentPosition} />
+      {
+        this.props.player.downloadCompleted ?
+        (
+          <TrackList
+              playlist={sound.playlist}
+              currentTrack={this.props.player.currentTrack}
+              currentPosition={this.state.currentPosition}/>
+        ):(
+          <h2>PLACEHOLDER</h2>
+        )
+      }
       </div>
 
       </div>

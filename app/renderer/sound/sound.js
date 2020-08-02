@@ -50,6 +50,11 @@ class Sound  {
 
   }
 
+  setNewPlaylist(playlist){
+    this.playlist = playlist;
+    this.index = 0
+  }
+
 
 
 }

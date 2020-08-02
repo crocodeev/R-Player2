@@ -36,7 +36,7 @@ class Api extends EventEmitter {
 
     async getChannels(){
 
-        let requestOptions = {
+        const requestOptions = {
         method: 'GET',
         headers: {
             Cookie: `uid=${this.token}`
@@ -76,16 +76,19 @@ class Api extends EventEmitter {
             }
     }
 
-    async contentDownload(trackArray){
+    async contentDownload1(trackArray){
 
-      for(const item of trackArray){
+        for await (const item of trackArray){
 
          const name = item.name;
+         let index = 1;
             try {
                 const responce = await fetch(item.url);
-                const dest = fs.createWriteStream(this.storage + name);
+                const dest = await fs.createWriteStream(this.storage + name);
                 responce.body.pipe(dest);
                 dest.on('close', () => {
+                    console.log(index + " " + name);
+                    index++;
                     this.emit('gottrack');
                 });
             } catch (error) {
@@ -94,7 +97,43 @@ class Api extends EventEmitter {
             }
 
       }
+
+      console.log("loop completed");
+
     }
+
+    contentDownload(trackArray){
+
+      let self = this;
+      let counter = 0;
+
+      (async function download() {
+
+        const item = trackArray[counter];
+        const name = item.name;
+
+          try {
+              const responce = await fetch(item.url);
+              const dest = fs.createWriteStream(self.storage + name);
+              responce.body.pipe(dest);
+              dest.on('close', () => {
+                  console.log(name);
+                  counter++;
+                  self.emit('gottrack');
+                  if(counter < trackArray.length){
+                    download();
+                  }else{
+                    self.emit('loadcomplited');
+                  }
+              });
+          } catch (error) {
+              console.log(error);
+
+          }
+        }).apply(self);
+  }
+
+
 
     async downloadTrackBuffer(obj){
         const name = obj.name;

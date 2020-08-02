@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Download(props)  {
 
-  console.log(props.downloadCount * 100 / props.totalTracks );
+  //реализовать should companent update для функционального компонента
 
     return (
       <div className="row teal lighten-5 valign-wrapper downloadrow">

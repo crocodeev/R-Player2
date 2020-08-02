@@ -1,7 +1,8 @@
 import { connect } from 'react-redux';
 import Player from '../components/Player';
 import { setPlaylistPosition,
-         setCurrentChannel } from '../actions/action';
+         setCurrentChannel,
+         downloadStatus } from '../actions/action';
 import { push } from 'connected-react-router';
 
 
@@ -13,6 +14,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     track: (trackName) => dispatch(setPlaylistPosition(trackName)),
     channel: (channelId) => dispatch(setCurrentChannel(channelId)),
+    downloadStatus: (status) => dispatch(downloadStatus(status)),
     logout: () => dispatch(push("/"))
   };
 };

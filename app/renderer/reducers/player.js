@@ -5,12 +5,11 @@ import {  PLAYLIST_POSITION,
           GET_SCHEDULE,
           SET_CURRENT_CHANNEL,
           GET_TRACK,
-          RESET_DOWNLOAD_COUNTER } from '../actions/actionTypes';
+          RESET_DOWNLOAD_COUNTER,
+          DOWNLOAD_STATUS } from '../actions/actionTypes';
 
 
-export default function playerReducer(state = {
-                                                downloadCount: 0
-                                              }, action){
+export default function playerReducer(state = {}, action){
 
   switch (action.type) {
     case PLAYLIST_POSITION:
@@ -48,6 +47,11 @@ export default function playerReducer(state = {
           return({
           ...state,
           downloadCount: 0
+                });
+    case DOWNLOAD_STATUS:
+          return({
+          ...state,
+          downloadCompleted: action.payload
                 });
     case TEST:
           return({

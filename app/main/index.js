@@ -3,7 +3,7 @@ import { app, crashReporter, BrowserWindow, Menu } from 'electron';
 import { createStore,
          applyMiddleware,
          combineReducers } from 'redux';
-import MPC from '../customModules/mainProcessLIstener'
+import MPC from '../customModules/mainProcessListener'
 import API from '../customModules/api';
 import { initialApiConfig } from '../hardcode/initialApiConfig'
 

@@ -28,7 +28,8 @@ export default class Player extends Component {
     this.currentChannel = this.props.player.currentChannel != null ? this.props.player.currentChannel : null;
     this.renderSeekPos = this.renderSeekPos.bind(this);
     this.getSchedule  = this.getSchedule.bind(this);
-    this.sound = new Sound(this.props.player.schedule.tracks);
+    const initialPlaylist = typeof this.props.player.schedule == "undefined" ? [{name:"placeholder"}] : this.props.player.schedule.tracks;
+    this.sound = new Sound(initialPlaylist);
 
   }
 
@@ -132,7 +133,7 @@ export default class Player extends Component {
 
 
       <Download
-        totalTracks={this.props.player.schedule.tracks.length}
+        totalTracks={ typeof this.props.player.schedule == "undefined" ? 0 : this.props.player.schedule.tracks.length}
         downloadCount={this.props.player.downloadCount}
       />
 

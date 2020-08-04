@@ -6,9 +6,7 @@ import RPC from '../../customModules/renderProccessConnector';
 const rpc = new RPC();
 
 
-function Authorize (props){
-
-  console.log(props);
+function Authorize (){
 
   const { register, handleSubmit, errors } = useForm();
 

@@ -4,7 +4,7 @@ import { forwardToMain } from 'electron-redux';
 import persistState from 'redux-localstorage';
 import thunk from 'redux-thunk';
 //for develop
-//import logger from 'redux-logger';
+import logger from 'redux-logger';
 
 //добаляем редюсер
 import user from './reducers/user';
@@ -27,8 +27,8 @@ export default function configureStore(initialState, routerHistory) {
     player
   };
 
-  //const middlewares = [thunk, router, logger];
-  const middlewares = [thunk, router];
+  const middlewares = [thunk, router, logger];
+  //const middlewares = [thunk, router];
 
   const composeEnhancers = (() => {
     const compose_ = window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;

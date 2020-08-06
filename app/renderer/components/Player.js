@@ -5,13 +5,13 @@ import Channels from './Channels';
 import Download from './Download';
 import raf from 'raf';
 
-import Sound from '../sound/soundEmmiter';
-
 //inter proccess communication
 
 import RPC from '../../customModules/renderProccessConnector';
 
 const rpc = new RPC();
+
+
 
 export default class Player extends Component {
 
@@ -28,37 +28,26 @@ export default class Player extends Component {
     this.currentChannel = this.props.player.currentChannel != null ? this.props.player.currentChannel : null;
     this.renderSeekPos = this.renderSeekPos.bind(this);
     this.getSchedule  = this.getSchedule.bind(this);
-    const initialPlaylist = typeof this.props.player.schedule == "undefined" ? [{name:"placeholder"}] : this.props.player.schedule.tracks;
-    this.sound = new Sound(initialPlaylist);
-
   }
 
   componentDidMount(){
 
-      this.sound.on('play', (trackName) => {
-      //this.setState({isPlaying: true});
+      sound.on('play', (trackName) => {
+      this.setState({isPlaying: true});
+      console.log(trackName);
       this.props.track(trackName);
-      this.duration = this.sound.getDuration();
+      this.duration = sound.getDuration();
       this.increaseCurrentPosition();
       this.renderSeekPos();
     } );
-    this.sound.on('end', () => {
+      sound.on('end', () => {
       this.clearRAF();
     })
   }
 
-  componentWillReceiveProps(nextProps){
-
-    if (nextProps.player.downloadCompleted && !this.state.isPlaying){
-      this.setState({isPlaying: true});
-      this.sound.setNewPlaylist(this.props.player.schedule.tracks);
-      this.sound.play();
-    }
-  }
-
 
   handlePlay = () => {
-    this.sound.play();
+    sound.play();
   };
 
   handleLogOut = () => {
@@ -80,7 +69,7 @@ export default class Player extends Component {
 
   renderSeekPos () {
     this.setState({
-      seek: this.sound.seek()
+      seek: sound.seek()
     })
     if (this.state.isPlaying) {
       this._raf = raf(this.renderSeekPos);
@@ -120,7 +109,7 @@ export default class Player extends Component {
         this.props.player.downloadCompleted ?
         (
           <TrackList
-              playlist={this.sound.playlist}
+              playlist={sound.playlist}
               currentTrack={this.props.player.currentTrack}
               currentPosition={this.state.currentPosition}/>
         ):(

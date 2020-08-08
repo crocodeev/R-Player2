@@ -6,7 +6,9 @@ import { PLAYLIST_POSITION,
          SET_CURRENT_CHANNEL,
          GET_TRACK,
          RESET_DOWNLOAD_COUNTER,
-         DOWNLOAD_STATUS } from './actionTypes';
+         DOWNLOAD_STATUS,
+         SET_PLAYING_STATUS
+         } from './actionTypes';
 
 
 export function setPlaylistPosition(trackName){
@@ -63,3 +65,9 @@ export function downloadStatus(status){
   }
 }
 
+export function setPlayingStatus(status){
+  return{
+    type: SET_PLAYING_STATUS,
+    payload: status
+  }
+}

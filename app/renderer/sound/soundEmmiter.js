@@ -6,7 +6,7 @@ Howler.html5PoolSize = 0;
 
 const storage = initialApiConfig.storage;
 
-class Sound extends EventEmmitter  {
+class Sound extends EventEmmitter {
 
   constructor(playlist){
     super();
@@ -32,21 +32,18 @@ class Sound extends EventEmmitter  {
         {
           src: data.src,
           onplay: () => {
-            //const currentTrackName = this.playlist[this.index].name;
-            //this.emit('play', currentTrackName);
+            const currentTrackName = this.playlist[this.index].name;
+            this.emit('play', currentTrackName);
           },
           onend: () => {
-            //this.emit('end');
-            //this.next();
+            this.emit('end');
+            Howler.unload();
+            this.next();
           },
-          onseek:() => {
-
-          }
         }
       );
     }
       sound.play();
-      //this.index = index;
   }
 
   next(){

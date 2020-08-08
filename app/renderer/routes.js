@@ -11,6 +11,6 @@ export default (
   <Switch>
     <Route exact path="/" component={Auth} />
     <Route exact path="/loggedin" component={LoggedInPage} />
-    <Route exact path="/player" component={Placeholder} />
+    <Route exact path="/player" component={Player} />
   </Switch>
 );

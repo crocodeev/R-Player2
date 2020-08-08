@@ -4,7 +4,8 @@ import { getToken,
          getSchedule,
          getTrack,
          downloadCountReset,
-         downloadStatus } from '../renderer/actions/action'
+         downloadStatus,
+         } from '../renderer/actions/action'
 
 import { push } from 'connected-react-router';
 

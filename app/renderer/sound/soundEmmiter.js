@@ -1,12 +1,16 @@
 const {Howl, Howler} = require('howler');
 const EventEmmitter = require('events');
-const raf = require('raf');
+import { initialApiConfig } from '../../hardcode/initialApiConfig'
 
-class Sound extends EventEmmitter  {
+Howler.html5PoolSize = 0;
+
+const storage = initialApiConfig.storage;
+
+class Sound extends EventEmmitter {
 
   constructor(playlist){
     super();
-    this.playlist = playlist;
+    this.playlist = playlist.map((item) => this.addSourceToPlaylistItem(item));
     this.index = 0
   }
 
@@ -33,16 +37,13 @@ class Sound extends EventEmmitter  {
           },
           onend: () => {
             this.emit('end');
+            Howler.unload();
             this.next();
           },
-          onseek:() => {
-
-          }
         }
       );
     }
       sound.play();
-      //this.index = index;
   }
 
   next(){
@@ -69,6 +70,16 @@ class Sound extends EventEmmitter  {
 
   getPlaylist(){
     return this.playlist;
+  }
+
+  addSourceToPlaylistItem(item){
+    item.src = storage + item.name;
+    return item;
+  }
+
+  setNewPlaylist(playlist){
+    this.playlist = playlist.map((item) => this.addSourceToPlaylistItem(item))
+    //this.index=0;
   }
 
 

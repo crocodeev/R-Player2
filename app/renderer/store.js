@@ -3,6 +3,8 @@ import { connectRouter, routerMiddleware, push } from 'connected-react-router';
 import { forwardToMain } from 'electron-redux';
 import persistState from 'redux-localstorage';
 import thunk from 'redux-thunk';
+
+//for develop
 //import logger from 'redux-logger';
 
 //добаляем редюсер
@@ -26,8 +28,10 @@ export default function configureStore(initialState, routerHistory) {
     player
   };
 
+
   //const middlewares = [thunk, router, logger];
   const middlewares = [thunk, router];
+
 
   const composeEnhancers = (() => {
     const compose_ = window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;

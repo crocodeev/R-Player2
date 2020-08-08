@@ -1,10 +1,20 @@
 const {Howl, Howler} = require('howler');
 
+import { initialApiConfig } from '../../hardcode/initialApiConfig'
+
+const storage = initialApiConfig.storage;
+
 class Sound  {
 
   constructor(playlist){
-    this.playlist = playlist;
+
+    this.playlist = playlist.map((item) => this.addSourceToPlaylistItem(item));
     this.index = 0
+  }
+
+  addSourceToPlaylistItem(item){
+    item.src = storage + item.name;
+    return item;
   }
 
   /* play function create Howl instance
@@ -48,6 +58,11 @@ class Sound  {
 
     this.play(index);
 
+  }
+
+  setNewPlaylist(playlist){
+    this.playlist = playlist;
+    this.index = 0
   }
 
 

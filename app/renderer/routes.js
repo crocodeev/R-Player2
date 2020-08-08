@@ -5,6 +5,7 @@ import LoginPage from './containers/LoginPage';
 import LoggedInPage from './containers/LoggedInPage';
 import Player from './containers/PlayerContainer';
 import Auth from './components/Auth';
+import Placeholder from './components/Placeholder';
 
 export default (
   <Switch>

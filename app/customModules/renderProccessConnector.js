@@ -1,0 +1,25 @@
+const { ipcRenderer } = window.require("electron");
+
+
+class RPC {
+
+    testSend(message) {
+        ipcRenderer.send('test', message);
+    }
+
+    getToken(obj){
+        ipcRenderer.send('token', obj);
+    }
+
+    getSchedule(channelID){
+        ipcRenderer.send('schedule', channelID);
+    }
+
+    getTrack(url){
+        ipcRenderer.send('track', url);
+    }
+
+}
+
+
+module.exports = RPC;

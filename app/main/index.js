@@ -1,18 +1,36 @@
-
 import path from 'path';
 import { app, crashReporter, BrowserWindow, Menu } from 'electron';
-import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { createStore,
+         applyMiddleware,
+         combineReducers } from 'redux';
+import MPC from '../customModules/mainProcessListener'
+import API from '../customModules/api';
+import { initialApiConfig } from '../hardcode/initialApiConfig'
+
+console.log(initialApiConfig);
+
+const api = new API(initialApiConfig);
+const mpc = new MPC();
+
 //store works
 
-import { forwardToRenderer, replayActionMain } from 'electron-redux';
+import { forwardToRenderer,
+         replayActionMain,
+          } from 'electron-redux';
 import player from '../renderer/reducers/player';
+import thunk from 'redux-thunk';
 
 const initialState = {
 }
 
-const store = createStore(combineReducers({player}), initialState, applyMiddleware(forwardToRenderer));
+const store = createStore(combineReducers({player}),
+                          initialState,
+                          applyMiddleware(thunk,
+                                          forwardToRenderer));
 
 replayActionMain(store);
+
+mpc.init(api, store);
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -115,6 +133,5 @@ app.on('ready', async () => {
   }
 });
 
-console.log("this state is " + JSON.stringify(store.getState()));
 
 

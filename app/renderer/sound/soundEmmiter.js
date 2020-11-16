@@ -26,6 +26,21 @@ class Sound extends EventEmmitter  {
 
     if(data.howl){
       sound = data.howl;
+
+      sound.on('play', () => {
+        const currentTrackName = this.playlist[this.index].name;
+        this.emit('play', currentTrackName);
+        //arm next track
+        this.playlist[this.index + 1].howl = new Howl ({
+          src: this.playlist[this.index + 1] 
+        }); 
+      });
+
+      sound.on('end', () => {
+        this.emit('end');
+        this.next();
+      });
+
     }else{
       sound = data.howl = new Howl(
         {
@@ -33,6 +48,10 @@ class Sound extends EventEmmitter  {
           onplay: () => {
             const currentTrackName = this.playlist[this.index].name;
             this.emit('play', currentTrackName);
+            //arm next track
+            this.playlist[this.index + 1].howl = new Howl ({
+              src: this.playlist[this.index + 1] 
+            }); 
           },
           onend: () => {
             this.emit('end');
@@ -54,7 +73,7 @@ class Sound extends EventEmmitter  {
     if (this.playlist[this.index].howl) {
       this.playlist[this.index].howl.stop();
     }
-
+    
     this.play(index);
   }
 

@@ -25,6 +25,7 @@ syncHistoryWithStore(store, routerHistory);
 
 const rootElement = document.querySelector(document.currentScript.getAttribute('data-container'));
 
+
 ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={routerHistory}>{routes}</ConnectedRouter>

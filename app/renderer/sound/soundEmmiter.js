@@ -27,6 +27,19 @@ class Sound extends EventEmmitter  {
     if(data.howl){
       sound = data.howl;
 
+      sound.on('play', () => { 
+          const currentTrackName = this.playlist[this.index].name;
+          this.emit('play', currentTrackName);
+          this.playlist[this.index + 1].howl = new Howl({
+            src: this.playlist[this.index + 1].src
+          })
+      })
+
+      sound.on('end', ()=>{
+        this.emit('end');
+        this.next();
+      })
+
     }else{
       sound = data.howl = new Howl(
         {
@@ -34,6 +47,10 @@ class Sound extends EventEmmitter  {
           onplay: () => {
             const currentTrackName = this.playlist[this.index].name;
             this.emit('play', currentTrackName);
+            console.log(this.playlist[this.index + 1]);
+            this.playlist[this.index + 1].howl = new Howl({
+              src: this.playlist[this.index + 1].src 
+            })
           },
           onend: () => {
             this.emit('end');

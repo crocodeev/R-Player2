@@ -88,5 +88,6 @@ class Sound extends EventEmmitter  {
 
 }
 
+const sound = new Sound([{name:"placeholder"}]);
 
-export default Sound;
+export default sound;

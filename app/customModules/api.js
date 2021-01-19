@@ -2,13 +2,15 @@ const {session} = require('electron');
 const fetch = require('electron-fetch').default;
 const fs = require('fs');
 const { EventEmitter } = require('events');
+const Crypter = require('../utils/crypter');
+
+const crypter = new Crypter()
 
 class Api extends EventEmitter {
 
     constructor(obj){
         super();
         Object.assign(this,  obj);
-
     }
 
     async getToken(obj){
@@ -110,12 +112,13 @@ class Api extends EventEmitter {
       (async function download() {
 
         const item = trackArray[counter];
-        const name = item.name;
+        const name = item.checksum;
 
           try {
               const responce = await fetch(item.url);
               const dest = fs.createWriteStream(self.storage + name);
-              responce.body.pipe(dest);
+              const cipher = crypter.getCipher()
+              responce.body.pipe(cipher).pipe(dest);
               dest.on('close', () => {
                   console.log(name);
                   counter++;

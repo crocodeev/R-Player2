@@ -9,7 +9,6 @@ class Crypter {
     }
     
     getCipher(){
-        console.log(this.iv);
         const cipher = crypto.createCipheriv(this.algorithm, this.secretKey, this.iv)
         return cipher
     }

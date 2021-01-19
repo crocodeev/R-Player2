@@ -4,6 +4,7 @@ import TrackList from './TrackList';
 import Channels from './Channels';
 import Download from './Download';
 import raf from 'raf';
+import TestDecrypt from './TestDecrypt';
 
 //temporary switch to another module
 import Sound from '../sound/soundEmmiter'
@@ -149,6 +150,9 @@ export default class Player extends Component {
           <a className="waves-effect waves-light btn-small supersmall" onClick={this.handleLogOut}>
           LOGOUT
           </a>
+        </div>
+        <div className="col">
+         <TestDecrypt />
         </div>
       </div>
 

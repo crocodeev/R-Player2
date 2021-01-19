@@ -126,7 +126,7 @@ class Api extends EventEmitter {
                   if(counter < trackArray.length){
                     download();
                   }else{
-                    self.emit('loadcomplited');
+                    self.emit('loadcompleted');
                   }
               });
           } catch (error) {

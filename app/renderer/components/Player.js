@@ -5,7 +5,8 @@ import Channels from './Channels';
 import Download from './Download';
 import raf from 'raf';
 
-import Sound from '../sound/soundEmmiter';
+//temporary switch to another module
+import Sound from '../sound/soundEmmiter'
 
 //inter proccess communication
 

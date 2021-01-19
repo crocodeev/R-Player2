@@ -35,6 +35,7 @@ class Sound  {
       sound = data.howl;
     }else{
 
+      const buffer = 
       /*
       this we need
       1. read file

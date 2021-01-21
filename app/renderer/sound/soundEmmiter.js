@@ -1,7 +1,8 @@
 const {Howl, Howler} = require('howler');
 const EventEmmitter = require('events');
+const decryptSource = require('./sourceDecrypter');
 const raf = require('raf');
-import { initialApiConfig } from '../../hardcode/initialApiConfig'
+import { initialApiConfig } from '../../hardcode/initialApiConfig';
 
 
 const storage = initialApiConfig.storage;
@@ -17,7 +18,7 @@ class Sound extends EventEmmitter  {
   /* play function create Howl instance
      and start track, on tack end start
      next track in array  */
-  play(index){
+  async play(index){
 
     let sound;
 
@@ -42,9 +43,14 @@ class Sound extends EventEmmitter  {
       })
 
     }else{
+
+      const url = await decryptSource(data.src)
+
+      console.log(url)
+
       sound = data.howl = new Howl(
         {
-          src: data.src,
+          src: url,
           preload: true,
           format: ["mp3", "wave"],
           onplay: () => {
@@ -64,6 +70,7 @@ class Sound extends EventEmmitter  {
           }
         }
       );
+
     }
       sound.play();
       //this.index = index;

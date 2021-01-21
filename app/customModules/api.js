@@ -2,9 +2,9 @@ const {session} = require('electron');
 const fetch = require('electron-fetch').default;
 const fs = require('fs');
 const { EventEmitter } = require('events');
-const Crypter = require('../utils/crypter');
+const crypter = require('../utils/crypter');
 
-const crypter = new Crypter()
+
 
 class Api extends EventEmitter {
 

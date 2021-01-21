@@ -3,29 +3,35 @@ import React from 'react'
 const {Howl, Howler} = require('howler');
 const fs = require('fs');
 const streamToBlob = require('stream-to-blob');
-const Crypter = require('../../utils/crypter');
+const toBlobURL = require('stream-to-blob-url')
+const crypter = require('../../utils/crypter');
 
-const crypter = new Crypter()
 
 export default function DecryptAndPlay(){
 
-    const path = "C:\\MUSIC\\A Band Called Success - How We Do_1.mp3"
+    console.log("Crypter IV");
+    console.log(crypter.iv)
+
+    const path = "C:\\MUSIC\\0a049a90ae8e6a4f7d62a6315130688c847a33db"
 
     async function decryptAndPlay() {
 
-        console.log("Start decryp and play")
-        let buffer = new Buffer('')
-        const decipher = crypter.getCipher()
+       
         const input = fs.createReadStream(path)
-        const output = fs.createWriteStream(buffer)
-        
-        input.pipe(decipher).pipe(output)
+        const decipher = crypter.getDecipher()
+        const output = fs.createWriteStream("C:\\Music\\1.mp3")
 
-        output.on('close', () => {
-            console.log(buffer)
-        })
-        
-        /*const url = URL.createObjectURL(blob)
+        /*input.pipe(decipher)
+
+        console.log(input.pipe(decipher));
+
+        const blob = streamToBlob(input.pipe(decipher))
+
+        console.log(typeof blob)
+
+        const url = URL.createObjectURL(blob)*/
+
+        const url = await toBlobURL(input.pipe(decipher))
 
         console.log("URLLLLLL");
         console.log(url)
@@ -37,7 +43,9 @@ export default function DecryptAndPlay(){
 
         sound.play()
 
-        console.log(sound)*/
+        URL.revokeObjectURL(url)
+
+        console.log(sound)
 
 
     }

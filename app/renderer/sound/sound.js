@@ -1,4 +1,7 @@
 const {Howl, Howler} = require('howler');
+const Crypter = require('../../utils/crypter');
+
+const crypter = new Crypter();
 
 import { initialApiConfig } from '../../hardcode/initialApiConfig'
 
@@ -32,6 +35,17 @@ class Sound  {
     if(data.howl){
       sound = data.howl;
     }else{
+
+      const buffer = 
+      /*
+      this we need
+      1. read file
+      2. decode to buffer
+      3. create URL from buffer
+      4. create Howl
+      5. release URL
+      */
+
       sound = data.howl = new Howl(
         {
           src: data.src,

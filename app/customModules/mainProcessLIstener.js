@@ -53,7 +53,7 @@ class MPC {
         api.on('gottrack', () => {
           store.dispatch(getTrack());
         });
-        api.on('loadcomplited', () => {
+        api.on('loadcompleted', () => {
           store.dispatch(downloadStatus(true));
         })
     }

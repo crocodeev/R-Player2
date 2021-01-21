@@ -3,6 +3,7 @@ const EventEmmitter = require('events');
 const raf = require('raf');
 import { initialApiConfig } from '../../hardcode/initialApiConfig'
 
+
 const storage = initialApiConfig.storage;
 
 class Sound extends EventEmmitter  {
@@ -44,6 +45,8 @@ class Sound extends EventEmmitter  {
       sound = data.howl = new Howl(
         {
           src: data.src,
+          preload: true,
+          format: ["mp3", "wave"],
           onplay: () => {
             const currentTrackName = this.playlist[this.index].name;
             this.emit('play', currentTrackName);
@@ -93,7 +96,8 @@ class Sound extends EventEmmitter  {
   }
 
   addSourceToPlaylistItem(item){
-    item.src = storage + item.name;
+    item.src = storage + item.checksum;
+    console.log(item);
     return item;
   }
 

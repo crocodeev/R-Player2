@@ -6,8 +6,10 @@ import { createMemoryHistory } from 'history';
 import routes from './routes';
 import configureStore from './store';
 import { replayActionRenderer, getInitialStateRenderer } from 'electron-redux' 
-import Sound from './sound/soundEmmiter';
+import sound from './sound/soundEmmiter';
 
+//this for the test purpose only
+const soundModule = sound
 
 const syncHistoryWithStore = (store, history) => {
   const { router } = store.getState();

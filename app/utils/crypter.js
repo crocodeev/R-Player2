@@ -13,15 +13,11 @@ class Crypter {
     
     getCipher(){
         const cipher = crypto.createCipheriv(this.algorithm, this.secretKey, this.iv)
-        console.log("CIPHER");
-        console.log(this.iv);
         return cipher
     }
 
     getDecipher(){
         const decipher = crypto.createDecipheriv(this.algorithm, this.secretKey, this.iv)
-        console.log("DECIPHER");
-        console.log(this.iv);
         return decipher
     }
 

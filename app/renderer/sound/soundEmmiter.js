@@ -26,40 +26,57 @@ class Sound extends EventEmmitter  {
 
     const data = this.playlist[this.index];
 
+   /* console.log(this.index);
+    console.log("data");
+    console.log(data);
+    console.log(data.howl);*/
+
+
     if(data.howl){
+    
       sound = data.howl;
 
-      sound.on('play', () => { 
-          const currentTrackName = this.playlist[this.index].name;
-          this.emit('play', currentTrackName);
-          this.playlist[this.index + 1].howl = new Howl({
-            src: this.playlist[this.index + 1].src
-          })
+      /*sound.on('play', async () => {
+
+        const currentTrackName = this.playlist[this.index].name;
+        this.emit('play', currentTrackName);
+
+        const url = await decryptSource(this.playlist[this.index + 1].src)
+
+        this.playlist[this.index + 1].howl = new Howl({
+          src: url,
+          preload: true,
+          format: ["mp3", "wave"]
+        });
+
       })
 
       sound.on('end', ()=>{
         this.emit('end');
         this.next();
-      })
+      })*/
 
     }else{
 
       const url = await decryptSource(data.src)
-
-      console.log(url)
 
       sound = data.howl = new Howl(
         {
           src: url,
           preload: true,
           format: ["mp3", "wave"],
-          onplay: () => {
+
+          onplay: async () => {
             const currentTrackName = this.playlist[this.index].name;
             this.emit('play', currentTrackName);
-            console.log(this.playlist[this.index + 1]);
+
+            /*const url = await decryptSource(this.playlist[this.index + 1].src);
+            
             this.playlist[this.index + 1].howl = new Howl({
-              src: this.playlist[this.index + 1].src 
-            })
+              src: url,
+              preload: true,
+              format: ["mp3", "wave"]
+            });*/
           },
           onend: () => {
             this.emit('end');
@@ -73,6 +90,7 @@ class Sound extends EventEmmitter  {
 
     }
       sound.play();
+      URL.revokeObjectURL(url)
       //this.index = index;
   }
 
@@ -94,7 +112,10 @@ class Sound extends EventEmmitter  {
   }
 
   getDuration(){
-    let rawDuration = this.playlist[this.index].howl.duration()
+    /*console.log("get duration");
+    console.log(this.index);
+    console.log(this.playlist[this.index]);*/
+    let rawDuration = this.playlist[this.index].howl.duration();
     return (rawDuration/60).toFixed(2);
   }
 
@@ -104,7 +125,6 @@ class Sound extends EventEmmitter  {
 
   addSourceToPlaylistItem(item){
     item.src = storage + item.checksum;
-    console.log(item);
     return item;
   }
 

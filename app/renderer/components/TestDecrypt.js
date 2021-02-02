@@ -9,9 +9,6 @@ const crypter = require('../../utils/crypter');
 
 export default function DecryptAndPlay(){
 
-    console.log("Crypter IV");
-    console.log(crypter.iv)
-
     const path = "C:\\MUSIC\\0a049a90ae8e6a4f7d62a6315130688c847a33db"
 
     async function decryptAndPlay() {

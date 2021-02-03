@@ -1,6 +1,3 @@
-const config = require ('electron-node-config')
-
-console.log(process.platform);
 
 const folder = process.platform === 'linux' ? "/home/pi/Music/" : "C:\\MUSIC\\"
 

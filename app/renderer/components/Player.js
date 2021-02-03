@@ -34,9 +34,10 @@ export default class Player extends Component {
   }
 
   componentDidMount(){
-
       sound.on('play', (trackName) => {
-      //this.setState({isPlaying: true});
+      if(!this.state.isPlaying){
+        this.setState({isPlaying: true});
+      }  
       this.props.track(trackName);
       this.duration = sound.getDuration();
       this.increaseCurrentPosition();

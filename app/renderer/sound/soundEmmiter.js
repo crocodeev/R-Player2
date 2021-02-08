@@ -72,7 +72,8 @@ class Sound extends EventEmmitter  {
 
     if (this.playlist[this.index].howl) {
       this.playlist[this.index].howl.stop();
-      this.playlist[this.index].howl = null;
+      this.playlist[this.index].howl.unload();
+      delete this.playlist[this.index].howl
     }
     
     this.play(index);

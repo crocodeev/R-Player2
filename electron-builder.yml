@@ -33,5 +33,6 @@ win:
 
 linux:
   target:
-    - deb
-    - AppImage
+    - target: deb
+      arch:
+        - armv7l

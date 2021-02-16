@@ -7,8 +7,6 @@ import MPC from '../customModules/mainProcessListener'
 import API from '../customModules/api';
 import { initialApiConfig } from '../hardcode/initialApiConfig'
 
-console.log(initialApiConfig);
-
 const api = new API(initialApiConfig);
 const mpc = new MPC();
 
@@ -19,6 +17,7 @@ import { forwardToRenderer,
           } from 'electron-redux';
 import player from '../renderer/reducers/player';
 import thunk from 'redux-thunk';
+
 
 const initialState = {
 }

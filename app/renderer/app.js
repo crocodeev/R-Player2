@@ -23,6 +23,7 @@ const initialState = getInitialStateRenderer();
 //const initialState = {};
 const routerHistory = createMemoryHistory();
 const store = configureStore(initialState, routerHistory);
+console.log(store.getState())
 replayActionRenderer(store);
 syncHistoryWithStore(store, routerHistory);
 

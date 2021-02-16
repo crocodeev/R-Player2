@@ -9,9 +9,9 @@ import sound from '../sound/soundEmmiter';
 
 //inter proccess communication
 
-import RPC from '../../customModules/renderProccessConnector';
+import rpc from '../../customModules/renderProccessConnector';
 
-const rpc = new RPC();
+
 
 export default class Player extends Component {
 

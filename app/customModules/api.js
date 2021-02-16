@@ -13,6 +13,14 @@ class Api extends EventEmitter {
         Object.assign(this,  obj);
     }
 
+    set guid(guid){
+        this._guid = guid
+    }
+    
+    get guid(){
+        return this._guid
+    }
+
     async getToken(obj){
 
         this.id = obj.projectId;
@@ -24,7 +32,7 @@ class Api extends EventEmitter {
         };
 
             try {
-                const responce = await fetch(`http://${this.domaiName}/api/account/signin/?id=${this.id}&code=${this.code}&name=${this.name}&guid=${this.guid}`, requestOptions);
+                const responce = await fetch(`http://${this.domaiName}/api/account/signin/?id=${this.id}&code=${this.code}&name=${this.name}&guid=${this._guid}`, requestOptions);
                 const result =  await responce.json();
                 console.log("REQUEST RESULT :" + result.data.token);
                 this.token = result.data.token;

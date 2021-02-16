@@ -13,12 +13,12 @@ class MPC {
     init(api, store){
         ipcMain.on('test', (event, arg) => {
             console.log(arg);
-            store.dispatch(
+            /*store.dispatch(
               {
                 type:"TEST",
                 payload: arg
               }
-            )
+            )*/
         });
 
         ipcMain.on('token', (event, arg) => {
@@ -33,6 +33,11 @@ class MPC {
         ipcMain.on('track', (event, arg) => {
             api.downloadTrack(arg);
         });
+
+        ipcMain.on('guid', (event, arg) => {
+            api.guid = arg;
+            console.log(api);
+        })
 
         //listeners section
 

@@ -1,3 +1,4 @@
+import { create } from 'browser-sync';
 import { createAction } from 'redux-actions';
 
 export default {

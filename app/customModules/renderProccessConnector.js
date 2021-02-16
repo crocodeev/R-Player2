@@ -19,7 +19,12 @@ class RPC {
         ipcRenderer.send('track', url);
     }
 
+    setGuid(guid){
+        ipcRenderer.send('guid', guid);
+    }
+
 }
 
+const rpc = new RPC()
 
-module.exports = RPC;
+module.exports = rpc;

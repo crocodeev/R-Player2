@@ -31,7 +31,8 @@
     "redux-localstorage": "^0.4.1",
     "redux-thunk": "^2.3.0",
     "stream-to-blob": "^2.0.1",
-    "stream-to-blob-url": "^3.0.2"
+    "stream-to-blob-url": "^3.0.2",
+    "uuidjs": "^4.2.8"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

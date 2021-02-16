@@ -6,6 +6,7 @@ import {  PLAYLIST_POSITION,
           SET_CURRENT_CHANNEL,
           GET_TRACK,
           RESET_DOWNLOAD_COUNTER,
+          SET_GUID,
           DOWNLOAD_STATUS } from '../actions/actionTypes';
 
 
@@ -58,6 +59,11 @@ export default function playerReducer(state = {}, action){
             ...state,
             isConnected: action.payload
           });
+    case SET_GUID:
+          return({
+            ...state,
+            guid: action.payload
+          })      
     default:
       return state;
   }

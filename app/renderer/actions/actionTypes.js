@@ -8,3 +8,4 @@ export const GET_TRACK = "GET_TRACK";
 export const RESET_DOWNLOAD_COUNTER = "RESET_DOWNLOAD_COUNTER";
 export const DOWNLOAD_STATUS = "DOWNLOAD_STATUS";
 export const TEST = "TEST";
+export const SET_GUID = "SET_GUID";

@@ -7,6 +7,9 @@ import routes from './routes';
 import configureStore from './store';
 import { replayActionRenderer, getInitialStateRenderer } from 'electron-redux' 
 import sound from './sound/soundEmmiter';
+import UUID from 'uuidjs';
+import { setGuid } from './actions/action';
+import rpc from '../customModules/renderProccessConnector';
 
 //this for the test purpose only
 const soundModule = sound
@@ -19,13 +22,30 @@ const syncHistoryWithStore = (store, history) => {
 };
 
 const initialState = getInitialStateRenderer();
+console.log("initial state from getInitialStateRenderer");
+console.log(initialState);
 
-//const initialState = {};
 const routerHistory = createMemoryHistory();
+console.log("Router history");
+console.log(routerHistory);
 const store = configureStore(initialState, routerHistory);
-console.log(store.getState())
+
 replayActionRenderer(store);
 syncHistoryWithStore(store, routerHistory);
+
+//generate guid, if need
+console.log("store");
+console.log(store);
+console.log("state");
+console.log(store.getState());
+rpc.setGuid("Only test function")
+if ("guid" in  store.getState().player){
+  rpc.setGuid(store.getState().player.guid);
+}else{
+  const uuid = UUID.genV4();
+  store.dispatch(setGuid(uuid.hexNoDelim));
+  rpc.setGuid(store.getState().player.guid);
+}
 
 
 

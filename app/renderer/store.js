@@ -12,6 +12,8 @@ import player from './reducers/player';
 //добавляем экшены
 import userActions from './actions/user';
 
+console.log(userActions);
+
 export default function configureStore(initialState, routerHistory) {
   const router = routerMiddleware(routerHistory);
 

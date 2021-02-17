@@ -36,3 +36,4 @@ linux:
     - target: deb
       arch:
         - armv7l
+        - x64

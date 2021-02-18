@@ -16,7 +16,7 @@ class Api extends EventEmitter {
     /* setting guid after inizialization api module,
     cause initialize api in main process, 
     but guid store in render*/
-    
+
     set guid(guid){
         this._guid = guid
     }
@@ -26,6 +26,7 @@ class Api extends EventEmitter {
     }
 
     async getToken(obj){
+
 
         this.id = obj.projectId;
         this.code = obj.playerCode;
@@ -90,32 +91,6 @@ class Api extends EventEmitter {
             }
     }
 
-    async contentDownload1(trackArray){
-
-        for await (const item of trackArray){
-
-         const name = item.name;
-         let index = 1;
-            try {
-                const responce = await fetch(item.url);
-                const dest = await fs.createWriteStream(this.storage + name);
-                responce.body.pipe(dest);
-                dest.on('close', () => {
-                    console.log(index + " " + name);
-                    index++;
-                    this.emit('gottrack');
-                });
-            } catch (error) {
-                console.log(error);
-
-            }
-
-      }
-
-      console.log("loop completed");
-
-    }
-
     contentDownload(trackArray){
 
       let self = this;
@@ -148,29 +123,140 @@ class Api extends EventEmitter {
         }).apply(self);
   }
 
+    async accountCheck(code){
 
+        if(!this.isPropertyExist("code") ){
+            this.code = code
+        }
 
-    async downloadTrackBuffer(obj){
-        const name = obj.name;
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                Cookie: `uid=${this.token}`
+            },
+            redirect: 'follow'
+            };
+
+        try {
+            const responce = await fetch(`http://${this.domaiName}/api/account/check/?code=${this.code}`, requestOptions);
+            const result =  await responce.json();
+
+            return result.data
+
+        } catch (error) {
+            console.log("ERROR :" + error);
+        }    
+    }
+
+    async getScheduleLastModified(channel){
+
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                Cookie: `uid=${this.token}`
+            },
+            redirect: 'follow'
+            };
+
+        try {
+            const responce = await fetch(`http://${this.domaiName}/api/campaign/getschedulelastmodified?channel=${channel}`, requestOptions);
+            const result =  await responce.json();
+
+            return result.data.lastModified
+            
+        } catch (error) {
+            console.log("ERROR :" + error);
+        }    
+    }
+
+    async sendDownloadStatus(channel, tracksIdsArray){
+
+        const raw = JSON.stringify(tracksIdsArray);
+
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                Cookie: `uid=${this.token}`
+            },
+            body: raw,
+            redirect: 'follow'
+            };
+        
             try {
-                const responce = await fetch(obj.url);
-                const dest = fs.createWriteStream(this.storage + name);
-                responce.body.pipe(dest);
-                dest.on('close', () => {
-                    console.log("file success wrote");
-                    this.emit('gottrack');
-                });
+                const responce = await fetch(`http://${this.domaiName}/api/campaign/tracks/?channel=${channel}`, requestOptions);
+                const result =  await responce.json();
+    
+                return result.data
+                
             } catch (error) {
-                console.log(error);
+                console.log("ERROR :" + error);
+            }         
 
-            }
+    }
+
+    async sendPlayReport(data){
+
+        /*
+        channel - channel id,
+        playlist  - playlist id,
+        track - track id,
+        from - start date YYYY-MM-DD HH:ii:ss
+        to - end date YYYY-MM-DD HH:ii:ss
+        */
+
+        const raw = JSON.stringify(data);
+
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                Cookie: `uid=${this.token}`
+            },
+            body: raw,
+            redirect: 'follow'
+            };
+
+            try {
+                const responce = await fetch(`http://${this.domaiName}/api/channel/report`, requestOptions);
+                const result =  await responce.json();
+    
+                return result.data
+                
+            } catch (error) {
+                console.log("ERROR :" + error);
+            }      
 
     }
 
+    async addToBlackList(data){
+        /*
+        channel_id,
+        track_id,
+        username,
+        comment
+         */
 
-    downloadTracks(){
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                Cookie: `uid=${this.token}`
+            },
+            redirect: 'follow'
+            };
+
+        try {
+            const responce = await fetch(`http://${this.domaiName}/api/channel/blacklist?channel_id=${data.channel_id}&track_id=${data.track_id}&username=${data.username}&comment=${data.comment}`, requestOptions);
+            const result =  await responce.json();
+    
+            return result.data;
+                
+            } catch (error) {
+            console.log("ERROR :" + error);
+            }   
 
     }
+
 
     setCookies(data){
 
@@ -186,17 +272,10 @@ class Api extends EventEmitter {
                           })
 
     }
-
-    /*getCookies(coockieName, callback){
-        session.defaultSession.cookies.get({name: data})
-                        .then((cookies) => {
-                            callback
-                        }).catch((error) => {
-                            console.log(error)
-                        })
-
-    }*/
-
+    //utils
+    isPropertyExist(property){
+        return( property in this );
+    }
 }
 
 

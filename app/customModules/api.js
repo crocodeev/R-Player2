@@ -13,6 +13,10 @@ class Api extends EventEmitter {
         Object.assign(this,  obj);
     }
 
+    /* setting guid after inizialization api module,
+    cause initialize api in main process, 
+    but guid store in render*/
+    
     set guid(guid){
         this._guid = guid
     }

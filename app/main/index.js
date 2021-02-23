@@ -6,6 +6,22 @@ import { createStore,
 import MPC from '../customModules/mainProcessListener'
 import API from '../customModules/api';
 import { initialApiConfig } from '../hardcode/initialApiConfig'
+import AutoLaunch from 'auto-launch'
+
+const autolauncher = new AutoLaunch({
+  name: "r-player"
+})
+
+autolauncher.isEnabled()
+.then(function(isEnabled){
+    if(isEnabled){
+        return;
+    }
+    autolauncher.enable();
+})
+.catch(function(err){
+    console.log("Autolauncher: " + error);
+});
 
 const api = new API(initialApiConfig);
 const mpc = new MPC();

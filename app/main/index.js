@@ -8,7 +8,7 @@ import API from '../customModules/api';
 import { initialApiConfig } from '../hardcode/initialApiConfig'
 import AutoLaunch from 'auto-launch'
 
-const autolauncher = new AutoLaunch({
+/*const autolauncher = new AutoLaunch({
   name: "r-player"
 })
 
@@ -21,7 +21,7 @@ autolauncher.isEnabled()
 })
 .catch(function(err){
     console.log("Autolauncher: " + error);
-});
+});*/
 
 const api = new API(initialApiConfig);
 const mpc = new MPC();

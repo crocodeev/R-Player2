@@ -13,12 +13,6 @@ class MPC {
     init(api, store){
         ipcMain.on('test', (event, arg) => {
             console.log(arg);
-            /*store.dispatch(
-              {
-                type:"TEST",
-                payload: arg
-              }
-            )*/
         });
 
         ipcMain.on('token', (event, arg) => {
@@ -36,7 +30,6 @@ class MPC {
 
         ipcMain.on('guid', (event, arg) => {
             api.guid = arg;
-            console.log(api);
         })
 
         //listeners section
@@ -53,7 +46,7 @@ class MPC {
           console.log("got schedule");
           store.dispatch(downloadCountReset());
           store.dispatch(getSchedule(api.schedule));
-          api.contentDownload(api.schedule.tracks);
+          api.contentDownload(api.schedule[0].playlists[0].tracks);
         });
         api.on('gottrack', () => {
           store.dispatch(getTrack());

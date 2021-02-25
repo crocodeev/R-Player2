@@ -84,7 +84,7 @@ class Api extends EventEmitter {
             try {
                 const responce = await fetch(`http://${this.domaiName}/api/campaign/getschedule/?channel=${channelId}`, requestOptions);
                 const result = await responce.json();
-                this.schedule = result.data[0].playlists[0]; //нет проверки данных
+                this.schedule = result.data; //нет проверки данных, было так: data[0].playlists[0] - теперь берём полное расписание
                 this.emit('gotschedule');
             } catch (e) {
                 console.log(e);

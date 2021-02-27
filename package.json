@@ -13,6 +13,7 @@
     "@babel/register": "^7.9.0",
     "auto-launch": "^5.0.5",
     "connected-react-router": "^6.8.0",
+    "dayjs": "^1.10.4",
     "electron-fetch": "^1.4.0",
     "electron-redux": "^1.5.3",
     "history": "^4.10.1",

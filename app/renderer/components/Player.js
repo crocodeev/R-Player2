@@ -15,6 +15,7 @@ import rpc from '../../customModules/renderProccessConnector';
 
 import taskScheduleCreator from '../scheduler/taskScheduleCreator'
 import shuffler from '../scheduler/shuffler'
+const dayjs = require('dayjs')
 
 
 
@@ -49,21 +50,30 @@ export default class Player extends Component {
     //по факту не загрузится, если проверку в загрузке не сделать
     if( "schedule" in this.props.player){
 
-      //start create tasks
-        //check channel rules
-      const channelSchedule = this.props.player.channels.find( c => c.id == this.props.player.currentChannel)
-   
-      const channelRule = {
-        start: channelSchedule.workTime.startTime,
-        end: channelSchedule.workTime.endTime
-      }
-      
-      taskScheduleCreator(channelRule, this.props.player.schedule[0].weekInfo.allDaysPeriod.startTime, () => {
+      const now = dayjs().format('H:m')
+      const scheduleTime = this.props.player.schedule[0].weekInfo.allDaysPeriod.startTime
+      const scheduleStartTime = `${scheduleTime.hour}:${scheduleTime.minutes}`
+
+      console.log("now :" + now);
+      console.log("ScheduleStartTime: " + scheduleStartTime);
+
+      // if start time overdue, start immediatly
+      if(now > scheduleStartTime){
         sound.play()
-      });
-
-
-
+      }else{
+        //check channel rules
+        const channelSchedule = this.props.player.channels.find( c => c.id == this.props.player.currentChannel)
+   
+        const channelRule = {
+          start: channelSchedule.workTime.startTime,
+          end: channelSchedule.workTime.endTime
+        }
+      
+        taskScheduleCreator(channelRule, this.props.player.schedule[0].weekInfo.allDaysPeriod.startTime, () => {
+          sound.play()
+        });
+        
+      }
     }
 
 
@@ -88,8 +98,37 @@ export default class Player extends Component {
 
     if (nextProps.player.downloadCompleted && !this.state.isPlaying){
       this.setState({isPlaying: true});
-      sound.setNewPlaylist(this.props.player.schedule[0].playlists[0].tracks);
-      sound.play();
+
+      const playlist = this.props.player.schedule[0].playlists[0].tracks;
+
+      const shuffledPlaylist = shuffler(playlist)
+      sound.setNewPlaylist(shuffledPlaylist);
+      
+      const now = dayjs().format('H:m')
+      const scheduleTime = this.props.player.schedule[0].weekInfo.allDaysPeriod.startTime
+      const scheduleStartTime = `${scheduleTime.hour}:${scheduleTime.minutes}`
+
+      console.log("now :" + now);
+      console.log("ScheduleStartTime: " + scheduleStartTime);
+
+      // if start time overdue, start immediatly
+      if(now > scheduleStartTime){
+        sound.play()
+      }else{
+        //check channel rules
+        const channelSchedule = this.props.player.channels.find( c => c.id == this.props.player.currentChannel)
+   
+        const channelRule = {
+          start: channelSchedule.workTime.startTime,
+          end: channelSchedule.workTime.endTime
+        }
+      
+        taskScheduleCreator(channelRule, this.props.player.schedule[0].weekInfo.allDaysPeriod.startTime, () => {
+          sound.play()
+        });
+        
+      }
+
     }
   }
 

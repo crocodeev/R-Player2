@@ -14,6 +14,7 @@ import rpc from '../../customModules/renderProccessConnector';
 //временное
 
 import taskScheduleCreator from '../scheduler/taskScheduleCreator'
+import shuffler from '../scheduler/shuffler'
 
 
 
@@ -40,7 +41,8 @@ export default class Player extends Component {
     */
 
     const initialPlaylist = typeof this.props.player.schedule == "undefined" ? [{name:"placeholder"}] : this.props.player.schedule[0].playlists[0].tracks;
-    sound.setNewPlaylist(initialPlaylist)
+    const shuffledPlaylist = shuffler(initialPlaylist)
+    sound.setNewPlaylist(shuffledPlaylist)
 
 
     //check is schedule exist

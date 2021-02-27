@@ -17,6 +17,7 @@
     "electron-redux": "^1.5.3",
     "history": "^4.10.1",
     "howler": "^2.2.0",
+    "node-schedule": "^2.0.0",
     "prop-types": "^15.7.2",
     "raf": "^3.4.1",
     "react": "^16.13.1",
@@ -72,6 +73,6 @@
     "pack:win": "gulp pack-win",
     "pack:linux": "gulp pack-linux",
     "private:format": "prettier gulpfile.js babel.config.js \"tasks/*.js\" \"app/**/*.js\" \"test/**/*.js\"",
-    "cln":"node ./tests/clearAppData.js"
+    "cln": "node ./tests/clearAppData.js"
   }
 }

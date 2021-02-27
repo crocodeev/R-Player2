@@ -11,6 +11,10 @@ import sound from '../sound/soundEmmiter';
 
 import rpc from '../../customModules/renderProccessConnector';
 
+//временное
+
+import taskScheduleCreator from '../scheduler/taskScheduleCreator'
+
 
 
 export default class Player extends Component {
@@ -28,8 +32,38 @@ export default class Player extends Component {
     this.currentChannel = this.props.player.currentChannel != null ? this.props.player.currentChannel : null;
     this.renderSeekPos = this.renderSeekPos.bind(this);
     this.getSchedule  = this.getSchedule.bind(this);
+
+    /*
+    Handle schedule
+    In near future need to transfer in separate module
+    No logic in Player
+    */
+
     const initialPlaylist = typeof this.props.player.schedule == "undefined" ? [{name:"placeholder"}] : this.props.player.schedule[0].playlists[0].tracks;
     sound.setNewPlaylist(initialPlaylist)
+
+
+    //check is schedule exist
+    //по факту не загрузится, если проверку в загрузке не сделать
+    if( "schedule" in this.props.player){
+
+      //start create tasks
+        //check channel rules
+      const channelSchedule = this.props.player.channels.find( c => c.id == this.props.player.currentChannel)
+   
+      const channelRule = {
+        start: channelSchedule.workTime.startTime,
+        end: channelSchedule.workTime.endTime
+      }
+      
+      taskScheduleCreator(channelRule, this.props.player.schedule[0].weekInfo.allDaysPeriod.startTime, () => {
+        sound.play()
+      });
+
+
+
+    }
+
 
   }
 

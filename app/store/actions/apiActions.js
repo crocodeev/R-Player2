@@ -2,10 +2,9 @@
 import { GET_TOKEN,
     GET_CHANNELS,
     SET_CURRENT_CHANNEL,
-    RESET_DOWLOADED_TRACKS,
+    RESET_DOWNLOADED_TRACKS,
     ADD_DOWNLOADED_TRACK,
     SET_GUID } from './actionTypes';
-
 
 
 export function getToken(token){
@@ -40,14 +39,14 @@ payload: guid
 //как выполнить push в массив в state
 export function addDownloadedTrackInArray(track) {
     return{
-    type: ADD_DOWLOADED_TRACK,
+    type: ADD_DOWNLOADED_TRACK,
     payload: track
     }
     }
 
 export function resetDownloadedTracksArray(track) {
     return{
-    type: RESET_DOWLOADED_TRACKS,
+    type: RESET_DOWNLOADED_TRACKS,
     }
     }    
 

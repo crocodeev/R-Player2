@@ -39,13 +39,14 @@ import { forwardToRenderer,
          replayActionMain,
           } from 'electron-redux';
 import player from '../store/reducers/player';
+import webapi from '../store/reducers/api';
 import thunk from 'redux-thunk';
 
 
 const initialState = {
 }
 
-const store = createStore(combineReducers({player}),
+const store = createStore(combineReducers({player, webapi}),
                           initialState,
                           applyMiddleware(thunk,
                                           forwardToRenderer));

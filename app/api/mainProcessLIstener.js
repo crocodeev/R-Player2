@@ -4,8 +4,9 @@ import { getChannels,
          getTrack,
          downloadCountReset,
          downloadStatus } from '../store/actions/action'
-import { getToken
-         } from '../store/actions/apiActions'
+import { getToken,
+         addDownloadedTrackInArray,
+         resetDownloadedTracksArray} from '../store/actions/apiActions'
        
 
 import { push } from 'connected-react-router';
@@ -47,11 +48,15 @@ class MPC {
         api.on('gotschedule', () => {
           console.log("got schedule");
           store.dispatch(downloadCountReset());
+          store.dispatch(resetDownloadedTracksArray());
           store.dispatch(getSchedule(api.schedule));
           api.contentDownload(api.schedule[0].playlists[0].tracks);
         });
-        api.on('gottrack', () => {
+        api.on('gottrack', (trackID) => {
           store.dispatch(getTrack());
+          store.dispatch(addDownloadedTrackInArray(trackID));
+          const downloadedTracksArray = store.getState().webapi.downloadedTracks;
+          //api.sendDownloadStatus(downloadedTracksArray)
         });
         api.on('loadcompleted', () => {
           store.dispatch(downloadStatus(true));

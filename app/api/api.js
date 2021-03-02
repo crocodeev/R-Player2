@@ -20,6 +20,10 @@ class Api extends EventEmitter {
     set guid(guid){
         this._guid = guid
     }
+
+    set channel(channelId){
+        this._channel = channelId
+    }
     
     get guid(){
         return this._guid
@@ -74,6 +78,8 @@ class Api extends EventEmitter {
 
     async getSchedule(channelId){
 
+            this.channel = channelId;
+
             const requestOptions = {
             method: 'GET',
             headers: {
@@ -106,10 +112,12 @@ class Api extends EventEmitter {
           try {
               
               const isExist = await isFileExist(filePath);
+              console.log(filePath);
+              console.log(isExist);
               
               if(isFileExist){
                 counter++;
-                  self.emit('gottrack');
+                  self.emit('gottrack', item.id);
                   if(counter < trackArray.length){
                     download();
                   }else{
@@ -123,7 +131,7 @@ class Api extends EventEmitter {
                 dest.on('close', () => {
                     console.log(name);
                     counter++;
-                    self.emit('gottrack');
+                    self.emit('gottrack', item.id);
                     if(counter < trackArray.length){
                         download();
                     }else{
@@ -184,7 +192,7 @@ class Api extends EventEmitter {
         }    
     }
 
-    async sendDownloadStatus(channel, tracksIdsArray){
+    async sendDownloadStatus(tracksIdsArray){
 
         const raw = JSON.stringify(tracksIdsArray);
 
@@ -199,13 +207,17 @@ class Api extends EventEmitter {
             };
         
             try {
-                const responce = await fetch(`http://${this.domaiName}/api/campaign/tracks/?channel=${channel}`, requestOptions);
-                const result =  await responce.json();
+                const responce = await fetch(`http://${this.domaiName}/api/campaign/tracks/?channel=${this.channel}`, requestOptions);
+                //console.log(responce.body);
+                //const result =  await responce.json();
     
-                return result.data
+                //return result.data
                 
             } catch (error) {
-                console.log("ERROR :" + error);
+                console.log("ERROR FROM sendDownloadStatus:");
+                console.log(error.name);
+                console.log(error.message);
+                console.log(error.stack);
             }         
 
     }

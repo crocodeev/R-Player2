@@ -8,7 +8,7 @@ import thunk from 'redux-thunk';
 
 //add reducers
 import player from './reducers/player';
-import api from './reducers/api'
+import webapi from './reducers/api'
 //add actions
 //import userActions from './actions/user';
 
@@ -26,7 +26,7 @@ export default function configureStore(initialState, routerHistory) {
   const reducers = {
     forwardToMain,
     router: connectRouter(routerHistory),
-    api,
+    webapi,
     player
   };
 

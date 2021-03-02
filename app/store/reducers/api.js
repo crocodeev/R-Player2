@@ -2,11 +2,11 @@ import {  GET_TOKEN,
           GET_CHANNELS,
           SET_CURRENT_CHANNEL,
           SET_GUID,
-          RESET_DOWLOADED_TRACKS,
-          ADD_DOWLOADED_TRACK} from '../actions/actionTypes';
+          RESET_DOWNLOADED_TRACKS,
+          ADD_DOWNLOADED_TRACK} from '../actions/actionTypes';
 
 
-export default function apiReducer(state = {}, action){
+export default function webapi(state = {}, action){
 
 switch (action.type) {
 case GET_TOKEN:
@@ -24,12 +24,12 @@ case SET_CURRENT_CHANNEL:
     ...state,
       currentChannel: action.payload
       });
-case ADD_DOWLOADED_TRACK:
+case ADD_DOWNLOADED_TRACK:
     return({
     ...state,
-    downloadedTracks: [...state.api.downloadedTracks, action.payload]
+    downloadedTracks: [...state.downloadedTracks, action.payload]
           });
-case RESET_DOWLOADED_TRACKS:
+case RESET_DOWNLOADED_TRACKS:
     return({
     ...state,
     downloadedTracks: []

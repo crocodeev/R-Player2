@@ -6,15 +6,16 @@ import thunk from 'redux-thunk';
 //for develop
 //import logger from 'redux-logger';
 
-//добаляем редюсер
+//add reducers
 import user from './reducers/user';
 import player from './reducers/player';
-//добавляем экшены
+//add actions
 import userActions from './actions/user';
 
-console.log(userActions);
-
+// return store
 export default function configureStore(initialState, routerHistory) {
+
+  //sync react router with state
   const router = routerMiddleware(routerHistory);
 
   const actionCreators = {

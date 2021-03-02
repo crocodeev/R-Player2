@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm } from "react-hook-form";
 import { connect } from 'react-redux';
-import rpc from '../../customModules/renderProccessConnector';
+import rpc from '../../api/renderProccessConnector';
 
 
 function Authorize (){

@@ -3,12 +3,17 @@ import { app, crashReporter, BrowserWindow, Menu } from 'electron';
 import { createStore,
          applyMiddleware,
          combineReducers } from 'redux';
-import MPC from '../customModules/mainProcessListener'
-import API from '../customModules/api';
+import MPC from '../api/mainProcessListener'
+import API from '../api/api';
 import { initialApiConfig } from '../hardcode/initialApiConfig'
 import AutoLaunch from 'auto-launch'
 
-/*const autolauncher = new AutoLaunch({
+//for activate development mode
+const isDevelopment = process.env.NODE_ENV === 'development';
+
+//if production, enable autolaunch
+if(!isDevelopment){ 
+  const autolauncher = new AutoLaunch({
   name: "r-player"
 })
 
@@ -21,7 +26,9 @@ autolauncher.isEnabled()
 })
 .catch(function(err){
     console.log("Autolauncher: " + error);
-});*/
+});
+}
+
 
 const api = new API(initialApiConfig);
 const mpc = new MPC();
@@ -31,7 +38,7 @@ const mpc = new MPC();
 import { forwardToRenderer,
          replayActionMain,
           } from 'electron-redux';
-import player from '../renderer/reducers/player';
+import player from '../store/reducers/player';
 import thunk from 'redux-thunk';
 
 
@@ -46,8 +53,6 @@ const store = createStore(combineReducers({player}),
 replayActionMain(store);
 
 mpc.init(api, store);
-
-const isDevelopment = process.env.NODE_ENV === 'development';
 
 let mainWindow = null;
 let forceQuit = false;

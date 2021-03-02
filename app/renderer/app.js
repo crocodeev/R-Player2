@@ -4,12 +4,12 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import { createMemoryHistory } from 'history';
 import routes from './routes';
-import configureStore from './store';
+import configureStore from '../store/store';
 import { replayActionRenderer, getInitialStateRenderer } from 'electron-redux' 
 import sound from './sound/soundEmmiter';
 import UUID from 'uuidjs';
-import { setGuid } from './actions/action';
-import rpc from '../customModules/renderProccessConnector';
+import { setGuid } from '../store/actions/action';
+import rpc from '../api/renderProccessConnector';
 
 //this for the test purpose only
 const soundModule = sound

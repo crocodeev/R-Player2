@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import Player from '../components/Player';
 import { setPlaylistPosition,
          setCurrentChannel,
-         downloadStatus } from '../actions/action';
+         downloadStatus } from '../../store/actions/action';
 import { push } from 'connected-react-router';
 
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Channel from './Channel';
-import { setCurrentChannel } from '../actions/action';
+import { setCurrentChannel } from '../../store/actions/action';
 
 class Channels extends Component {
 

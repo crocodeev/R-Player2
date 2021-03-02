@@ -9,7 +9,7 @@ import sound from '../sound/soundEmmiter';
 
 //inter proccess communication
 
-import rpc from '../../customModules/renderProccessConnector';
+import rpc from '../../api/renderProccessConnector';
 
 //временное
 

@@ -7,10 +7,10 @@ import thunk from 'redux-thunk';
 //import logger from 'redux-logger';
 
 //add reducers
-import user from './reducers/user';
 import player from './reducers/player';
+import api from './reducers/api'
 //add actions
-import userActions from './actions/user';
+//import userActions from './actions/user';
 
 // return store
 export default function configureStore(initialState, routerHistory) {
@@ -19,14 +19,14 @@ export default function configureStore(initialState, routerHistory) {
   const router = routerMiddleware(routerHistory);
 
   const actionCreators = {
-    ...userActions,
+    //...userActions,
     push,
   };
 
   const reducers = {
     forwardToMain,
     router: connectRouter(routerHistory),
-    user,
+    api,
     player
   };
 

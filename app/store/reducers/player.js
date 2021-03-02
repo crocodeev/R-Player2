@@ -1,12 +1,10 @@
 import {  PLAYLIST_POSITION,
-          GET_TOKEN,
           TEST,
-          GET_CHANNELS,
           GET_SCHEDULE,
           SET_CURRENT_CHANNEL,
+          GET_CHANNELS,
           GET_TRACK,
           RESET_DOWNLOAD_COUNTER,
-          SET_GUID,
           DOWNLOAD_STATUS } from '../actions/actionTypes';
 
 
@@ -19,11 +17,6 @@ export default function playerReducer(state = {}, action){
         currentTrack: action.payload
       });
     //add next session for test storage communication between render and main
-    case GET_TOKEN:
-      return({
-        ...state,
-        token: action.payload
-      });
     case GET_CHANNELS:
           return({
             ...state,
@@ -58,12 +51,7 @@ export default function playerReducer(state = {}, action){
           return({
             ...state,
             isConnected: action.payload
-          });
-    case SET_GUID:
-          return({
-            ...state,
-            guid: action.payload
-          })      
+          }); 
     default:
       return state;
   }

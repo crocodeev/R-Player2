@@ -1,10 +1,12 @@
 const {ipcMain} = require('electron');
-import { getToken,
-         getChannels,
+import { getChannels,
          getSchedule,
          getTrack,
          downloadCountReset,
          downloadStatus } from '../store/actions/action'
+import { getToken
+         } from '../store/actions/apiActions'
+       
 
 import { push } from 'connected-react-router';
 

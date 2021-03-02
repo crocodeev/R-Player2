@@ -39,12 +39,12 @@ console.log(store);
 console.log("state");
 console.log(store.getState());
 rpc.setGuid("Only test function")
-if ("guid" in  store.getState().player){
-  rpc.setGuid(store.getState().player.guid);
+if ("guid" in  store.getState().api){
+  rpc.setGuid(store.getState().api.guid);
 }else{
   const uuid = UUID.genV4();
   store.dispatch(setGuid(uuid.hexNoDelim));
-  rpc.setGuid(store.getState().player.guid);
+  rpc.setGuid(store.getState().api.guid);
 }
 
 

@@ -1,7 +1,5 @@
 import React from 'react';
 
-//light-blue lighten-5
-
 function Channel(props) {
 
   return (

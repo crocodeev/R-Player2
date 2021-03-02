@@ -1,6 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, useLayoutEffect, useState } from 'react';
 import Channel from './Channel';
 import { setCurrentChannel } from '../../store/actions/action';
+
+/*
+function Channels(props) {
+
+    const [channels, setChannels] = useState() 
+}
+*/
 
 class Channels extends Component {
 

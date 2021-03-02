@@ -65,12 +65,7 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-      clickClak: () => console.log("clicked")
-}
-}
 
-const Auth = connect(mapStateToProps, mapDispatchToProps)(Authorize);
+const Auth = connect(mapStateToProps)(Authorize);
 
 export default Auth;

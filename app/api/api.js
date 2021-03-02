@@ -3,7 +3,7 @@ const fetch = require('electron-fetch').default;
 const fs = require('fs');
 const { EventEmitter } = require('events');
 const crypter = require('../utils/crypter');
-
+const isFileExist = require('./helpers/isFileExist').default;
 
 
 class Api extends EventEmitter {
@@ -27,6 +27,7 @@ class Api extends EventEmitter {
 
     async getToken(obj){
 
+        console.log(obj);
 
         this.id = obj.projectId;
         this.code = obj.playerCode;
@@ -100,22 +101,36 @@ class Api extends EventEmitter {
 
         const item = trackArray[counter];
         const name = item.checksum;
+        const filePath = self.storage + name;  
 
           try {
-              const responce = await fetch(item.url);
-              const dest = fs.createWriteStream(self.storage + name);
-              const cipher = crypter.getCipher()
-              responce.body.pipe(cipher).pipe(dest);
-              dest.on('close', () => {
-                  console.log(name);
-                  counter++;
+              
+              const isExist = await isFileExist(filePath);
+              
+              if(isFileExist){
+                counter++;
                   self.emit('gottrack');
                   if(counter < trackArray.length){
                     download();
                   }else{
                     self.emit('loadcompleted');
                   }
-              });
+              }else{
+                const responce = await fetch(item.url);
+                const dest = fs.createWriteStream(filePath);
+                const cipher = crypter.getCipher()
+                responce.body.pipe(cipher).pipe(dest);
+                dest.on('close', () => {
+                    console.log(name);
+                    counter++;
+                    self.emit('gottrack');
+                    if(counter < trackArray.length){
+                        download();
+                    }else{
+                        self.emit('loadcompleted');
+                    }
+                });
+              }
           } catch (error) {
               console.log(error);
 

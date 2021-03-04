@@ -89,8 +89,8 @@ class Api extends EventEmitter {
             };
 
             try {
-                const responce = await fetch(`http://${this.domaiName}/api/campaign/getschedule/?channel=${channelId}`, requestOptions);
-                const result = await responce.json();
+                const response = await fetch(`http://${this.domaiName}/api/campaign/getschedule/?channel=${channelId}`, requestOptions);
+                const result = await response.json();
                 this.schedule = result.data; //нет проверки данных, было так: data[0].playlists[0] - теперь берём полное расписание
                 this.emit('gotschedule');
             } catch (e) {
@@ -107,13 +107,13 @@ class Api extends EventEmitter {
 
         const item = trackArray[counter];
         const name = item.checksum;
-        const filePath = self.storage + name;  
+        const filePath = self.storage + name;
+        
+        const isExist = await isFileExist(filePath);
+        console.log(filePath);
+        console.log(isExist);  
 
           try {
-              
-              const isExist = await isFileExist(filePath);
-              console.log(filePath);
-              console.log(isExist);
               
               if(isFileExist){
                 counter++;
@@ -299,10 +299,13 @@ class Api extends EventEmitter {
                           })
 
     }
+
     //utils
     isPropertyExist(property){
         return( property in this );
     }
+
+    
 }
 
 

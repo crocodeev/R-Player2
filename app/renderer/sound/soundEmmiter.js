@@ -116,6 +116,14 @@ class Sound extends EventEmmitter  {
     return howl
   }
 
+  get currentTrackName () {
+    return this.playlist[this.index].name;
+  }
+
+  get currentTrackDuration(){
+    let rawDuration = this.playlist[this.index].howl.duration();
+    return (rawDuration/60).toFixed(2);
+  }
 
 }
 

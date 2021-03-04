@@ -34,11 +34,6 @@ replayActionRenderer(store);
 syncHistoryWithStore(store, routerHistory);
 
 //generate guid, if need
-console.log("store");
-console.log(store);
-console.log("state");
-console.log(store.getState());
-rpc.setGuid("Only test function")
 if ("guid" in  store.getState().webapi){
   rpc.setGuid(store.getState().webapi.guid);
 }else{

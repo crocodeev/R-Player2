@@ -109,22 +109,13 @@ class Api extends EventEmitter {
         const name = item.checksum;
         const filePath = self.storage + name;
         
-        const isExist = await isFileExist(filePath);
-        console.log(filePath);
-        console.log(isExist);  
-
-        const isExist = await isFileExist(filePath);
-              console.log(isExist);     
+        const isExist = await isFileExist(filePath);  
 
           try {
               
-<<<<<<< HEAD
-              if(isFileExist){
-=======
 
               if(isExist){
                 console.log("download skip");  
->>>>>>> 9b9c7ccc647f520b77367c66cf81c9995b3f8933
                 counter++;
                   self.emit('gottrack', item.id);
                   if(counter < trackArray.length){

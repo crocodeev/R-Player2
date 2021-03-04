@@ -5,7 +5,9 @@ import {  PLAYLIST_POSITION,
           GET_CHANNELS,
           GET_TRACK,
           RESET_DOWNLOAD_COUNTER,
-          DOWNLOAD_STATUS } from '../actions/actionTypes';
+          DOWNLOAD_STATUS,
+          SET_CURRENT_TRACK,
+          SET_TRACK_POSITION} from '../actions/actionTypes';
 
 
 export default function playerReducer(state = {}, action){
@@ -16,7 +18,6 @@ export default function playerReducer(state = {}, action){
         ...state,
         currentTrack: action.payload
       });
-    //add next session for test storage communication between render and main
     case GET_CHANNELS:
           return({
             ...state,
@@ -47,6 +48,15 @@ export default function playerReducer(state = {}, action){
           ...state,
           downloadCompleted: action.payload
                 });
+    case DOWNLOAD_STATUS:
+          return({
+          ...state,
+          currentTrack: {
+            name: action.payload.name,
+            duration: action.payload.duration,
+            seek: 0
+          }
+          });            
     case TEST:
           return({
             ...state,

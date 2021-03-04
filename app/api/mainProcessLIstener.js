@@ -55,9 +55,6 @@ class MPC {
         api.on('gottrack', (trackID) => {
           store.dispatch(getTrack());
           store.dispatch(addDownloadedTrackInArray(trackID));
-          const downloadedTracksArray = store.getState().webapi.downloadedTracks;
-          console.log(typeof downloadedTracksArray);
-          api.sendDownloadStatus(downloadedTracksArray);
         });
         api.on('loadcompleted', () => {
           store.dispatch(downloadStatus(true));

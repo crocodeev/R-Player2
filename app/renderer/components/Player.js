@@ -19,6 +19,7 @@ const dayjs = require('dayjs')
 
 
 
+
 export default class Player extends Component {
 
   //нужно перенести state в store, а может и не нужно
@@ -42,10 +43,7 @@ export default class Player extends Component {
     */
 
     const initialPlaylist = typeof this.props.player.schedule == "undefined" ? [{name:"placeholder"}] : this.props.player.schedule[0].playlists[0].tracks;
-    const dummyPlaylist = [];
-    Object.assign(dummyPlaylist, shuffler(initialPlaylist))
-    console.log("clone list");
-    sound.setNewPlaylist(dummyPlaylist)
+    sound.setNewPlaylist(initialPlaylist)
 
 
     //check is schedule exist
@@ -61,7 +59,7 @@ export default class Player extends Component {
 
       // if start time overdue, start immediatly
       if(now > scheduleStartTime){
-        //sound.play()
+        sound.play()
       }else{
         //check channel rules
         const channelSchedule = this.props.player.channels.find( c => c.id == this.props.player.currentChannel)
@@ -72,7 +70,7 @@ export default class Player extends Component {
         }
       
         taskScheduleCreator(channelRule, this.props.player.schedule[0].weekInfo.allDaysPeriod.startTime, () => {
-          //sound.play()
+          sound.play()
         });
         
       }
@@ -115,7 +113,7 @@ export default class Player extends Component {
 
       // if start time overdue, start immediatly
       if(now > scheduleStartTime){
-        //sound.play()
+        sound.play()
       }else{
         //check channel rules
         const channelSchedule = this.props.player.channels.find( c => c.id == this.props.player.currentChannel)
@@ -126,7 +124,7 @@ export default class Player extends Component {
         }
       
         taskScheduleCreator(channelRule, this.props.player.schedule[0].weekInfo.allDaysPeriod.startTime, () => {
-          //sound.play()
+          sound.play()
         });
         
       }

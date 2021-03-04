@@ -10,7 +10,7 @@ let tracksArray = [
 
   const tracks = tracksArray.map((item) => {
     const obj ={};
-    obj.src = "E:\\MUSIC\\" + item;
+    obj.src = "С:\\MUSIC\\" + item;
     obj.name = item;
     return obj;
   });

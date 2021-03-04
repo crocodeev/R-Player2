@@ -1,9 +1,8 @@
 const {Howl, Howler} = require('howler');
 const EventEmmitter = require('events');
 const decryptSource = require('./sourceDecrypter');
-const raf = require('raf');
+import deepcopy from 'deepcopy';
 import { initialApiConfig } from '../../hardcode/initialApiConfig';
-
 
 const storage = initialApiConfig.storage;
 
@@ -99,7 +98,8 @@ class Sound extends EventEmmitter  {
   }
 
   setNewPlaylist(playlist){
-    this.playlist = playlist.map((item) => this.addSourceToPlaylistItem(item));
+    const withSource = playlist.map((item) => this.addSourceToPlaylistItem(item))
+    this.playlist = deepcopy(withSource);
     this.index=0;
   }
 

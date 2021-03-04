@@ -51,7 +51,6 @@ if ("guid" in  store.getState().webapi){
 soundModule.on('play', () => {
   const name = soundModule.currentTrackName;
   const duration = soundModule.currentTrackDuration;
-
   store.dispatch(setCurrentTrack(name, duration));
   raf(renderSeekPos);
 })
@@ -62,7 +61,7 @@ soundModule.on('end', () => {
 
 function renderSeekPos(){
   const seek = soundModule.seek();
-  //store.dispatch(setSeekPosition(seek))
+  store.dispatch(setSeekPosition(seek))
   raf(renderSeekPos);
 }
 

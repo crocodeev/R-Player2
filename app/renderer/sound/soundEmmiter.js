@@ -34,8 +34,7 @@ class Sound extends EventEmmitter  {
       sound = data.howl;
 
       sound.on('play', async () => {
-        const currentTrackName = this.playlist[this.index].name;
-        this.emit('play', currentTrackName);
+        this.emit('play');
         //load next playlist item
         this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1].src) 
       })
@@ -50,8 +49,7 @@ class Sound extends EventEmmitter  {
       sound = data.howl = await this._createHowl(data.src)
 
       sound.on('play', async () => {
-        const currentTrackName = this.playlist[this.index].name;
-        this.emit('play', currentTrackName);
+        this.emit('play');
         //load next playlist item
         this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1].src) 
       })
@@ -101,7 +99,7 @@ class Sound extends EventEmmitter  {
   }
 
   setNewPlaylist(playlist){
-    this.playlist = playlist.map((item) => this.addSourceToPlaylistItem(item))
+    this.playlist = playlist.map((item) => this.addSourceToPlaylistItem(item));
     this.index=0;
   }
 

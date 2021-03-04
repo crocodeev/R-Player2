@@ -1,15 +1,18 @@
 import React, { useEffect, useRef } from 'react';
 import raf from 'raf';
+import TrackName from './currentTrackComponents/TrackName' 
 
 export default function CurrentTrack(props)  {
 
     const seekPosition = useRef(0);
     const duration = useRef(1);
+    const currentTrack = useRef("");
 
     useEffect(() => {
       soundModule.on('play', () => {
         renderSeekPos();
         duration.current = soundModule.currentTrackDuration;
+        currentTrack = soundModule.currentTrack;
       })
       soundModule.on('end', () => {
         renderSeekPos();
@@ -18,6 +21,7 @@ export default function CurrentTrack(props)  {
 
     const renderSeekPos = () => {
         seekPosition.current = soundModule.seek();
+        console.log(seekPosition.current);
         raf(renderSeekPos);
     }
 
@@ -27,14 +31,13 @@ export default function CurrentTrack(props)  {
     }
   
     function progress(){
-      return props.currentTime*100/props.duration;
+      return seekPosition.current*100/duration.current;
     }
-
 
 
     return (
       <div>
-        <h6>{props.currentTrack}</h6><h6>{props.currentTime + "/" + props.duration}</h6>
+        <TrackName name={currentTrack.current} seekPosition={seekPosition.current} duration={duration.current}/>
         <div className="progress">
           <div className="determinate" style={{width: progress() +'%'}}></div>
         </div>

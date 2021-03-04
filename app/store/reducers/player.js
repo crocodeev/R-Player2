@@ -7,7 +7,7 @@ import {  PLAYLIST_POSITION,
           RESET_DOWNLOAD_COUNTER,
           DOWNLOAD_STATUS,
           SET_CURRENT_TRACK,
-          SET_TRACK_POSITION} from '../actions/actionTypes';
+          SET_SEEK_POSITION} from '../actions/actionTypes';
 
 
 export default function playerReducer(state = {}, action){
@@ -48,15 +48,16 @@ export default function playerReducer(state = {}, action){
           ...state,
           downloadCompleted: action.payload
                 });
-    case DOWNLOAD_STATUS:
+    case SET_CURRENT_TRACK:
           return({
           ...state,
-          currentTrack: {
-            name: action.payload.name,
-            duration: action.payload.duration,
-            seek: 0
-          }
-          });            
+          currentTrack: action.payload
+          });
+    case SET_SEEK_POSITION:
+          return({
+          ...state,
+          currentTrack: { ...state.currentTrack, seek: action.payload}
+          });                    
     case TEST:
           return({
             ...state,

@@ -8,20 +8,14 @@ import { PLAYLIST_POSITION,
          RESET_DOWNLOAD_COUNTER,
          DOWNLOAD_STATUS,
          SET_GUID, 
-         SET_CURRENT_TRACK} from './actionTypes';
+         SET_CURRENT_TRACK,
+         SET_SEEK_POSITION} from './actionTypes';
 
 
 export function setPlaylistPosition(trackName){
   return {
     type: PLAYLIST_POSITION,
     payload: trackName
-  }
-}
-
-export function getToken(token){
-  return {
-    type: GET_TOKEN,
-    payload: token
   }
 }
 
@@ -79,5 +73,12 @@ export function setCurrentTrack(name, duration){
       name,
       duration
     }
+  }
+}
+
+export function setSeekPosition(seekPosition) {
+  return{
+    type: SET_SEEK_POSITION,
+    payload: seekPosition
   }
 }

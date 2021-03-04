@@ -26,13 +26,13 @@ export default class Player extends Component {
 
     super(props);
     this.state = {
-      seek: 0,
-      duration: 0,
+      //seek: 0,
+      //duration: 0,
       currentPosition: 0,
       isPlaying: false
     }
     this.currentChannel = this.props.player.currentChannel != null ? this.props.player.currentChannel : null;
-    this.renderSeekPos = this.renderSeekPos.bind(this);
+    //this.renderSeekPos = this.renderSeekPos.bind(this);
     this.getSchedule  = this.getSchedule.bind(this);
 
     /*
@@ -42,8 +42,10 @@ export default class Player extends Component {
     */
 
     const initialPlaylist = typeof this.props.player.schedule == "undefined" ? [{name:"placeholder"}] : this.props.player.schedule[0].playlists[0].tracks;
-    const shuffledPlaylist = shuffler(initialPlaylist)
-    sound.setNewPlaylist(shuffledPlaylist)
+    const dummyPlaylist = [];
+    Object.assign(dummyPlaylist, shuffler(initialPlaylist))
+    console.log("clone list");
+    sound.setNewPlaylist(dummyPlaylist)
 
 
     //check is schedule exist
@@ -59,7 +61,7 @@ export default class Player extends Component {
 
       // if start time overdue, start immediatly
       if(now > scheduleStartTime){
-        sound.play()
+        //sound.play()
       }else{
         //check channel rules
         const channelSchedule = this.props.player.channels.find( c => c.id == this.props.player.currentChannel)
@@ -70,7 +72,7 @@ export default class Player extends Component {
         }
       
         taskScheduleCreator(channelRule, this.props.player.schedule[0].weekInfo.allDaysPeriod.startTime, () => {
-          sound.play()
+          //sound.play()
         });
         
       }
@@ -80,18 +82,18 @@ export default class Player extends Component {
   }
 
   componentDidMount(){
-      sound.on('play', (trackName) => {
+      sound.on('play', () => {
       if(!this.state.isPlaying){
         this.setState({isPlaying: true});
       }  
-      this.props.track(trackName);
-      this.duration = sound.getDuration();
+      //this.props.track(trackName);
+      //this.duration = sound.getDuration();
       this.increaseCurrentPosition();
-      this.renderSeekPos();
+      //this.renderSeekPos();
     } );
-    sound.on('end', () => {
-      this.clearRAF();
-    })
+    /*sound.on('end', () => {
+      //this.clearRAF();
+    })*/
   }
 
   componentWillReceiveProps(nextProps){
@@ -113,7 +115,7 @@ export default class Player extends Component {
 
       // if start time overdue, start immediatly
       if(now > scheduleStartTime){
-        sound.play()
+        //sound.play()
       }else{
         //check channel rules
         const channelSchedule = this.props.player.channels.find( c => c.id == this.props.player.currentChannel)
@@ -124,7 +126,7 @@ export default class Player extends Component {
         }
       
         taskScheduleCreator(channelRule, this.props.player.schedule[0].weekInfo.allDaysPeriod.startTime, () => {
-          sound.play()
+          //sound.play()
         });
         
       }
@@ -154,19 +156,19 @@ export default class Player extends Component {
     })
   }
 
-  renderSeekPos () {
+  /*renderSeekPos () {
     this.setState({
       seek: sound.seek()
     })
     if (this.state.isPlaying) {
       this._raf = raf(this.renderSeekPos);
     }
-  }
+  }*/
 
   //очистка requestAnimationFrame
-  clearRAF () {
+  /*clearRAF () {
     raf.cancel(this._raf)
-  }
+  }*/
 
 
   render() {
@@ -175,11 +177,7 @@ export default class Player extends Component {
       <div className="container">
 
       <div className ="row">
-        <CurrentTrack
-        currentTrack={this.props.player.currentTrack}
-        currentTime={this.state.seek}
-        duration={this.duration || 0}
-        />
+       
       </div>
 
       <div className="row">

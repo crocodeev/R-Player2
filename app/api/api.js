@@ -113,9 +113,18 @@ class Api extends EventEmitter {
         console.log(filePath);
         console.log(isExist);  
 
+        const isExist = await isFileExist(filePath);
+              console.log(isExist);     
+
           try {
               
+<<<<<<< HEAD
               if(isFileExist){
+=======
+
+              if(isExist){
+                console.log("download skip");  
+>>>>>>> 9b9c7ccc647f520b77367c66cf81c9995b3f8933
                 counter++;
                   self.emit('gottrack', item.id);
                   if(counter < trackArray.length){
@@ -124,6 +133,8 @@ class Api extends EventEmitter {
                     self.emit('loadcompleted');
                   }
               }else{
+                
+                console.log("trying download file");
                 const responce = await fetch(item.url);
                 const dest = fs.createWriteStream(filePath);
                 const cipher = crypter.getCipher()
@@ -208,10 +219,9 @@ class Api extends EventEmitter {
         
             try {
                 const responce = await fetch(`http://${this.domaiName}/api/campaign/tracks/?channel=${this.channel}`, requestOptions);
-                //console.log(responce.body);
                 //const result =  await responce.json();
     
-                //return result.data
+                console.log(responce.status);
                 
             } catch (error) {
                 console.log("ERROR FROM sendDownloadStatus:");

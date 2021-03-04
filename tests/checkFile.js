@@ -4,8 +4,11 @@ const p = process.argv[2]
 
 async function isFileExist(path) {
 
-    return fs.promises.access(path)
-           .then((message) => console.log(message))
+    await fs.promises.access(path, fs.constants.F_OK)
+           .then(
+               result => console.log(true),
+               error => console.log(false))
+       
 
 }
 

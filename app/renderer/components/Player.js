@@ -175,7 +175,7 @@ export default class Player extends Component {
       <div className="container">
 
       <div className ="row">
-       
+       <CurrentTrack />
       </div>
 
       <div className="row">

@@ -1,21 +1,24 @@
 
-import { PLAYLIST_POSITION,
-         GET_TOKEN,
-         GET_CHANNELS,
-         GET_SCHEDULE,
-         SET_CURRENT_CHANNEL,
+import { SET_PLAYLIST_POSITION,
+         SET_PLAYLIST,
          GET_TRACK,
          RESET_DOWNLOAD_COUNTER,
          DOWNLOAD_STATUS,
-         SET_GUID, 
          SET_CURRENT_TRACK,
          SET_SEEK_POSITION} from './actionTypes';
 
 
-export function setPlaylistPosition(trackName){
+export function setPlaylist(playlist){
   return {
-    type: PLAYLIST_POSITION,
-    payload: trackName
+    type: SET_PLAYLIST,
+    payload: playlist
+  }
+}
+
+export function setPlaylistPosition(position){
+  return {
+    type: SET_PLAYLIST_POSITION,
+    payload: position
   }
 }
 
@@ -23,13 +26,6 @@ export function getChannels(channels){
   return {
     type: GET_CHANNELS,
     payload: channels
-  }
-}
-
-export function getSchedule(schedule){
-  return {
-    type: GET_SCHEDULE,
-    payload: schedule
   }
 }
 

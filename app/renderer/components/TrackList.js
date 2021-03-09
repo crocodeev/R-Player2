@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-//import TrackListItem from './TrackListItem';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
@@ -18,6 +17,8 @@ class TrackList extends Component {
 
   listRef = React.createRef();
 
+  
+  //проверяем, должен ли компонент обновиться, чтобы не перерендеривать оный
   shouldComponentUpdate(nextProps){
     return this.props.currentPosition !== nextProps.currentPosition;
   }

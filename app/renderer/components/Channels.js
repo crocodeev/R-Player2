@@ -1,6 +1,6 @@
 import React, { Component, useLayoutEffect, useState } from 'react';
 import Channel from './Channel';
-import { setCurrentChannel } from '../../store/actions/action';
+import { setCurrentChannel } from '../../store/actions/playerActions';
 
 
 class Channels extends Component {

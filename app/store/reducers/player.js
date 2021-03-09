@@ -1,8 +1,6 @@
-import {  PLAYLIST_POSITION,
+import {  SET_PLAYLIST,
+          SET_PLAYLIST_POSITION,
           TEST,
-          GET_SCHEDULE,
-          SET_CURRENT_CHANNEL,
-          GET_CHANNELS,
           GET_TRACK,
           RESET_DOWNLOAD_COUNTER,
           DOWNLOAD_STATUS,
@@ -13,26 +11,16 @@ import {  PLAYLIST_POSITION,
 export default function playerReducer(state = {}, action){
 
   switch (action.type) {
-    case PLAYLIST_POSITION:
+    case SET_PLAYLIST_POSITION:
       return ({
         ...state,
-        currentTrack: action.payload
+        playlistPosition: action.payload
       });
-    case GET_CHANNELS:
-          return({
-            ...state,
-            channels: action.payload
-          });
-    case GET_SCHEDULE:
-          return({
-           ...state,
-            schedule: action.payload
-            });
-    case SET_CURRENT_CHANNEL:
-          return({
-          ...state,
-            currentChannel: action.payload
-            });
+    case SET_PLAYLIST:
+      return ({
+        ...state,
+        playlist: action.payload
+      });
     case GET_TRACK:
           return({
           ...state,

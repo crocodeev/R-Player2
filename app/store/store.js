@@ -8,7 +8,8 @@ import thunk from 'redux-thunk';
 
 //add reducers
 import player from './reducers/player';
-import webapi from './reducers/api'
+import webapi from './reducers/api';
+import schedule from './reducers/schedule';
 //add actions
 //import userActions from './actions/user';
 
@@ -27,7 +28,8 @@ export default function configureStore(initialState, routerHistory) {
     forwardToMain,
     router: connectRouter(routerHistory),
     webapi,
-    player
+    player,
+    schedule
   };
 
   //const middlewares = [thunk, router, logger];

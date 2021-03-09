@@ -1,10 +1,10 @@
 
 import { GET_TOKEN,
-    GET_CHANNELS,
-    SET_CURRENT_CHANNEL,
-    RESET_DOWNLOADED_TRACKS,
-    ADD_DOWNLOADED_TRACK,
-    SET_GUID } from './actionTypes';
+         GET_CHANNELS,
+         SET_CURRENT_CHANNEL,
+         RESET_DOWNLOADED_TRACKS,
+         ADD_DOWNLOADED_TRACK,
+         SET_GUID } from './actionTypes';
 
 
 export function getToken(token){

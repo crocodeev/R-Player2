@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import CurrentTrack from './CurrentTrack';
 import TrackList from './TrackList';
-import Channels from './Channels';
 import ChannelsSelect from './ChannelsSelect';
 import Download from './Download';
 
@@ -33,9 +32,6 @@ export default class Player extends Component {
       currentPosition: 0,
       isPlaying: false
     }
-    this.currentChannel = this.props.player.currentChannel != null ? this.props.player.currentChannel : null;
-    //this.renderSeekPos = this.renderSeekPos.bind(this);
-    this.getSchedule  = this.getSchedule.bind(this);
 
     /*
     Handle schedule
@@ -43,7 +39,7 @@ export default class Player extends Component {
     No logic in Player
     */
 
-    const initialPlaylist = typeof this.props.player.schedule == "undefined" ? [{name:"placeholder"}] : this.props.player.schedule[0].playlists[0].tracks;
+    const initialPlaylist = typeof this.props.schedule.schedule == "undefined" ? [{name:"placeholder"}] : this.props.schedule.schedule[0].playlists[0].tracks;
     sound.setNewPlaylist(initialPlaylist)
 
 
@@ -52,7 +48,7 @@ export default class Player extends Component {
     if( "schedule" in this.props.player){
 
       const now = dayjs().format('H:m')
-      const scheduleTime = this.props.player.schedule[0].weekInfo.allDaysPeriod.startTime
+      const scheduleTime = this.props.schedule[0].weekInfo.allDaysPeriod.startTime
       const scheduleStartTime = `${scheduleTime.hour}:${scheduleTime.minutes}`
 
       console.log("now :" + now);
@@ -85,14 +81,7 @@ export default class Player extends Component {
       if(!this.state.isPlaying){
         this.setState({isPlaying: true});
       }  
-      //this.props.track(trackName);
-      //this.duration = sound.getDuration();
-      this.increaseCurrentPosition();
-      //this.renderSeekPos();
     } );
-    /*sound.on('end', () => {
-      //this.clearRAF();
-    })*/
   }
 
   componentWillReceiveProps(nextProps){
@@ -100,13 +89,13 @@ export default class Player extends Component {
     if (nextProps.player.downloadCompleted && !this.state.isPlaying){
       this.setState({isPlaying: true});
 
-      const playlist = this.props.player.schedule[0].playlists[0].tracks;
+      const playlist = this.props.schedule.schedule[0].playlists[0].tracks;
 
       const shuffledPlaylist = shuffler(playlist)
       sound.setNewPlaylist(shuffledPlaylist);
       
       const now = dayjs().format('H:m')
-      const scheduleTime = this.props.player.schedule[0].weekInfo.allDaysPeriod.startTime
+      const scheduleTime = this.props.schedule.schedule[0].weekInfo.allDaysPeriod.startTime
       const scheduleStartTime = `${scheduleTime.hour}:${scheduleTime.minutes}`
 
       console.log("now :" + now);
@@ -143,33 +132,6 @@ export default class Player extends Component {
     this.props.downloadStatus(false);
   }
 
-  getSchedule(event){
-    const channelId = event.target.getAttribute("value");
-    this.props.channel(channelId);
-    rpc.getSchedule(channelId);
-  }
-
-  increaseCurrentPosition (){
-    this.setState((state)=>{
-      return {currentPosition: state.currentPosition + 1}
-    })
-  }
-
-  /*renderSeekPos () {
-    this.setState({
-      seek: sound.seek()
-    })
-    if (this.state.isPlaying) {
-      this._raf = raf(this.renderSeekPos);
-    }
-  }*/
-
-  //очистка requestAnimationFrame
-  /*clearRAF () {
-    raf.cancel(this._raf)
-  }*/
-
-
   render() {
 
     return (
@@ -185,17 +147,12 @@ export default class Player extends Component {
 
       <div className="row">
       <div className="scrolist">
-      {
-        this.props.player.downloadCompleted ?
-        (
           <TrackList
               playlist={sound.playlist}
-              currentTrack={this.props.player.currentTrack}
-              currentPosition={this.state.currentPosition}/>
-        ):(
-          <h2>PLACEHOLDER</h2>
-        )
-      }
+              currentTrack={this.props.player.currentTrack.name}
+              currentPosition={this.props.player.playlistPosition}
+          />
+    
       </div>
 
       </div>

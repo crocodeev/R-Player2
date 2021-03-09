@@ -8,15 +8,18 @@ import configureStore from '../store/store';
 import { replayActionRenderer, getInitialStateRenderer } from 'electron-redux' 
 import sound from './sound/soundEmmiter';
 import UUID from 'uuidjs';
-import { setGuid } from '../store/actions/action';
+import { setGuid } from '../store/actions/apiActions';
 import rpc from '../api/renderProccessConnector';
 
 //this is for player to store part
 import raf from 'raf';
 import {
   setCurrentTrack,
-  setSeekPosition
-} from '../store/actions/action'
+  setSeekPosition,
+  setPlaylist,
+  setPlaylistPosition
+} from '../store/actions/playerActions'
+import { element } from 'prop-types';
 
 //this for the test purpose only
 const soundModule = sound
@@ -52,11 +55,19 @@ soundModule.on('play', () => {
   const name = soundModule.currentTrackName;
   const duration = soundModule.currentTrackDuration;
   store.dispatch(setCurrentTrack(name, duration));
+  store.dispatch(setPlaylistPosition(soundModule.index));
   raf(renderSeekPos);
 })
 
 soundModule.on('end', () => {
   clearRAF();
+})
+
+soundModule.on('change', () => {
+  console.log("CHANGE");
+  const playlist = soundModule.playlist.map(element => element.name)
+  console.log(playlist);
+  store.dispatch(setPlaylist(playlist))
 })
 
 function renderSeekPos(){

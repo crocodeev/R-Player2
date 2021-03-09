@@ -6,6 +6,13 @@ import { initialApiConfig } from '../../hardcode/initialApiConfig';
 
 const storage = initialApiConfig.storage;
 
+/*
+emit
+play
+end
+change
+*/
+
 class Sound extends EventEmmitter  {
 
   constructor(playlist){
@@ -101,6 +108,7 @@ class Sound extends EventEmmitter  {
     const withSource = playlist.map((item) => this.addSourceToPlaylistItem(item))
     this.playlist = deepcopy(withSource);
     this.index=0;
+    this.emit('change');
   }
 
   async _createHowl(track){

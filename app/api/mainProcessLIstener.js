@@ -1,10 +1,10 @@
 const {ipcMain} = require('electron');
-import { getChannels,
-         getSchedule,
-         getTrack,
+import { getTrack,
          downloadCountReset,
-         downloadStatus } from '../store/actions/action'
+         downloadStatus } from '../store/actions/playerActions'
+import { setSchedule} from '../store/actions/scheduleActions'         
 import { getToken,
+         getChannels,
          addDownloadedTrackInArray,
          resetDownloadedTracksArray} from '../store/actions/apiActions'
        
@@ -49,7 +49,7 @@ class MPC {
           console.log("got schedule");
           store.dispatch(downloadCountReset());
           store.dispatch(resetDownloadedTracksArray());
-          store.dispatch(getSchedule(api.schedule));
+          store.dispatch(setSchedule(api.schedule));
           api.contentDownload(api.schedule[0].playlists[0].tracks);
         });
         api.on('gottrack', (trackID) => {

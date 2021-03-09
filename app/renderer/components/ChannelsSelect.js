@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import M from 'materialize-css'
-import { setCurrentChannel } from '../../store/actions/action';
+import { setCurrentChannel } from '../../store/actions/apiActions';
 import rpc from '../../api/renderProccessConnector';
 
 function ChannelsSelect({

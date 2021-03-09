@@ -1,56 +1,54 @@
-import React, { Component, useLayoutEffect, useState } from 'react';
-import Channel from './Channel';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import M from 'materialize-css'
 import { setCurrentChannel } from '../../store/actions/action';
+import rpc from '../../api/renderProccessConnector';
 
+function ChannelsSelect({
+  channels,
+  currentChannel,
+  setChannelToStore
+}) {
 
-function Channels(props) {
+  
+    useEffect(() => {
+      M.AutoInit()
+    }, [])
 
-    const [channels, setChannels] = useState(props.channels) 
+    function selectChannel(event){
+      const value = event.target.value;
+      setChannelToStore(value);
+      rpc.getSchedule(value);
+    }
+  
 
-    
-    
-    return(
-        <div class="input-field col s12">
-            <select>
-            <option value="" disabled selected>Choose your option</option>
-            <option value="1">Option 1</option>
-            <option value="2">Option 2</option>
-            <option value="3">Option 3</option>
+    return( 
+      <div className="input-field">
+            <select 
+              value={ currentChannel === undefined ? "default" : currentChannel }
+              onChange={selectChannel}
+            >
+            <option value="default" disabled>Select Channel</option>
+            {
+            channels.map(elem => <option key={elem.id} value={elem.id}>{elem.name}</option>)
+            }  
             </select>
-            <label>Materialize Select</label>
-        </div>
+            <label>CHANNEL SELECTOR</label>
+      </div>      
     )
         
 }
 
-/*
-class Channels extends Component {
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setChannelToStore: (channelId) => dispatch(setCurrentChannel(channelId)), 
+  };
+};
 
-    constructor(props){
-      super();
-      this.channels = props.channels;
-      this.getSchedule = props.onClick;
-    }
-
-
-    shouldComponentUpdate(nextProps){
-      return this.props.currentChannel !== nextProps.currentChannel;
-    }
+const mapStateToProps = (state) => {
+  return state.webapi;
+};
 
 
-    render(){
-      return (
-        <ul className="collection" onClick={(e) => this.getSchedule(e)}>
-        {this.channels.map((item) => <Channel
-                                      name={item.name}
-                                      key={item.id}
-                                      value={item.id}
-                                      className={item.id == this.props.currentChannel ? "collection-item active": "collection-item"} />)}
-        </ul>
-      );
-    }
-    }
-*/
-
-export default Channels;
+export default connect(mapStateToProps, mapDispatchToProps)(ChannelsSelect);
 

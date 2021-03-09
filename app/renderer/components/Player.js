@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import CurrentTrack from './CurrentTrack';
 import TrackList from './TrackList';
 import Channels from './Channels';
+import ChannelsSelect from './ChannelsSelect';
 import Download from './Download';
-import raf from 'raf';
+
 
 import sound from '../sound/soundEmmiter';
 
@@ -178,16 +179,12 @@ export default class Player extends Component {
        <CurrentTrack />
       </div>
 
-      <div className="row">
-
-      <div className="col s3">
-        <Channels
-          channels={this.props.player.channels}
-          currentChannel={this.props.player.currentChannel}
-          onClick={this.getSchedule} />
+      <div className = "row">
+        <ChannelsSelect />
       </div>
 
-      <div className="col s9 scrolist">
+      <div className="row">
+      <div className="scrolist">
       {
         this.props.player.downloadCompleted ?
         (

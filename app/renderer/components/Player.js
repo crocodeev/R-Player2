@@ -136,15 +136,12 @@ export default class Player extends Component {
 
     return (
       <div className="container">
-
       <div className ="row">
        <CurrentTrack />
       </div>
-
       <div className = "row">
         <ChannelsSelect />
       </div>
-
       <div className="row">
       <div className="scrolist">
           <TrackList
@@ -152,18 +149,12 @@ export default class Player extends Component {
               currentTrack={this.props.player.currentTrack.name}
               currentPosition={this.props.player.playlistPosition}
           />
-    
       </div>
-
       </div>
-
-
       <Download
         totalTracks={ typeof this.props.player.schedule == "undefined" ? 0 : this.props.player.schedule[0].playlists[0].tracks.length}
         downloadCount={this.props.player.downloadCount}
       />
-
-
       <div className="row buttonrow">
         <div className="col">
           <a className="waves-effect waves-light btn-small supersmall" onClick={this.handlePlay}>

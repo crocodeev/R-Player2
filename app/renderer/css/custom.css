@@ -10,7 +10,7 @@
 
 .download{
   height: 20px;
-  margin: auto;
+  margin: .5rem 0 1rem 0;
 }
 
 .downloadrow{
@@ -26,3 +26,22 @@
   line-height: 20px;
   font-size: 15px;
 }
+
+.pdleftzero{
+  padding-left: 0 !important;
+}
+
+.pdrightzero{
+  padding-right: 0 !important;
+}
+
+.label-download-progress{
+  top: -4px;
+  position: relative;
+  font-size: .8rem;
+}
+
+.download-progress{
+  margin: .5rem 0 1rem 0;
+}
+

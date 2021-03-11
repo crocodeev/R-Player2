@@ -1,24 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import CurrentTrack from './CurrentTrack';
 import TrackList from './TrackList';
 import ChannelsSelect from './ChannelsSelect';
 import Download from './Download';
-
-
 import sound from '../sound/soundEmmiter';
-
 //inter proccess communication
-
 import rpc from '../../api/renderProccessConnector';
-
 //временное
-
 import taskScheduleCreator from '../scheduler/taskScheduleCreator'
 import shuffler from '../scheduler/shuffler'
 const dayjs = require('dayjs')
-
-
-
 
 export default class Player extends Component {
 
@@ -27,9 +18,6 @@ export default class Player extends Component {
 
     super(props);
     this.state = {
-      //seek: 0,
-      //duration: 0,
-      currentPosition: 0,
       isPlaying: false
     }
 
@@ -144,19 +132,12 @@ export default class Player extends Component {
         <ChannelsSelect />
         </div>
         <div className="col s8 pdrightzero">
-        <Download
-        totalTracks={ typeof this.props.player.schedule == "undefined" ? 0 : this.props.player.schedule[0].playlists[0].tracks.length}
-        downloadCount={this.props.player.downloadCount}
-        />
+        <Download />
         </div>
       </div>
       <div className="row">
       <div className="scrolist">
-          <TrackList
-              playlist={sound.playlist}
-              currentTrack={this.props.player.currentTrack.name}
-              currentPosition={this.props.player.playlistPosition}
-          />
+          <TrackList />
       </div>
 
       </div>

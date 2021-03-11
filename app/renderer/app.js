@@ -32,8 +32,6 @@ const syncHistoryWithStore = (store, history) => {
 };
 
 const initialState = getInitialStateRenderer();
-console.log("initial state from getInitialStateRenderer");
-console.log(initialState);
 
 const routerHistory = createMemoryHistory();
 const store = configureStore(initialState, routerHistory);
@@ -64,9 +62,7 @@ soundModule.on('end', () => {
 })
 
 soundModule.on('change', () => {
-  console.log("CHANGE");
   const playlist = soundModule.playlist.map(element => element.name)
-  console.log(playlist);
   store.dispatch(setPlaylist(playlist))
 })
 

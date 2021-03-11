@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Player from '../components/Player';
+import Player from '../components/Player copy';
 import { setPlaylistPosition,
          setCurrentChannel,
          downloadStatus } from '../../store/actions/playerActions';
@@ -12,9 +12,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    track: (trackName) => dispatch(setPlaylistPosition(trackName)),
-    channel: (channelId) => dispatch(setCurrentChannel(channelId)),
-    downloadStatus: (status) => dispatch(downloadStatus(status)),
     logout: () => dispatch(push("/"))
   };
 };

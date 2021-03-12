@@ -8,7 +8,14 @@ import {  SET_PLAYLIST,
           SET_SEEK_POSITION} from '../actions/actionTypes';
 
 
-export default function playerReducer(state = {}, action){
+export default function playerReducer(state = {
+  playlist:["Artist - Title"],
+  currentTrack: {
+    name: "Artist - Title",
+    duration: "0.00",
+    seek:"0.00"
+  }
+}, action){
 
   switch (action.type) {
     case SET_PLAYLIST_POSITION:

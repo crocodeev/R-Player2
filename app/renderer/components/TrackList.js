@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
@@ -6,8 +7,8 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 const Row = ({ data, index, style}) => {
   const { playlist, currentTrack } = data;
   return(
-    <div className={playlist[index].name === currentTrack ? "collection-item active" : "collection-item"} style={style}>
-      {playlist[index].name}
+    <div className={playlist[index] === currentTrack ? "collection-item active" : "collection-item"} style={style}>
+      {playlist[index]}
     </div>
   )
   }
@@ -16,15 +17,14 @@ const Row = ({ data, index, style}) => {
 class TrackList extends Component {
 
   listRef = React.createRef();
-
   
-  //проверяем, должен ли компонент обновиться, чтобы не перерендеривать оный
   shouldComponentUpdate(nextProps){
-    return this.props.currentPosition !== nextProps.currentPosition;
+    return this.props.playlistPosition !== nextProps.playlistPosition;
+
   }
 
   componentDidUpdate(){
-    this.listRef.current.scrollToItem(this.props.currentPosition, 'center')
+    this.listRef.current.scrollToItem(this.props.playlistPosition, 'center')
   }
 
   render(){
@@ -42,7 +42,7 @@ class TrackList extends Component {
         width={width}
         itemData={{
           playlist: this.props.playlist,
-          currentTrack: this.props.currentTrack
+          currentTrack: this.props.currentTrack.name
         }}
         >
         {Row}
@@ -56,35 +56,9 @@ class TrackList extends Component {
 
 }
 
+const mapStateToProps = (state) => {
+  return state.player
+}
 
 
-/*<AutoSizer>
-      {({height, width}) => (
-        <List
-        className="collection"
-        height={height}
-        itemCount={55}
-        itemSize={35}
-        ref={this.listRef}
-        width={width}
-        >
-        </List>
-        )
-      }
-    </AutoSizer>*/
-
-
-
-
-/*function TrackList({playlist, currentTrack}) {
-  return (
-    <ul className="collection scrolist">
-    {playlist.map(item => <TrackListItem
-      name={item.name}
-      key={item.name}
-      clName = {item.name === currentTrack ? "collection-item active" : "collection-item"}/>)}
-    </ul>
-  );
-}*/
-
-export default TrackList;
+export default connect(mapStateToProps)(TrackList);

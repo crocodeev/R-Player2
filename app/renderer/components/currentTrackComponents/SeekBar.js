@@ -1,7 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import SeekNumber from './SeekNumber';
 
-function SeekBar({seek, duration}){
+const SeekBar = ({seek, duration}) => {
 
     function progress() {
         return seek*100/duration
@@ -16,4 +17,8 @@ function SeekBar({seek, duration}){
 
 }
 
-export default SeekBar
+const mapStateToProps = (state) => {
+  return state.player.currentTrack;
+};
+
+export default connect(mapStateToProps)(SeekBar)

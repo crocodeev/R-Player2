@@ -11,29 +11,27 @@ import taskScheduleCreator from '../scheduler/taskScheduleCreator'
 import shuffler from '../scheduler/shuffler'
 const dayjs = require('dayjs')
 
-export default class Player extends Component {
+const Player = (props) => {
 
-  //нужно перенести state в store, а может и не нужно
-  constructor(props) {
+  //текущее состояние модуля Sound, нужно получить из самого Sound
+  const [isPlaying, setIsPlaying] = useState(false);
 
-    super(props);
-    this.state = {
-      isPlaying: false
-    }
+  //при первом запуске компанента
+  useEffect(()=>{
 
-    /*
-    Handle schedule
-    In near future need to transfer in separate module
-    No logic in Player
-    */
+    sound.on('play', () => {
+      if(!isPlaying){
+        setIsPlaying(true);
+      }  
+    });
 
-    const initialPlaylist = typeof this.props.schedule.schedule == "undefined" ? [{name:"placeholder"}] : this.props.schedule.schedule[0].playlists[0].tracks;
-    sound.setNewPlaylist(initialPlaylist)
-
+    // Устанавливаем плейлист
+    const initialPlaylist = typeof props.schedule.schedule == "undefined" ? [{name:"placeholder"}] : props.schedule.schedule[0].playlists[0].tracks;
+    sound.setNewPlaylist(initialPlaylist);
 
     //check is schedule exist
     //по факту не загрузится, если проверку в загрузке не сделать
-    if( "schedule" in this.props.player){
+    if( "schedule" in props.player){
 
       const now = dayjs().format('H:m')
       const scheduleTime = this.props.schedule[0].weekInfo.allDaysPeriod.startTime
@@ -47,43 +45,33 @@ export default class Player extends Component {
         sound.play()
       }else{
         //check channel rules
-        const channelSchedule = this.props.player.channels.find( c => c.id == this.props.player.currentChannel)
+        const channelSchedule = props.webapi.channels.find( c => c.id == props.webapi.currentChannel)
    
         const channelRule = {
           start: channelSchedule.workTime.startTime,
           end: channelSchedule.workTime.endTime
         }
       
-        taskScheduleCreator(channelRule, this.props.player.schedule[0].weekInfo.allDaysPeriod.startTime, () => {
+        taskScheduleCreator(channelRule, this.props.schedule.schedule[0].weekInfo.allDaysPeriod.startTime, () => {
           sound.play()
         });
         
       }
     }
+  }, [])
 
+  //при загрузке
+  useEffect(()=>{
+    if (props.player.downloadCompleted && !isPlaying){
+      setIsPlaying(true);
 
-  }
-
-  componentDidMount(){
-      sound.on('play', () => {
-      if(!this.state.isPlaying){
-        this.setState({isPlaying: true});
-      }  
-    } );
-  }
-
-  componentWillReceiveProps(nextProps){
-
-    if (nextProps.player.downloadCompleted && !this.state.isPlaying){
-      this.setState({isPlaying: true});
-
-      const playlist = this.props.schedule.schedule[0].playlists[0].tracks;
+      const playlist = props.schedule.schedule[0].playlists[0].tracks;
 
       const shuffledPlaylist = shuffler(playlist)
       sound.setNewPlaylist(shuffledPlaylist);
       
       const now = dayjs().format('H:m')
-      const scheduleTime = this.props.schedule.schedule[0].weekInfo.allDaysPeriod.startTime
+      const scheduleTime = props.schedule.schedule[0].weekInfo.allDaysPeriod.startTime
       const scheduleStartTime = `${scheduleTime.hour}:${scheduleTime.minutes}`
 
       console.log("now :" + now);
@@ -94,69 +82,68 @@ export default class Player extends Component {
         sound.play()
       }else{
         //check channel rules
-        const channelSchedule = this.props.player.channels.find( c => c.id == this.props.player.currentChannel)
+        const channelSchedule = props.player.channels.find( c => c.id == props.webapi.currentChannel)
    
         const channelRule = {
           start: channelSchedule.workTime.startTime,
           end: channelSchedule.workTime.endTime
         }
       
-        taskScheduleCreator(channelRule, this.props.player.schedule[0].weekInfo.allDaysPeriod.startTime, () => {
+        taskScheduleCreator(channelRule, props.webapi.schedule[0].weekInfo.allDaysPeriod.startTime, () => {
           sound.play()
         });
         
       }
-
     }
-  }
+  },
+  [props.player])
 
-
-  handlePlay = () => {
+  const handlePlay = () => {
     sound.play();
   };
 
-  handleLogOut = () => {
+  const handleLogOut = () => {
     this.props.logout();
     this.props.downloadStatus(false);
   }
 
-  render() {
+  return (
+    <div className="container">
+    <div className ="row">
+     <CurrentTrack />
+    </div>
+    <div className = "row">
+      <div className="col s4 pdleftzero">
+      <ChannelsSelect />
+      </div>
+      <div className="col s8 pdrightzero">
+      <Download />
+      </div>
+    </div>
+    <div className="row">
+    <div className="scrolist">
+        <TrackList />
+    </div>
 
-    return (
-      <div className="container">
-      <div className ="row">
-       <CurrentTrack />
+    </div>
+    
+    <div className="row buttonrow">
+      <div className="col">
+        <a className="waves-effect waves-light btn-small supersmall" onClick={handlePlay}>
+        PLAY
+        </a>
       </div>
-      <div className = "row">
-        <div className="col s4 pdleftzero">
-        <ChannelsSelect />
-        </div>
-        <div className="col s8 pdrightzero">
-        <Download />
-        </div>
+      <div className="col">
+        <a className="waves-effect waves-light btn-small supersmall" onClick={handleLogOut}>
+        LOGOUT
+        </a>
       </div>
-      <div className="row">
-      <div className="scrolist">
-          <TrackList />
-      </div>
+    </div>
 
-      </div>
-      
-      <div className="row buttonrow">
-        <div className="col">
-          <a className="waves-effect waves-light btn-small supersmall" onClick={this.handlePlay}>
-          PLAY
-          </a>
-        </div>
-        <div className="col">
-          <a className="waves-effect waves-light btn-small supersmall" onClick={this.handleLogOut}>
-          LOGOUT
-          </a>
-        </div>
-      </div>
-
-      </div>
-    );
-  }
+    </div>
+  );
 }
+
+export default Player
+
 

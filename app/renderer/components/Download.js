@@ -3,14 +3,15 @@ import { connect } from 'react-redux';
 
 const Download = React.memo((props) => {
 
-  console.log("render");
+ 
+  console.log(props.downloadCount);
 
   return (
     <div>
     <label className="label-download-progress">DOWNLOAD PROGRESS</label>
      <div className="progress download">
       <div className="determinate" style={
-        {width: (props.downloadCount * 100/props.playlist.length ) +'%'}
+        {width: (props.downloadCount * 100/props.downloadAmount ) +'%'}
       }></div>
     </div>
     </div>

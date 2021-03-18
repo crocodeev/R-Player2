@@ -1,5 +1,6 @@
 
 import { SET_PLAYLIST_POSITION,
+         SET_DOWNLOAD_AMOUNT, 
          SET_PLAYLIST,
          GET_TRACK,
          RESET_DOWNLOAD_COUNTER,
@@ -42,6 +43,13 @@ export function getTrack(){
   }
 }
 
+export function setDownloadAmount(amount){
+  return{
+    type: SET_DOWNLOAD_AMOUNT,
+    payload: amount
+  }
+}
+
 export function downloadCountReset(){
   return{
     type: RESET_DOWNLOAD_COUNTER
@@ -52,13 +60,6 @@ export function downloadStatus(status){
   return{
     type: DOWNLOAD_STATUS,
     payload: status
-  }
-}
-
-export function setGuid(guid) {
-  return{
-    type: SET_GUID,
-    payload: guid
   }
 }
 

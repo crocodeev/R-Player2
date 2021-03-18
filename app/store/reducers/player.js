@@ -1,5 +1,6 @@
 import {  SET_PLAYLIST,
           SET_PLAYLIST_POSITION,
+          SET_DOWNLOAD_AMOUNT,
           TEST,
           GET_TRACK,
           RESET_DOWNLOAD_COUNTER,
@@ -43,6 +44,11 @@ export default function playerReducer(state = {
           ...state,
           downloadCompleted: action.payload
                 });
+    case SET_DOWNLOAD_AMOUNT:
+          return({
+          ...state,
+          downloadAmount: action.payload  
+          })            
     case SET_CURRENT_TRACK:
           return({
           ...state,

@@ -127,9 +127,14 @@ class Api extends EventEmitter {
                 
                 console.log("trying download file");
                 const responce = await fetch(item.url);
+
+                console.log(responce);
+
+
                 const dest = fs.createWriteStream(filePath);
                 const cipher = crypter.getCipher()
                 responce.body.pipe(cipher).pipe(dest);
+                responce.body.on('error', (e) => console.log(e));
                 dest.on('close', () => {
                     console.log(name);
                     counter++;

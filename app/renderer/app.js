@@ -17,7 +17,8 @@ import {
   setCurrentTrack,
   setSeekPosition,
   setPlaylist,
-  setPlaylistPosition
+  setPlaylistPosition,
+  setDownloadAmount
 } from '../store/actions/playerActions'
 import { element } from 'prop-types';
 
@@ -64,6 +65,7 @@ soundModule.on('end', () => {
 soundModule.on('change', () => {
   const playlist = soundModule.playlist.map(element => element.name)
   store.dispatch(setPlaylist(playlist))
+  store.dispatch(setDownloadAmount(1))
 })
 
 function renderSeekPos(){
@@ -76,6 +78,10 @@ function clearRAF (){
   raf.cancel(raf)
 }
 
+//check for files
+//work with scheduler
+ //set initial playlist, if no playlist in store, set 
+const initialPlaylist = typeof store.getState() == "undefined" ? [{name:""}] : props.schedule.schedule[0].playlists[0].tracks;
 
 
 const rootElement = document.querySelector(document.currentScript.getAttribute('data-container'));

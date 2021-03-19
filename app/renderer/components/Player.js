@@ -25,10 +25,6 @@ const Player = (props) => {
       }  
     });
 
-    // Устанавливаем плейлист
-    const initialPlaylist = typeof props.schedule.schedule == "undefined" ? [{name:"placeholder"}] : props.schedule.schedule[0].playlists[0].tracks;
-    sound.setNewPlaylist(initialPlaylist);
-
     //check is schedule exist
     //по факту не загрузится, если проверку в загрузке не сделать
     if( "schedule" in props.player){

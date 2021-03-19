@@ -3,9 +3,6 @@ import { connect } from 'react-redux';
 
 const Download = React.memo((props) => {
 
- 
-  console.log(props.downloadCount);
-
   return (
     <div>
     <label className="label-download-progress">DOWNLOAD PROGRESS</label>

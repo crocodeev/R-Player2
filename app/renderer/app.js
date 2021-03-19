@@ -10,6 +10,9 @@ import sound from './sound/soundEmmiter';
 import UUID from 'uuidjs';
 import { setGuid } from '../store/actions/apiActions';
 import rpc from '../api/renderProccessConnector';
+//subscribe to store changes
+import watch from 'redux-watch';
+import isEqual from 'is-equal';
 
 //this is for player to store part
 import raf from 'raf';
@@ -20,7 +23,12 @@ import {
   setPlaylistPosition,
   setDownloadAmount
 } from '../store/actions/playerActions'
-import { element } from 'prop-types';
+
+import {
+  setChannelTime
+} from '../store/actions/scheduleActions'
+
+import { element, object } from 'prop-types';
 
 //this for the test purpose only
 const soundModule = sound
@@ -78,14 +86,37 @@ function clearRAF (){
   raf.cancel(raf)
 }
 
+//store, add subscribers
+
+let watchScheduleChange = watch(store.getState, 'schedule.schedule', isEqual);
+
+store.subscribe(watchScheduleChange(
+  (newValue, oldValue, objectPath) => {
+    console.log(newValue);
+    console.log(oldValue);
+    console.log(objectPath);
+
+  }
+))
+
 //check for files
 //work with scheduler
- //set initial playlist, if no playlist in store, set 
-const initialPlaylist = typeof store.getState() == "undefined" ? [{name:""}] : props.schedule.schedule[0].playlists[0].tracks;
+ //set initial playlist, on start playlist in always empty
+const initialPlaylist = [{name:"Artist - Title"}];
+sound.setNewPlaylist(initialPlaylist);
+
+//check is schedule exist, if yes - handle it
+
+const schedule = store.getState().schedule.schedule;
+
+if(Boolean(schedule)){
+  console.log("Schedule exist");
+}
+
+
 
 
 const rootElement = document.querySelector(document.currentScript.getAttribute('data-container'));
-
 
 ReactDOM.render(
   <Provider store={store}>

@@ -1,12 +1,13 @@
 const {ipcMain} = require('electron');
 import { getTrack,
          downloadCountReset,
-         downloadStatus } from '../store/actions/playerActions'
-import { setSchedule} from '../store/actions/scheduleActions'         
+         setDownloadAmount,
+         downloadStatus } from '../store/actions/playerActions';
+import { setChannelRules, setSchedule} from '../store/actions/scheduleActions';         
 import { getToken,
          getChannels,
          addDownloadedTrackInArray,
-         resetDownloadedTracksArray} from '../store/actions/apiActions'
+         resetDownloadedTracksArray} from '../store/actions/apiActions';
        
 
 import { push } from 'connected-react-router';
@@ -45,11 +46,14 @@ class MPC {
           store.dispatch(getChannels(api.channels));
           store.dispatch(push("/player"));
         });
-        api.on('gotschedule', () => {
+        api.on('gotschedule', (schedule) => {
           console.log("got schedule");
+          
           store.dispatch(downloadCountReset());
           store.dispatch(resetDownloadedTracksArray());
-          store.dispatch(setSchedule(api.schedule));
+          store.dispatch(setSchedule(schedule));
+      
+          store.dispatch(setDownloadAmount(api.schedule[0].playlists[0].tracks.length))
           api.contentDownload(api.schedule[0].playlists[0].tracks);
         });
         api.on('gottrack', (trackID) => {

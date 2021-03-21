@@ -1,8 +1,5 @@
 import { connect } from 'react-redux';
-import Player from '../components/Player copy';
-import { setPlaylistPosition,
-         setCurrentChannel,
-         downloadStatus } from '../../store/actions/playerActions';
+import Player from '../components/Player';
 import { push } from 'connected-react-router';
 
 

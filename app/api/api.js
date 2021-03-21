@@ -92,7 +92,7 @@ class Api extends EventEmitter {
                 const response = await fetch(`http://${this.domaiName}/api/campaign/getschedule/?channel=${channelId}`, requestOptions);
                 const result = await response.json();
                 this.schedule = result.data; //нет проверки данных, было так: data[0].playlists[0] - теперь берём полное расписание
-                this.emit('gotschedule');
+                this.emit('gotschedule', result.data);
             } catch (e) {
                 console.log(e);
             }
@@ -130,6 +130,8 @@ class Api extends EventEmitter {
                 const dest = fs.createWriteStream(filePath);
                 const cipher = crypter.getCipher()
                 responce.body.pipe(cipher).pipe(dest);
+                //how to catch errors, is electron-fetch caugth errors?
+                responce.body.on('error', (e) => console.log(e));
                 dest.on('close', () => {
                     console.log(name);
                     counter++;

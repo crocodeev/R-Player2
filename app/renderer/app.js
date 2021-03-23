@@ -13,6 +13,8 @@ import rpc from '../api/renderProccessConnector';
 //subscribe to store changes
 import watch from 'redux-watch';
 import isEqual from 'is-equal';
+import Scheduler from './scheduler/scheduler';
+
 
 //this is for player to store part
 import raf from 'raf';
@@ -85,34 +87,50 @@ function renderSeekPos(){
 function clearRAF (){
   raf.cancel(raf)
 }
+//initial sheduler module
+
+const scheduler = new Scheduler(soundModule);
+
+const channelRule = store.getState().schedule.channelRule;
+
+if(Boolean(channelRule)){
+  scheduler.channelRule = channelRule;
+}
 
 //store, add subscribers
 
 let watchScheduleChange = watch(store.getState, 'schedule.schedule', isEqual);
+let watchChannelChange = watch(store.getState, 'schedule.channelRule', isEqual);
+let watchLastModified = watch(store.getState, 'schedule.lastModified')
+
+store.subscribe(watchLastModified(
+  (lastModified) => { console.log(lastModified) }
+))
+
+store.subscribe(watchChannelChange(
+  (channelRule) => {
+    scheduler.channelRule = channelRule;
+  } 
+))
 
 store.subscribe(watchScheduleChange(
-  (newValue, oldValue, objectPath) => {
-    console.log(newValue);
-    console.log(oldValue);
-    console.log(objectPath);
-
+  (schedule) => {
+  scheduler.createTasks(schedule);
   }
 ))
 
+
 //check for files
 //work with scheduler
- //set initial playlist, on start playlist in always empty
+//set initial playlist, on start playlist in always empty
 const initialPlaylist = [{name:"Artist - Title"}];
 sound.setNewPlaylist(initialPlaylist);
 
-//check is schedule exist, if yes - handle it
-
+//check is schedule exist, if yes - handle i
 const schedule = store.getState().schedule.schedule;
-
 if(Boolean(schedule)){
-  console.log("Schedule exist");
+   scheduler.createTasks(schedule);
 }
-
 
 
 

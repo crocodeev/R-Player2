@@ -16,10 +16,10 @@ return ({
   ...state,
   lastModified: action.payload
 });
-case SET_LAST_MODIFIED:
+case SET_CHANNEL_TIME:
 return ({
   ...state,
-  channelTime: action.payload
+  channelRule: action.payload
 });
 default:
     return state;

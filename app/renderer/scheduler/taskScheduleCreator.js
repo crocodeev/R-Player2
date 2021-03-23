@@ -1,29 +1,19 @@
-import { futimesSync } from 'fs';
 import scheduler from 'node-schedule'
 import timeComparator from './timeComparator'
 
-export default function taskScheduleCreator(channelRule, CampaignRule, job){
+export default function taskScheduleCreator(time, job){
 
 
-    const channelTime = channelRule.start
-    const campaignTime = channelRule.start
-
-    const pattern = createCrontabPattern(channelRule, CampaignRule);
-    console.log(pattern);
+    const pattern = createCrontabPattern(time);
 
     return scheduler.scheduleJob(pattern, job);
 
 }
 
-function createCrontabPattern(channelRule, CampaignRule){
+function createCrontabPattern(time){
 
-    const timeFromChannel = channelRule.start;
-    const timeFromCampaign = CampaignRule;
-
-    const compareTime = timeComparator(timeFromChannel, timeFromCampaign);
-    const readyTime = new TimeParse(compareTime);
+    const readyTime = new TimeParse(time);
     const pattern = `${readyTime.getSeconds()} ${readyTime.getMinutes()} ${readyTime.getHours()} * * *`;
-    console.log(pattern);
     return pattern;
 }
 

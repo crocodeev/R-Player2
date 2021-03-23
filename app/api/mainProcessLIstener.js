@@ -3,14 +3,18 @@ import { getTrack,
          downloadCountReset,
          setDownloadAmount,
          downloadStatus } from '../store/actions/playerActions';
-import { setChannelRules, setSchedule} from '../store/actions/scheduleActions';         
+import { setChannelRules, 
+         setSchedule,
+         setLastModified} from '../store/actions/scheduleActions';         
 import { getToken,
          getChannels,
          addDownloadedTrackInArray,
-         resetDownloadedTracksArray} from '../store/actions/apiActions';
-       
+         resetDownloadedTracksArray} from '../store/actions/apiActions';      
+import  createDateStamp from './helpers/createDateStamp';
+import  compareDateStamps from './helpers/compareDateStamps';      
 
 import { push } from 'connected-react-router';
+import { create } from 'browser-sync';
 
 class MPC {
 
@@ -25,7 +29,8 @@ class MPC {
 
 
         ipcMain.on('schedule', (event, arg) => {
-            api.getSchedule(arg);
+            api.channel = arg;
+            api.getSchedule();
         });
 
         ipcMain.on('track', (event, arg) => {
@@ -47,14 +52,16 @@ class MPC {
           store.dispatch(push("/player"));
         });
         api.on('gotschedule', (schedule) => {
-          console.log("got schedule");
-          
+
+          store.dispatch(setLastModified(createDateStamp));
+
           store.dispatch(downloadCountReset());
           store.dispatch(resetDownloadedTracksArray());
+          
           store.dispatch(setSchedule(schedule));
-      
-          store.dispatch(setDownloadAmount(api.schedule[0].playlists[0].tracks.length))
+          store.dispatch(setDownloadAmount(api.schedule[0].playlists[0].tracks.length));
           api.contentDownload(api.schedule[0].playlists[0].tracks);
+
         });
         api.on('gottrack', (trackID) => {
           store.dispatch(getTrack());
@@ -62,6 +69,14 @@ class MPC {
         });
         api.on('loadcompleted', () => {
           store.dispatch(downloadStatus(true));
+        })
+        api.on('lastModified', (lastModified) => {
+          
+          const currentStamp = store.getState().webapi.lastModified
+          if(compareDateStamps(currentStamp, lastModified)){
+            return;
+          }
+          store.dispatch(setLastModified(lastModified));
         })
     }
 }

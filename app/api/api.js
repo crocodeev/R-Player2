@@ -76,9 +76,7 @@ class Api extends EventEmitter {
         }
     }
 
-    async getSchedule(channelId){
-
-            this.channel = channelId;
+    async getSchedule(){
 
             const requestOptions = {
             method: 'GET',
@@ -89,9 +87,9 @@ class Api extends EventEmitter {
             };
 
             try {
-                const response = await fetch(`http://${this.domaiName}/api/campaign/getschedule/?channel=${channelId}`, requestOptions);
+                const response = await fetch(`http://${this.domaiName}/api/campaign/getschedule/?channel=${this._channel}`, requestOptions);
                 const result = await response.json();
-                this.schedule = result.data; //нет проверки данных, было так: data[0].playlists[0] - теперь берём полное расписание
+                this.schedule = result.data; 
                 this.emit('gotschedule', result.data);
             } catch (e) {
                 console.log(e);
@@ -175,7 +173,11 @@ class Api extends EventEmitter {
         }    
     }
 
-    async getScheduleLastModified(channel){
+    async getScheduleLastModified(){
+
+        if(!Boolean(this._channel)){
+            return;
+        }
 
         const requestOptions = {
             method: 'GET',
@@ -186,13 +188,13 @@ class Api extends EventEmitter {
             };
 
         try {
-            const responce = await fetch(`http://${this.domaiName}/api/campaign/getschedulelastmodified?channel=${channel}`, requestOptions);
-            const result =  await responce.json();
+            const responce = await fetch(`http://${this.domaiName}/api/campaign/getschedulelastmodified?channel=${this._channel}`, requestOptions);
+            const result =  await responce.json().data.lastModified;
 
-            return result.data.lastModified
-            
+            this.emit('lastModified', result)
+
         } catch (error) {
-            console.log("ERROR :" + error);
+            console.log("ERROR LAST MODIFIED:" + error);
         }    
     }
 

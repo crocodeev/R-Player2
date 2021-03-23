@@ -7,6 +7,7 @@ import MPC from '../api/mainProcessListener'
 import API from '../api/api';
 import { initialApiConfig } from '../hardcode/initialApiConfig'
 import AutoLaunch from 'auto-launch'
+import createReqularRequest from '../api/helpers/createReqularRequest'
 
 //for activate development mode
 const isDevelopment = process.env.NODE_ENV === 'development';
@@ -77,6 +78,13 @@ crashReporter.start({
   submitURL: 'https://your-domain.com/url-to-submit',
   uploadToServer: false,
 });
+
+//create regular request
+api.channel = store.getState().webapi.currentChannel;
+const reqularLastModified = createReqularRequest(() => {
+  api.getScheduleLastModified(); 
+}, initialApiConfig.lastModifiedInterval)
+
 
 app.on('window-all-closed', () => {
   // On OS X it is common for applications and their menu bar

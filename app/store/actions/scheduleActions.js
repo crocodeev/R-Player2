@@ -24,3 +24,17 @@ type: SET_CHANNEL_TIME,
 payload: channelRules
 }
 }
+
+export function setNextSchedule(schedule){
+return {
+type: SET_NEXT_SCHEDULE,
+payload: schedule
+}
+}
+
+export function resetNextSchedule(){
+return {
+type: RESER_NEXT_SCHEDULE,
+payload: null
+}
+}

@@ -1,6 +1,6 @@
-import taskScheduleCreator from './taskScheduleCreator';
-import timeComparator from './timeComparator';
-import shuffler from './shuffler';
+import taskScheduleCreator from './helpers/taskScheduleCreator';
+import timeComparator from './helpers/timeComparator';
+import shuffler from './helpers/shuffler';
 import dayjs from 'dayjs';
 import sound from '../sound/soundEmmiter';
 
@@ -82,6 +82,10 @@ export default class Scheduler {
     //time in object to string
     _timeHandler(timeObject){
         return `${timeObject.hour}:${timeObject.minutes}`
+    }
+
+    clearTaslQueue(){
+        this.tasks = []
     }
 
 

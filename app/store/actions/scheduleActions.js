@@ -1,7 +1,8 @@
 
 import { SET_SCHEDULE,
          SET_LAST_MODIFIED,
-         SET_CHANNEL_TIME } from './actionTypes';
+         SET_CHANNEL_TIME,
+         SET_NEXT_SCHEDULE } from './actionTypes';
 
 
 export function setSchedule(schedule){

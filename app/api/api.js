@@ -4,6 +4,7 @@ const fs = require('fs');
 const { EventEmitter } = require('events');
 const crypter = require('../utils/crypter');
 const isFileExist = require('./helpers/isFileExist').default;
+const getAllTracksFromSchedule = require('./helpers/getAllTracksFromSchedule').default;
 
 
 class Api extends EventEmitter {
@@ -89,7 +90,9 @@ class Api extends EventEmitter {
             try {
                 const response = await fetch(`http://${this.domaiName}/api/campaign/getschedule/?channel=${this._channel}`, requestOptions);
                 const result = await response.json();
-                this.schedule = result.data; 
+                //нужно поменять имена переменных
+                const tracks = getAllTracksFromSchedule(result.data)
+                this.schedule = tracks; 
                 this.emit('gotschedule', result.data);
             } catch (e) {
                 console.log(e);
@@ -189,9 +192,10 @@ class Api extends EventEmitter {
 
         try {
             const responce = await fetch(`http://${this.domaiName}/api/campaign/getschedulelastmodified?channel=${this._channel}`, requestOptions);
-            const result =  await responce.json().data.lastModified;
-
-            this.emit('lastModified', result)
+            const result =  await responce.json();
+            const lastModified = result.data.lastModified;
+            
+            this.emit('lastModified', lastModified)
 
         } catch (error) {
             console.log("ERROR LAST MODIFIED:" + error);

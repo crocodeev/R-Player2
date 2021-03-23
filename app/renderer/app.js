@@ -101,10 +101,31 @@ if(Boolean(channelRule)){
 
 let watchScheduleChange = watch(store.getState, 'schedule.schedule', isEqual);
 let watchChannelChange = watch(store.getState, 'schedule.channelRule', isEqual);
-let watchLastModified = watch(store.getState, 'schedule.lastModified')
+let watchLastModified = watch(store.getState, 'schedule.lastModified');
+let watchDownloadCompleted = watch(store.getState, 'player.downloadCompleted');
+
+store.subscribe(watchDownloadCompleted(
+  (newState) => { 
+    //if switch status to true
+    if(newState){
+      const schedule = store.getState().schedule.schedule;
+      scheduler.clearTaslQueue();
+      scheduler.createTasks(schedule);
+    }
+  }
+))
 
 store.subscribe(watchLastModified(
-  (lastModified) => { console.log(lastModified) }
+  (newState, oldState) => { 
+    if(!Boolean(oldState)){
+      console.log("first start");
+    }
+    if(newState > oldState){
+      console.log("request for new schedule");
+      const channelID = store.getState().webapi.currentChannel;
+      rpc.getSchedule(channelID);
+    }
+  }
 ))
 
 store.subscribe(watchChannelChange(
@@ -113,11 +134,11 @@ store.subscribe(watchChannelChange(
   } 
 ))
 
-store.subscribe(watchScheduleChange(
+/*store.subscribe(watchScheduleChange(
   (schedule) => {
   scheduler.createTasks(schedule);
   }
-))
+))*/
 
 
 //check for files

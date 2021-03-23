@@ -4,11 +4,6 @@ import TrackList from './TrackList';
 import ChannelsSelect from './ChannelsSelect';
 import Download from './Download';
 import sound from '../sound/soundEmmiter';
-//inter proccess communication
-import rpc from '../../api/renderProccessConnector';
-//временное
-import taskScheduleCreator from '../scheduler/taskScheduleCreator'
-import shuffler from '../scheduler/shuffler'
 const dayjs = require('dayjs')
 
 const Player = (props) => {
@@ -46,11 +41,6 @@ const Player = (props) => {
     </div>
     
     <div className="row buttonrow">
-      <div className="col">
-        <a className="waves-effect waves-light btn-small supersmall" onClick={handlePlay}>
-        PLAY
-        </a>
-      </div>
       <div className="col">
         <a className="waves-effect waves-light btn-small supersmall" onClick={handleLogOut}>
         LOGOUT

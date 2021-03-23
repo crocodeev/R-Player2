@@ -5,16 +5,16 @@ import { getTrack,
          downloadStatus } from '../store/actions/playerActions';
 import { setChannelRules, 
          setSchedule,
-         setLastModified} from '../store/actions/scheduleActions';         
+         setLastModified,
+         setNextSchedule} from '../store/actions/scheduleActions';         
 import { getToken,
          getChannels,
          addDownloadedTrackInArray,
          resetDownloadedTracksArray} from '../store/actions/apiActions';      
 import  createDateStamp from './helpers/createDateStamp';
 import  compareDateStamps from './helpers/compareDateStamps';      
-
+import deepcopy from 'deepcopy';
 import { push } from 'connected-react-router';
-import { create } from 'browser-sync';
 
 class MPC {
 
@@ -53,14 +53,15 @@ class MPC {
         });
         api.on('gotschedule', (schedule) => {
 
-          store.dispatch(setLastModified(createDateStamp));
+          store.dispatch(setLastModified(createDateStamp()));
 
           store.dispatch(downloadCountReset());
           store.dispatch(resetDownloadedTracksArray());
+          store.dispatch(downloadStatus(false));
           
-          store.dispatch(setSchedule(schedule));
-          store.dispatch(setDownloadAmount(api.schedule[0].playlists[0].tracks.length));
-          api.contentDownload(api.schedule[0].playlists[0].tracks);
+          store.dispatch(setNextSchedule(schedule));
+          store.dispatch(setDownloadAmount(api.schedule.length));
+          api.contentDownload(api.schedule);
 
         });
         api.on('gottrack', (trackID) => {
@@ -68,10 +69,11 @@ class MPC {
           store.dispatch(addDownloadedTrackInArray(trackID));
         });
         api.on('loadcompleted', () => {
+          const schedule = deepcopy(store.getState().schedule.nextSchedule);
+          store.dispatch(setSchedule(schedule));
           store.dispatch(downloadStatus(true));
         })
-        api.on('lastModified', (lastModified) => {
-          
+        api.on('lastModified', (lastModified) => {       
           const currentStamp = store.getState().webapi.lastModified
           if(compareDateStamps(currentStamp, lastModified)){
             return;

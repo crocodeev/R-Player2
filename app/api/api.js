@@ -178,7 +178,8 @@ class Api extends EventEmitter {
 
     async getScheduleLastModified(){
 
-        if(!Boolean(this._channel)){
+        console.log(this._channel);
+        if(!this._channel){
             return;
         }
 
@@ -193,6 +194,7 @@ class Api extends EventEmitter {
         try {
             const responce = await fetch(`http://${this.domaiName}/api/campaign/getschedulelastmodified?channel=${this._channel}`, requestOptions);
             const result =  await responce.json();
+            console.log(result);
             const lastModified = result.data.lastModified;
             
             this.emit('lastModified', lastModified)
@@ -298,7 +300,7 @@ class Api extends EventEmitter {
 
         const cookie = { url: `http://${this.domaiName}`,
                          name: 'uid',
-                         value: data};
+                         value: data};            
         session.defaultSession.cookies.set(cookie)
                           .then(() => {
                             this.token = data;
@@ -306,6 +308,7 @@ class Api extends EventEmitter {
                           }, (error) => {
                             console.error(error)
                           })
+
 
     }
 

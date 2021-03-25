@@ -84,7 +84,7 @@ export default class Scheduler {
         return `${timeObject.hour}:${timeObject.minutes}`
     }
 
-    clearTaslQueue(){
+    clearTaskQueue(){
         this.tasks = []
     }
 

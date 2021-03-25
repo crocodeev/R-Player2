@@ -14,6 +14,8 @@ import rpc from '../api/renderProccessConnector';
 import watch from 'redux-watch';
 import isEqual from 'is-equal';
 import Scheduler from './scheduler/scheduler';
+import createLastModifiedRequest from './helpers/createLastModifiedRequest';
+import setLastModified from './helpers/createDateStamp';
 
 
 //this is for player to store part
@@ -49,6 +51,11 @@ const store = configureStore(initialState, routerHistory);
 
 replayActionRenderer(store);
 syncHistoryWithStore(store, routerHistory);
+
+//set channel and token to api on start
+createLastModifiedRequest(store, rpc.storeIsReady);
+//set lastModified at very first start
+setLastModified(store)
 
 //guid works
 if ("guid" in  store.getState().webapi){
@@ -93,7 +100,7 @@ const scheduler = new Scheduler(soundModule);
 
 const channelRule = store.getState().schedule.channelRule;
 
-if(Boolean(channelRule)){
+if(channelRule){
   scheduler.channelRule = channelRule;
 }
 
@@ -109,7 +116,8 @@ store.subscribe(watchDownloadCompleted(
     //if switch status to true
     if(newState){
       const schedule = store.getState().schedule.schedule;
-      scheduler.clearTaslQueue();
+      soundModule.stop();
+      scheduler.clearTaskQueue();
       scheduler.createTasks(schedule);
     }
   }
@@ -117,7 +125,10 @@ store.subscribe(watchDownloadCompleted(
 
 store.subscribe(watchLastModified(
   (newState, oldState) => { 
-    if(!Boolean(oldState)){
+    console.log("From last modified");
+    console.log(newState);
+    console.log(oldState);
+    if(!oldState){
       console.log("first start");
     }
     if(newState > oldState){
@@ -149,7 +160,7 @@ sound.setNewPlaylist(initialPlaylist);
 
 //check is schedule exist, if yes - handle i
 const schedule = store.getState().schedule.schedule;
-if(Boolean(schedule)){
+if(schedule){
    scheduler.createTasks(schedule);
 }
 

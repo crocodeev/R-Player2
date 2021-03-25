@@ -11,8 +11,9 @@ import { getToken,
          getChannels,
          addDownloadedTrackInArray,
          resetDownloadedTracksArray} from '../store/actions/apiActions';      
-import  createDateStamp from './helpers/createDateStamp';
-import  compareDateStamps from './helpers/compareDateStamps';      
+import  compareDateStamps from './helpers/compareDateStamps';  
+import  createReqularRequest from './helpers/createReqularRequest';
+import { initialApiConfig } from '../hardcode/initialApiConfig';    
 import deepcopy from 'deepcopy';
 import { push } from 'connected-react-router';
 
@@ -30,6 +31,7 @@ class MPC {
 
         ipcMain.on('schedule', (event, arg) => {
             api.channel = arg;
+
             api.getSchedule();
         });
 
@@ -39,6 +41,14 @@ class MPC {
 
         ipcMain.on('guid', (event, arg) => {
             api.guid = arg;
+        })
+
+        ipcMain.once('store-inited', (event, arg) => {
+          api.channel = arg.channel;
+          api.setCookies(arg.token);
+          const reqularLastModified = createReqularRequest(() => {
+            api.getScheduleLastModified(); 
+          }, initialApiConfig.lastModifiedInterval)
         })
 
         //listeners section
@@ -52,8 +62,6 @@ class MPC {
           store.dispatch(push("/player"));
         });
         api.on('gotschedule', (schedule) => {
-
-          store.dispatch(setLastModified(createDateStamp()));
 
           store.dispatch(downloadCountReset());
           store.dispatch(resetDownloadedTracksArray());

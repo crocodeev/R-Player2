@@ -55,6 +55,7 @@ const store = createStore(combineReducers({player, webapi, schedule}),
 
 replayActionMain(store);
 
+
 mpc.init(api, store);
 
 let mainWindow = null;
@@ -79,12 +80,6 @@ crashReporter.start({
   submitURL: 'https://your-domain.com/url-to-submit',
   uploadToServer: false,
 });
-
-//create regular request
-api.channel = store.getState().webapi.currentChannel;
-const reqularLastModified = createReqularRequest(() => {
-  api.getScheduleLastModified(); 
-}, initialApiConfig.lastModifiedInterval)
 
 
 app.on('window-all-closed', () => {
@@ -161,6 +156,7 @@ app.on('ready', async () => {
       ]).popup(mainWindow);
     });
   }
+
 });
 
 

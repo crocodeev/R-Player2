@@ -43,11 +43,12 @@ class Scheduler {
 
     continuousPlaybackHandler(element){
 
-        let startTime = this._timeHandler(element.weekInfo.allDaysPeriod.startTime);
+        //check for difference between channels rules 
+        const startTime = this._timeHandler(element.weekInfo.allDaysPeriod.startTime);
         let endTime = this._timeHandler(element.weekInfo.allDaysPeriod.endTime);
 
         //check for difference between channels rules
-        
+      
 
 
        

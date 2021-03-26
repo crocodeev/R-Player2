@@ -92,10 +92,7 @@ let watchScheduleChange = watch(store.getState, 'schedule.schedule', isEqual);
 
 store.subscribe(watchScheduleChange(
   (newValue, oldValue, objectPath) => {
-    console.log(newValue);
-    console.log(oldValue);
-    console.log(objectPath);
-
+    
   }
 ))
 

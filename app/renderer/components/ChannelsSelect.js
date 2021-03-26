@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import M from 'materialize-css'
 import { setCurrentChannel } from '../../store/actions/apiActions';
+import { setChannelRules } from '../../store/actions/scheduleActions';
 import rpc from '../../api/renderProccessConnector';
 
 function ChannelsSelect({
   channels,
   currentChannel,
-  setChannelToStore
+  setChannelToStore,
+  setChannelRuleToScheduleStore
 }) {
 
   
@@ -18,6 +20,8 @@ function ChannelsSelect({
     function selectChannel(event){
       const value = event.target.value;
       setChannelToStore(value);
+      const channelRule = channels.find(item  => item.id == value).workTime;
+      setChannelRuleToScheduleStore(channelRule);
       rpc.getSchedule(value);
     }
   
@@ -41,7 +45,8 @@ function ChannelsSelect({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setChannelToStore: (channelId) => dispatch(setCurrentChannel(channelId)), 
+    setChannelToStore: (channelId) => dispatch(setCurrentChannel(channelId)),
+    setChannelRuleToScheduleStore: (channelRules) => dispatch(setChannelRules(channelRules))  
   };
 };
 

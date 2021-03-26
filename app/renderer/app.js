@@ -13,6 +13,10 @@ import rpc from '../api/renderProccessConnector';
 //subscribe to store changes
 import watch from 'redux-watch';
 import isEqual from 'is-equal';
+import Scheduler from './scheduler/scheduler';
+import createLastModifiedRequest from './helpers/createLastModifiedRequest';
+import setLastModified from './helpers/createDateStamp';
+
 
 //this is for player to store part
 import raf from 'raf';
@@ -47,6 +51,11 @@ const store = configureStore(initialState, routerHistory);
 
 replayActionRenderer(store);
 syncHistoryWithStore(store, routerHistory);
+
+//set channel and token to api on start
+createLastModifiedRequest(store, rpc.storeIsReady);
+//set lastModified at very first start
+setLastModified(store)
 
 //guid works
 if ("guid" in  store.getState().webapi){
@@ -85,31 +94,75 @@ function renderSeekPos(){
 function clearRAF (){
   raf.cancel(raf)
 }
+//initial sheduler module
+
+const scheduler = new Scheduler(soundModule);
+
+const channelRule = store.getState().schedule.channelRule;
+
+if(channelRule){
+  scheduler.channelRule = channelRule;
+}
 
 //store, add subscribers
 
 let watchScheduleChange = watch(store.getState, 'schedule.schedule', isEqual);
+let watchChannelChange = watch(store.getState, 'schedule.channelRule', isEqual);
+let watchLastModified = watch(store.getState, 'schedule.lastModified');
+let watchDownloadCompleted = watch(store.getState, 'player.downloadCompleted');
 
-store.subscribe(watchScheduleChange(
-  (newValue, oldValue, objectPath) => {
-    
+store.subscribe(watchDownloadCompleted(
+  (newState) => { 
+    //if switch status to true
+    if(newState){
+      const schedule = store.getState().schedule.schedule;
+      soundModule.stop();
+      scheduler.clearTaskQueue();
+      scheduler.createTasks(schedule);
+    }
   }
 ))
 
+store.subscribe(watchLastModified(
+  (newState, oldState) => { 
+    console.log("From last modified");
+    console.log(newState);
+    console.log(oldState);
+    if(!oldState){
+      console.log("first start");
+    }
+    if(newState > oldState){
+      console.log("request for new schedule");
+      const channelID = store.getState().webapi.currentChannel;
+      rpc.getSchedule(channelID);
+    }
+  }
+))
+
+store.subscribe(watchChannelChange(
+  (channelRule) => {
+    scheduler.channelRule = channelRule;
+  } 
+))
+
+/*store.subscribe(watchScheduleChange(
+  (schedule) => {
+  scheduler.createTasks(schedule);
+  }
+))*/
+
+
 //check for files
 //work with scheduler
- //set initial playlist, on start playlist in always empty
+//set initial playlist, on start playlist in always empty
 const initialPlaylist = [{name:"Artist - Title"}];
 sound.setNewPlaylist(initialPlaylist);
 
-//check is schedule exist, if yes - handle it
-
+//check is schedule exist, if yes - handle i
 const schedule = store.getState().schedule.schedule;
-
-if(Boolean(schedule)){
-  console.log("Schedule exist");
+if(schedule){
+   scheduler.createTasks(schedule);
 }
-
 
 
 

@@ -4,6 +4,7 @@ const fs = require('fs');
 const { EventEmitter } = require('events');
 const crypter = require('../utils/crypter');
 const isFileExist = require('./helpers/isFileExist').default;
+const getAllTracksFromSchedule = require('./helpers/getAllTracksFromSchedule').default;
 
 
 class Api extends EventEmitter {
@@ -76,9 +77,7 @@ class Api extends EventEmitter {
         }
     }
 
-    async getSchedule(channelId){
-
-            this.channel = channelId;
+    async getSchedule(){
 
             const requestOptions = {
             method: 'GET',
@@ -89,9 +88,11 @@ class Api extends EventEmitter {
             };
 
             try {
-                const response = await fetch(`http://${this.domaiName}/api/campaign/getschedule/?channel=${channelId}`, requestOptions);
+                const response = await fetch(`http://${this.domaiName}/api/campaign/getschedule/?channel=${this._channel}`, requestOptions);
                 const result = await response.json();
-                this.schedule = result.data; //нет проверки данных, было так: data[0].playlists[0] - теперь берём полное расписание
+                //нужно поменять имена переменных
+                const tracks = getAllTracksFromSchedule(result.data)
+                this.schedule = tracks; 
                 this.emit('gotschedule', result.data);
             } catch (e) {
                 console.log(e);
@@ -175,7 +176,13 @@ class Api extends EventEmitter {
         }    
     }
 
-    async getScheduleLastModified(channel){
+    async getScheduleLastModified(){
+
+        console.log("getlastModifiedForChannel");
+        console.log(this._channel);
+        if(!this._channel){
+            return;
+        }
 
         const requestOptions = {
             method: 'GET',
@@ -186,13 +193,15 @@ class Api extends EventEmitter {
             };
 
         try {
-            const responce = await fetch(`http://${this.domaiName}/api/campaign/getschedulelastmodified?channel=${channel}`, requestOptions);
+            const responce = await fetch(`http://${this.domaiName}/api/campaign/getschedulelastmodified?channel=${this._channel}`, requestOptions);
             const result =  await responce.json();
-
-            return result.data.lastModified
+            console.log(result);
+            const lastModified = result.data.lastModified;
             
+            this.emit('lastModified', lastModified)
+
         } catch (error) {
-            console.log("ERROR :" + error);
+            console.log("ERROR LAST MODIFIED:" + error);
         }    
     }
 
@@ -292,7 +301,7 @@ class Api extends EventEmitter {
 
         const cookie = { url: `http://${this.domaiName}`,
                          name: 'uid',
-                         value: data};
+                         value: data};            
         session.defaultSession.cookies.set(cookie)
                           .then(() => {
                             this.token = data;
@@ -300,6 +309,7 @@ class Api extends EventEmitter {
                           }, (error) => {
                             console.error(error)
                           })
+
 
     }
 

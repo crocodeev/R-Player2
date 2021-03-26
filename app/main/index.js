@@ -7,6 +7,7 @@ import MPC from '../api/mainProcessListener'
 import API from '../api/api';
 import { initialApiConfig } from '../hardcode/initialApiConfig'
 import AutoLaunch from 'auto-launch'
+import createReqularRequest from '../api/helpers/createReqularRequest'
 
 //for activate development mode
 const isDevelopment = process.env.NODE_ENV === 'development';
@@ -40,18 +41,20 @@ import { forwardToRenderer,
           } from 'electron-redux';
 import player from '../store/reducers/player';
 import webapi from '../store/reducers/api';
+import schedule from '../store/reducers/schedule';
 import thunk from 'redux-thunk';
 
 
 const initialState = {
 }
 
-const store = createStore(combineReducers({player, webapi}),
+const store = createStore(combineReducers({player, webapi, schedule}),
                           initialState,
                           applyMiddleware(thunk,
                                           forwardToRenderer));
 
 replayActionMain(store);
+
 
 mpc.init(api, store);
 
@@ -77,6 +80,7 @@ crashReporter.start({
   submitURL: 'https://your-domain.com/url-to-submit',
   uploadToServer: false,
 });
+
 
 app.on('window-all-closed', () => {
   // On OS X it is common for applications and their menu bar
@@ -152,6 +156,7 @@ app.on('ready', async () => {
       ]).popup(mainWindow);
     });
   }
+
 });
 
 

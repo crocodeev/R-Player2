@@ -17,10 +17,10 @@ function toLeadingZero(timeUnit = 0){
 }
 
 
-export default function timeComparator(timeFromChannel, timeFromSchedule) {
+export default function timeComparator(timeFromSchedule, timeFromChannelRule) {
 
-    const formatedTimeFromSchedule = toHHMMSS(timeFromSchedule);
+    //const formatedTimeFromSchedule = toHHMMSS(timeFromSchedule);
 
-    return timeFromChannel > formatedTimeFromSchedule ? timeFromChannel : formatedTimeFromSchedule;
+    return timeFromSchedule < timeFromChannelRule ? timeFromChannelRule : timeFromSchedule;
 }
 

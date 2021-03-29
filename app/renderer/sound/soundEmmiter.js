@@ -50,11 +50,15 @@ class Sound extends EventEmmitter  {
       })
 
       sound.on('end', () => {
-        console.log("HOWL EXIST + play next");
-        console.log();
+        console.log("HOWL EXIST + play next", this.index, this.playlist[this.index]);
         this.emit('end');
+  
+      })
+
+      sound.on('end', () => {
         this.next();
       })
+
 
     }else{
 
@@ -70,10 +74,14 @@ class Sound extends EventEmmitter  {
       })
 
       sound.on('end', () => {
-        console.log("CREATE HOWL + play next"); 
+        console.log("CREATE HOWL + play next", this.index, this.playlist[this.index]); 
         this.emit('end');
-        this.next();
       })
+
+      sound.on('end', () => {
+        this.next();
+      }, 1)
+
     
     }
 
@@ -84,15 +92,11 @@ class Sound extends EventEmmitter  {
   stop(){
     //stop and unload current slot
     if(this.playlist[this.index].howl){
-      this.playlist[this.index].howl.off()
-      if(this.playlist[this.index].howl.playing()){
-        this.playlist[this.index].howl.stop();
-      }
+      this.playlist[this.index].howl.stop();
       this.playlist[this.index].howl.unload();
     }
     //stop and unload next slot
     if(this.playlist[this.index].howl){
-        this.playlist[this.index + 1].howl.off();
       if(this.playlist[this.index + 1].howl.playing()){
         this.playlist[this.index + 1].howl.stop();
       }
@@ -103,7 +107,7 @@ class Sound extends EventEmmitter  {
   reset(){
     this.stop();
     //this.emit('end');
-    this.setNewPlaylist([{name:"Artist - Title"}]);
+    //this.setNewPlaylist([{name:"Artist - Title"}]);
   }
 
   next(){

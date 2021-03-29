@@ -22,6 +22,8 @@ export default class Scheduler {
     //return task and push to tasks array, or return current date
     createTasks(schedule){
 
+        console.log("START CREATE SCHEDULE");
+        
         const currentDate = dayjs().format('YYYY-MM-HH')
 
         schedule.forEach(element => {

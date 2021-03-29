@@ -24,8 +24,6 @@ class RPC {
     }
 
     storeIsReady(arg){
-        console.log("Store is ready");
-        console.log(arg);
         ipcRenderer.send('store-inited', arg);
     }
 

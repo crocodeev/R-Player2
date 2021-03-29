@@ -82,6 +82,9 @@ soundModule.on('end', () => {
 soundModule.on('change', () => {
   const playlist = soundModule.playlist.map(element => element.name)
   store.dispatch(setPlaylist(playlist))
+  //reset store current track here
+
+  //this at first start only
   store.dispatch(setDownloadAmount(1))
 })
 
@@ -116,18 +119,17 @@ store.subscribe(watchDownloadCompleted(
     //if switch status to true
     if(newState){
       const schedule = store.getState().schedule.schedule;
-      soundModule.stop();
-      scheduler.clearTaskQueue();
-      scheduler.createTasks(schedule);
+      sound.once('end', () => {
+        soundModule.reset();
+        scheduler.clearTaskQueue();
+        scheduler.createTasks(schedule);
+      })
     }
   }
 ))
 
 store.subscribe(watchLastModified(
   (newState, oldState) => { 
-    console.log("From last modified");
-    console.log(newState);
-    console.log(oldState);
     if(!oldState){
       console.log("first start");
     }

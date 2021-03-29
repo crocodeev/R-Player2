@@ -32,35 +32,45 @@ class Sound extends EventEmmitter  {
 
     const data = this.playlist[this.index];
 
+    console.log("START PLAYING...");
+    console.log("INDEX", this.index);
+    console.log("INDEX", data);
 
 
-  
     if(data.howl){
     
+      console.log("HOWL EXIST");
       sound = data.howl;
 
       sound.on('play', async () => {
         this.emit('play');
+        console.log("HOWL EXIST + load next");
         //load next playlist item
         this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1].src) 
       })
 
       sound.on('end', () => {
+        console.log("HOWL EXIST + play next");
+        console.log();
         this.emit('end');
         this.next();
       })
 
     }else{
+
+      console.log("CREATE HOWL");
       
       sound = data.howl = await this._createHowl(data.src)
 
       sound.on('play', async () => {
         this.emit('play');
         //load next playlist item
-        this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1].src) 
+        this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1].src)
+        console.log("CREATE HOWL + load next"); 
       })
 
       sound.on('end', () => {
+        console.log("CREATE HOWL + play next"); 
         this.emit('end');
         this.next();
       })
@@ -72,16 +82,32 @@ class Sound extends EventEmmitter  {
   }
 
   stop(){
-
     //stop and unload current slot
     if(this.playlist[this.index].howl){
-      this.playlist[this.index].howl.stop();
+      this.playlist[this.index].howl.off()
+      if(this.playlist[this.index].howl.playing()){
+        this.playlist[this.index].howl.stop();
+      }
       this.playlist[this.index].howl.unload();
     }
-    //unload next slot
+    //stop and unload next slot
+    if(this.playlist[this.index].howl){
+        this.playlist[this.index + 1].howl.off();
+      if(this.playlist[this.index + 1].howl.playing()){
+        this.playlist[this.index + 1].howl.stop();
+      }
+      this.playlist[this.index + 1].howl.unload();
+    }
+  }
+
+  reset(){
+    this.stop();
+    //this.emit('end');
+    this.setNewPlaylist([{name:"Artist - Title"}]);
   }
 
   next(){
+    console.log("NEXT");
     const index = this.index + 1;
 
     if (this.playlist[this.index].howl) {
@@ -95,9 +121,10 @@ class Sound extends EventEmmitter  {
 
   seek(){
     const sound = this.playlist[this.index].howl
-    if(sound.playing()){
+    if(sound && sound.playing()){
       return (sound.seek()/60).toFixed(2);
     }
+      return 0;
   }
 
   getDuration(){

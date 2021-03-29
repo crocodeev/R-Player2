@@ -21,6 +21,7 @@ export default class Scheduler {
 
     //return task and push to tasks array, or return current date
     createTasks(schedule){
+
         const currentDate = dayjs().format('YYYY-MM-HH')
 
         schedule.forEach(element => {
@@ -51,11 +52,6 @@ export default class Scheduler {
         let endTime = this._timeHandler(element.weekInfo.allDaysPeriod.endTime);
         const now = dayjs().format('H:m')
 
-        console.log("Start time");
-        console.log(startTime);
-        console.log("Now");
-        console.log(now);
-
 
         //check for time difference with channels rules
         
@@ -64,15 +60,14 @@ export default class Scheduler {
         //create task
         const playlist = shuffler(element.playlists[0].tracks)
 
-        const task = taskScheduleCreator(startTime, () => { 
+        const task = taskScheduleCreator(startTime, () => {
+            //при длительной кампании
             sound.setNewPlaylist(playlist);
-            sound.play();
+            //sound.play();
         });
-        console.log(task);
         //if continuous task is overdue
 
         if(now > startTime){
-            console.log("Start job immediately");
             task.job()
         }
 

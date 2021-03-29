@@ -8,9 +8,6 @@ const dayjs = require('dayjs')
 
 const Player = (props) => {
 
-  //текущее состояние модуля Sound, нужно получить из самого Sound
-  const [isPlaying, setIsPlaying] = useState(false);
-
   const handlePlay = () => {
     sound.play();
   };

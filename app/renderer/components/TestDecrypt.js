@@ -18,16 +18,6 @@ export default function DecryptAndPlay(){
         const decipher = crypter.getDecipher()
         const output = fs.createWriteStream("C:\\Music\\1.mp3")
 
-        /*input.pipe(decipher)
-
-        console.log(input.pipe(decipher));
-
-        const blob = streamToBlob(input.pipe(decipher))
-
-        console.log(typeof blob)
-
-        const url = URL.createObjectURL(blob)*/
-
         const url = await toBlobURL(input.pipe(decipher))
 
         console.log("URLLLLLL");

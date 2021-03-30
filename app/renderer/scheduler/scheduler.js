@@ -65,7 +65,7 @@ export default class Scheduler {
         const task = taskScheduleCreator(startTime, () => {
             //при длительной кампании
             sound.setNewPlaylist(playlist);
-            //sound.play();
+            sound.play();
         });
         //if continuous task is overdue
 

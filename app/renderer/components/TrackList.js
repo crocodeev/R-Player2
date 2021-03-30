@@ -19,7 +19,7 @@ class TrackList extends Component {
   listRef = React.createRef();
   
   shouldComponentUpdate(nextProps){
-    return this.props.playlistPosition !== nextProps.playlistPosition;
+    return this.props.currentTrack.name !== nextProps.currentTrack.name;
 
   }
 

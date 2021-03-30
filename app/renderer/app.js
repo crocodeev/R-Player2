@@ -118,12 +118,19 @@ store.subscribe(watchDownloadCompleted(
   (newState) => { 
     //if switch status to true
     if(newState){
+      soundModule.cancelAutomaticPlayNext();
       const schedule = store.getState().schedule.schedule;
-      sound.once('end', () => {
-        soundModule.reset();
-        scheduler.clearTaskQueue();
-        scheduler.createTasks(schedule);
-      })
+      if(soundModule.isPlaying){
+        soundModule.once('end', () => {
+          soundModule.stop();
+          //clear task to rewiev
+          scheduler.clearTaskQueue();
+          scheduler.createTasks(schedule);
+        })
+      }else{
+          scheduler.clearTaskQueue();
+          scheduler.createTasks(schedule);
+      }
     }
   }
 ))

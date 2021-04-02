@@ -1,10 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Duration from './seekNumberComponents/Duration';
+import Current from './seekNumberComponents/Current';
 
 const SeekNumber = (props) => {
 
     return (
-        <h6>{props.seek + "/" + props.duration}</h6>
+        <div>
+            <Current seek={ props.seek } />
+            <h6 className="timer">/</h6>
+            <Duration duration={ props.duration } />
+        </div>
     );
 
 }

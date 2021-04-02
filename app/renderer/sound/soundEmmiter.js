@@ -107,14 +107,9 @@ class Sound extends EventEmmitter  {
   seek(){
     const sound = this.playlist[this.index].howl
     if(sound && sound.playing()){
-      return (sound.seek()/60).toFixed(2);
+      return Math.floor(sound.seek())
     }
       return 0;
-  }
-
-  getDuration(){
-    let rawDuration = this.playlist[this.index].howl.duration();
-    return (rawDuration/60).toFixed(2);
   }
 
   getPlaylist(){
@@ -164,7 +159,7 @@ class Sound extends EventEmmitter  {
 
   get currentTrackDuration(){
     let rawDuration = this.playlist[this.index].howl.duration();
-    return (rawDuration/60).toFixed(2);
+    return (rawDuration).toFixed();
   }
 
 }

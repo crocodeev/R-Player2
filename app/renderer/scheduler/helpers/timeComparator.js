@@ -16,11 +16,26 @@ function toLeadingZero(timeUnit = 0){
     return timeUnit < 10 ? "0" + timeUnit : timeUnit.toString()
 }
 
+// compare start or end?
+const TypeEnum = Object.freeze({
+    start: "start",
+    end: "end"
+});
 
-export default function timeComparator(timeFromSchedule, timeFromChannelRule) {
+export default function timeComparator(timeFromSchedule, timeFromChannelRule, type) {
 
     //const formatedTimeFromSchedule = toHHMMSS(timeFromSchedule);
 
-    return timeFromSchedule < timeFromChannelRule ? timeFromChannelRule : timeFromSchedule;
+    switch (type) {
+        case TypeEnum.start:
+            return timeFromSchedule < timeFromChannelRule ? timeFromChannelRule : timeFromSchedule;
+            break;
+        case TypeEnum.end:
+            return timeFromSchedule > timeFromChannelRule ? timeFromChannelRule : timeFromSchedule;
+            break;    
+        default:
+            throw new Error(`Time comparator: time type is ${type}`);
+            break;
+    }
 }
 

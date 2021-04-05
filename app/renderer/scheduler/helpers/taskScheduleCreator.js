@@ -1,16 +1,32 @@
 import scheduler from 'node-schedule'
-import timeComparator from './timeComparator'
 
-export default function taskScheduleCreator(time, job){
+export default function taskScheduleCreator(start, end, element, action){
 
+    const job = scheduler
 
-    const pattern = createCrontabPattern(time);
+    //continuous or not
+    const taskRules = {};
+    if( element.playbackMode === 1 ){
+        taskRules.rule = '*/1 * * * * *';
+    }else{
+        throw new Error("Handling reccurence schedule not implemented for now");
+    }
 
-    return scheduler.scheduleJob(pattern, job);
+    const pattern = createCrontabPattern(start);
+
+    console.log(pattern);
+
+    return scheduler.scheduleJob(
+        element.name, 
+        taskRules,
+        action
+        );
 
 }
 
 function createCrontabPattern(time){
+
+    console.log(time);
 
     const readyTime = new TimeParse(time);
     const pattern = `${readyTime.getSeconds()} ${readyTime.getMinutes()} ${readyTime.getHours()} * * *`;

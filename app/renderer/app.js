@@ -16,26 +16,15 @@ import isEqual from 'is-equal';
 import Scheduler from './scheduler/scheduler';
 import createLastModifiedRequest from './helpers/createLastModifiedRequest';
 import setLastModified from './helpers/createDateStamp';
+import addListenersToSound from './helpers/atStartUp/addListenersToSound';
 
 
-//this is for player to store part
-import raf from 'raf';
-import {
-  setCurrentTrack,
-  setSeekPosition,
-  setPlaylist,
-  setPlaylistPosition,
-  setDownloadAmount
-} from '../store/actions/playerActions'
+//for test
+window.sound = sound
 
 import {
   setChannelTime
 } from '../store/actions/scheduleActions'
-
-import { element, object } from 'prop-types';
-
-//this for the test purpose only
-const soundModule = sound
 
 const syncHistoryWithStore = (store, history) => {
   const { router } = store.getState();
@@ -67,39 +56,11 @@ if ("guid" in  store.getState().webapi){
 }
 
 //add listeners to sound module, to change store
-soundModule.on('play', () => {
-  const name = soundModule.currentTrackName;
-  const duration = soundModule.currentTrackDuration;
-  store.dispatch(setCurrentTrack(name, duration));
-  store.dispatch(setPlaylistPosition(soundModule.index));
-  raf(renderSeekPos);
-})
+addListenersToSound(sound, store);
 
-soundModule.on('end', () => {
-  clearRAF();
-})
-
-soundModule.on('change', () => {
-  const playlist = soundModule.playlist.map(element => element.name)
-  store.dispatch(setPlaylist(playlist))
-  //reset store current track here
-
-  //this at first start only
-  store.dispatch(setDownloadAmount(1))
-})
-
-function renderSeekPos(){
-  const seek = soundModule.seek();
-  store.dispatch(setSeekPosition(seek))
-  raf(renderSeekPos);
-}
-
-function clearRAF (){
-  raf.cancel(raf)
-}
 //initial sheduler module
 
-const scheduler = new Scheduler(soundModule);
+const scheduler = new Scheduler(sound);
 
 const channelRule = store.getState().schedule.channelRule;
 
@@ -118,19 +79,9 @@ store.subscribe(watchDownloadCompleted(
   (newState) => { 
     //if switch status to true
     if(newState){
-      soundModule.cancelAutomaticPlayNext();
       const schedule = store.getState().schedule.schedule;
-      if(soundModule.isPlaying){
-        soundModule.once('end', () => {
-          soundModule.stop();
-          //clear task to rewiev
-          scheduler.clearTaskQueue();
-          scheduler.createTasks(schedule);
-        })
-      }else{
-          scheduler.clearTaskQueue();
-          scheduler.createTasks(schedule);
-      }
+      scheduler.clearTaskQueue();
+      scheduler.createTasks(schedule);
     }
   }
 ))
@@ -161,16 +112,14 @@ store.subscribe(watchChannelChange(
 ))*/
 
 
-//check for files
-//work with scheduler
-//set initial playlist, on start playlist in always empty
-const initialPlaylist = [{name:"Artist - Title"}];
-sound.setNewPlaylist(initialPlaylist);
 
-//check is schedule exist, if yes - handle i
+//check is schedule exist, if yes - handle it
+{
 const schedule = store.getState().schedule.schedule;
+
 if(schedule){
    scheduler.createTasks(schedule);
+}
 }
 
 

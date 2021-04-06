@@ -19,7 +19,6 @@ export default class Scheduler {
         this.channelEndTime = rules.endTime;
     }
 
-    //return task and push to tasks array, or return current date
     createTasks(schedule){
 
         console.log("START CREATE SCHEDULE");
@@ -35,47 +34,66 @@ export default class Scheduler {
             }
     
             //check is continous
-            if(element.playbackMode == 1){
-                this.continuousPlaybackHandler(element);
+            this._createTask(element);
 
-            }else{
-                //for now
-                return;
-            }
-    
         });
         
     }
 
-    continuousPlaybackHandler(element){
+    _createTask(element){
 
         //check for difference between channels rules 
         let startTime = this._timeHandler(element.weekInfo.allDaysPeriod.startTime);
         let endTime = this._timeHandler(element.weekInfo.allDaysPeriod.endTime);
-        const now = dayjs().format('H:m')
 
-
+        
         //check for time difference with channels rules
         
-        startTime = timeComparator(startTime, this.channelStartTime);
+        startTime = timeComparator(startTime, this.channelStartTime, "start");
+        endTime = timeComparator(endTime, this.channelEndTime, "end");
 
-        //create task
+        //create task 
         const playlist = shuffler(element.playlists[0].tracks)
 
-        const task = taskScheduleCreator(startTime, () => {
-            //при длительной кампании
-            sound.setNewPlaylist(playlist);
-            sound.play();
-        });
-        //if continuous task is overdue
-
-        if(now > startTime){
-            task.job()
+        const action = () => {
+                console.log("action sound");
+                //при длительной кампании
+                sound.setNewPlaylist(playlist);
+                /*
+                если прервать немедленно, то stop and play
+                если дождаться окончания или теневая загрузка, то once end 
+                */
+                sound.play();
         }
+        //здесь создаём job с учётом
+        const task = taskScheduleCreator(startTime, endTime, element, action);
 
+        console.log(task);
+
+        //task.name = element.name;
+        task.playbackMode =  element.playbackMode;
+        task.startTime = startTime;
+
+        
         this.tasks.push(task);
+
+        this.checkForMissedLaunch();
     }
 
+    checkForMissedLaunch(){
+        const toLaunch = this.tasks.find( element => {
+            return element.playbackMode === 1 && element.startTime < dayjs().format('HH:mm:ss') });
+
+        console.log(toLaunch);    
+        if(toLaunch){
+            toLaunch.job();  
+        }else{
+            return;
+        }
+        
+    }
+
+    
 
     //time in object to string
     _timeHandler(timeObject){

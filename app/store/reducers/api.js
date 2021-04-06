@@ -3,7 +3,8 @@ import {  GET_TOKEN,
           SET_CURRENT_CHANNEL,
           SET_GUID,
           RESET_DOWNLOADED_TRACKS,
-          ADD_DOWNLOADED_TRACK} from '../actions/actionTypes';
+          ADD_DOWNLOADED_TRACK,
+          LOGOUT} from '../actions/actionTypes';
 
 
 export default function webapi(state = {}, action){
@@ -38,7 +39,15 @@ case SET_GUID:
     return({
       ...state,
       guid: action.payload
-    })      
+    })
+case LOGOUT:
+    return({
+      ...state,
+      token: null,
+      channels: null,
+      currentChannel: null,
+      downloadedTracks: null
+      });          
 default:
 return state;
 }

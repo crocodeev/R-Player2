@@ -6,7 +6,8 @@ import {  SET_PLAYLIST,
           RESET_DOWNLOAD_COUNTER,
           DOWNLOAD_STATUS,
           SET_CURRENT_TRACK,
-          SET_SEEK_POSITION} from '../actions/actionTypes';
+          SET_SEEK_POSITION,
+          LOGOUT} from '../actions/actionTypes';
 
 
 export default function playerReducer(state = {
@@ -58,7 +59,12 @@ export default function playerReducer(state = {
           return({
           ...state,
           currentTrack: { ...state.currentTrack, seek: action.payload}
-          });                    
+          });
+    case LOGOUT:
+          return({
+          ...state,
+          currentTrack: { ...state.currentTrack, seek: action.payload}
+          });                           
     case TEST:
           return({
             ...state,

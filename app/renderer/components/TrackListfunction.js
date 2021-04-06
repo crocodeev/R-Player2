@@ -25,10 +25,16 @@ class TrackList extends Component {
 
   }
 
+  componentDidMount(){
+    console.log("Mount");
+  }
 
+  componentWillUpdate(){
+    console.log("Will update");
+  }
 
   componentDidUpdate(){
-
+    console.log("Updated");
     this.listRef.current.scrollToItem(this.props.playlistPosition, 'center')
   }
 

@@ -6,7 +6,8 @@ import { SET_PLAYLIST_POSITION,
          RESET_DOWNLOAD_COUNTER,
          DOWNLOAD_STATUS,
          SET_CURRENT_TRACK,
-         SET_SEEK_POSITION} from './actionTypes';
+         SET_SEEK_POSITION,
+         LOGOUT} from './actionTypes';
 
 
 export function setPlaylist(playlist){
@@ -77,5 +78,11 @@ export function setSeekPosition(seekPosition) {
   return{
     type: SET_SEEK_POSITION,
     payload: seekPosition
+  }
+}
+
+export function logout() {
+  return{
+    type: LOGOUT
   }
 }

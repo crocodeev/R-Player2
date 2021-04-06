@@ -16,7 +16,6 @@ const Player = (props) => {
     sound.cancelAutomaticPlayNext();
     sound.stop();
     props.logout();
-    //this.props.downloadStatus(false);
   }
 
   return (

@@ -14,9 +14,10 @@ export default function playerReducer(state = {
   playlist:["Artist - Title"],
   currentTrack: {
     name: "Artist - Title",
-    duration: "0.00",
-    seek:"0.00"
-  }
+    duration: 0,
+    seek: 0
+  },
+
 }, action){
 
   switch (action.type) {
@@ -63,13 +64,17 @@ export default function playerReducer(state = {
     case LOGOUT:
           return({
           ...state,
-          currentTrack: { ...state.currentTrack, seek: action.payload}
+          playlist: ["Artist - Title"],
+          currentTrack:{
+            name: "Artist - Title",
+            duration: 0,
+            seek: 0
+          },
+          downloadCount: 0,
+          downloadCompleted: false,
+          downloadAmount: 1,
+          playlistPosition: 0
           });                           
-    case TEST:
-          return({
-            ...state,
-            isConnected: action.payload
-          }); 
     default:
       return state;
   }

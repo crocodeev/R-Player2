@@ -4,10 +4,9 @@ export default function taskScheduleCreator(startTime, endTime, element, action)
 
     //continuous or not
     if( element.playbackMode === 1 ){
-        const pattern = createCrontabPattern(startTime);
-        console.log("pattern", pattern);
-
-        return scheduler.scheduleJob(element.name, pattern, action);
+        /*const pattern = createCrontabPattern(startTime);
+        console.log("pattern", pattern);*/
+        return scheduler.scheduleJob(element.name, '0 0 09 * * *', action);
         
     }else{
         throw new Error("Handling reccurence schedule not implemented for now");
@@ -17,11 +16,7 @@ export default function taskScheduleCreator(startTime, endTime, element, action)
 
 function createCrontabPattern(time){
 
-    console.log(time);
-
     const readyTime = new TimeParse(time);
-
-    console.log(readyTime);
 
     const pattern = `${readyTime.getSeconds()} ${readyTime.getMinutes()} ${readyTime.getHours()} * * *`;
     return pattern;

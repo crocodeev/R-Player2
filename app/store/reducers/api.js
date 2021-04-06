@@ -43,10 +43,10 @@ case SET_GUID:
 case LOGOUT:
     return({
       ...state,
-      token: null,
-      channels: null,
-      currentChannel: null,
-      downloadedTracks: null
+      token: "",
+      channels: [],
+      currentChannel: undefined,
+      downloadedTracks: []
       });          
 default:
 return state;

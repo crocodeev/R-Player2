@@ -2,7 +2,11 @@ import taskScheduleCreator from './helpers/taskScheduleCreator';
 import timeComparator from './helpers/timeComparator';
 import shuffler from './helpers/shuffler';
 import dayjs from 'dayjs';
+import customParseFormat from'dayjs/plugin/customParseFormat'
 import sound from '../sound/soundEmmiter';
+
+dayjs.extend(customParseFormat);
+
 
 export default class Scheduler {
 
@@ -15,8 +19,8 @@ export default class Scheduler {
 
 
     set channelRule(rules){
-        this.channelStartTime = rules.startTime;
-        this.channelEndTime = rules.endTime;
+        this.channelStartTime = this._toLeadingZero(rules.startTime);
+        this.channelEndTime = this._toLeadingZero(rules.endTime);
     }
 
     createTasks(schedule){
@@ -44,21 +48,25 @@ export default class Scheduler {
 
         //check for difference between channels rules 
         let startTime = this._timeHandler(element.weekInfo.allDaysPeriod.startTime);
+        console.log("startTime before comparator", startTime);
         let endTime = this._timeHandler(element.weekInfo.allDaysPeriod.endTime);
+        console.log("endTime before comparator", endTime);
 
         
         //check for time difference with channels rules
         
         startTime = timeComparator(startTime, this.channelStartTime, "start");
+        console.log("startTime after comparator", startTime);
         endTime = timeComparator(endTime, this.channelEndTime, "end");
+        console.log("endTime after comparator", startTime);
 
         //create task 
         const playlist = shuffler(element.playlists[0].tracks)
-
+        
         const action = () => {
-                console.log("action sound");
+                
                 //при длительной кампании
-                sound.setNewPlaylist(playlist);
+                sound.setNewPlaylist(this.playlist);
                 /*
                 если прервать немедленно, то stop and play
                 если дождаться окончания или теневая загрузка, то once end 
@@ -66,9 +74,8 @@ export default class Scheduler {
                 sound.play();
         }
         //здесь создаём job с учётом
-        const task = taskScheduleCreator(startTime, endTime, element, action);
 
-        console.log(task);
+        const task = taskScheduleCreator(startTime, endTime, element, action);
 
         //task.name = element.name;
         task.playbackMode =  element.playbackMode;
@@ -80,6 +87,7 @@ export default class Scheduler {
         this.checkForMissedLaunch();
     }
 
+
     checkForMissedLaunch(){
         const toLaunch = this.tasks.find( element => {
             return element.playbackMode === 1 && element.startTime < dayjs().format('HH:mm:ss') });
@@ -88,16 +96,26 @@ export default class Scheduler {
         if(toLaunch){
             toLaunch.job();  
         }else{
+            //if periodic campaign didn't exist stop
             return;
         }
         
     }
 
+
+    _lastModifiedStateHandler(job){
+        const name = job.name;
+    }
     
 
     //time in object to string
     _timeHandler(timeObject){
-        return `${timeObject.hour}:${timeObject.minutes}`
+        const time = `${timeObject.hour}:${timeObject.minutes}`;
+        return this._toLeadingZero(time);
+    }
+
+    _toLeadingZero(time) {
+        return dayjs(time, 'hh:mm').format('HH:mm:ss')
     }
 
     clearTaskQueue(){

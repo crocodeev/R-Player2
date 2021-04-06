@@ -12,6 +12,8 @@ function ChannelsSelect({
   setChannelRuleToScheduleStore
 }) {
 
+
+    console.log(currentChannel);
   
     useEffect(() => {
       M.AutoInit()

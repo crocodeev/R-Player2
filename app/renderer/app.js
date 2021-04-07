@@ -26,6 +26,10 @@ import {
   setChannelTime
 } from '../store/actions/scheduleActions'
 
+import {
+  logout
+} from '../store/actions/playerActions'
+
 const syncHistoryWithStore = (store, history) => {
   const { router } = store.getState();
   if (router && router.location) {
@@ -74,6 +78,15 @@ let watchScheduleChange = watch(store.getState, 'schedule.schedule', isEqual);
 let watchChannelChange = watch(store.getState, 'schedule.channelRule', isEqual);
 let watchLastModified = watch(store.getState, 'schedule.lastModified');
 let watchDownloadCompleted = watch(store.getState, 'player.downloadCompleted');
+let watchRouterLocation = watch(store.getState, 'router.location.pathname');
+
+store.subscribe(watchRouterLocation(
+  (newState, oldState) => {
+    if(newState != oldState && newState === "/"){
+      store.dispatch(logout());
+    }
+  }
+));
 
 store.subscribe(watchDownloadCompleted(
   (newState) => { 
@@ -84,7 +97,8 @@ store.subscribe(watchDownloadCompleted(
       scheduler.createTasks(schedule);
     }
   }
-))
+));
+
 
 store.subscribe(watchLastModified(
   (newState, oldState) => { 
@@ -97,13 +111,13 @@ store.subscribe(watchLastModified(
       rpc.getSchedule(channelID);
     }
   }
-))
+));
 
 store.subscribe(watchChannelChange(
   (channelRule) => {
     scheduler.channelRule = channelRule;
   } 
-))
+));
 
 /*store.subscribe(watchScheduleChange(
   (schedule) => {

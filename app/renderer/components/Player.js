@@ -4,7 +4,7 @@ import TrackList from './TrackList';
 import ChannelsSelect from './ChannelsSelect';
 import Download from './Download';
 import sound from '../sound/soundEmmiter';
-const dayjs = require('dayjs')
+
 
 const Player = (props) => {
 
@@ -13,8 +13,9 @@ const Player = (props) => {
   };
 
   const handleLogOut = () => {
-    this.props.logout();
-    this.props.downloadStatus(false);
+    sound.cancelAutomaticPlayNext();
+    sound.stop();
+    props.logout();
   }
 
   return (

@@ -53,30 +53,43 @@ class MPC {
 
         //listeners section
 
-        api.on('gottoken', () => {
+        api.on('gotToken', () => {
           store.dispatch(getToken(api.token));
           api.getChannels();
         });
-        api.on('gotchannels', () => {
+        api.on('gotChannels', () => {
           store.dispatch(getChannels(api.channels));
           store.dispatch(push("/player"));
         });
-        api.on('gotschedule', (schedule) => {
+        api.on('gotSchedule', (schedule) => {
 
-          store.dispatch(downloadCountReset());
-          store.dispatch(resetDownloadedTracksArray());
-          store.dispatch(downloadStatus(false));
+          if(api.isContentDownloading){
+            api.isContentDownloading = false;
+            api.once('loadCanceled', () => {
+              store.dispatch(downloadCountReset());
+              store.dispatch(resetDownloadedTracksArray());
+              store.dispatch(downloadStatus(false));
           
-          store.dispatch(setNextSchedule(schedule));
-          store.dispatch(setDownloadAmount(api.schedule.length));
-          api.contentDownload(api.schedule);
-
+              store.dispatch(setNextSchedule(schedule));
+              store.dispatch(setDownloadAmount(api.schedule.length));
+              api.contentDownload(api.schedule);
+            })
+          }else{
+            store.dispatch(downloadCountReset());
+            store.dispatch(resetDownloadedTracksArray());
+            store.dispatch(downloadStatus(false));
+          
+            store.dispatch(setNextSchedule(schedule));
+            store.dispatch(setDownloadAmount(api.schedule.length));
+            api.contentDownload(api.schedule);
+          }
         });
-        api.on('gottrack', (trackID) => {
+        api.on('gotTrack', (trackID) => {
           store.dispatch(getTrack());
           store.dispatch(addDownloadedTrackInArray(trackID));
         });
-        api.on('loadcompleted', () => {
+        api.on('loadCompleted', () => {
+          api.isContentDownloading = false;
           const schedule = deepcopy(store.getState().schedule.nextSchedule);
           store.dispatch(setSchedule(schedule));
           store.dispatch(downloadStatus(true));

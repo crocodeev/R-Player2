@@ -11,7 +11,6 @@ function ChannelsSelect({
   setChannelToStore,
   setChannelRuleToScheduleStore
 }) {
-
   
     useEffect(() => {
       M.AutoInit()
@@ -51,7 +50,11 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const mapStateToProps = (state) => {
-  return state.webapi;
+  let {channels, currentChannel} = state.webapi;
+  return {
+    channels,
+    currentChannel
+  };
 };
 
 

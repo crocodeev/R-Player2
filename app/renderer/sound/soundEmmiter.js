@@ -79,13 +79,14 @@ class Sound extends EventEmmitter  {
   }
 
   stop(){
+  
     //stop and unload current slot
     if(this.playlist[this.index].howl){
       this.playlist[this.index].howl.stop();
       this.playlist[this.index].howl.unload();
     }
     //stop and unload next slot
-    if(this.playlist[this.index + 1].howl){
+    if(this.playlist[this.index + 1] && this.playlist[this.index + 1].howl){
       this.playlist[this.index + 1].howl.stop()
       this.playlist[this.index + 1].howl.unload();
     }

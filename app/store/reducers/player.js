@@ -6,16 +6,18 @@ import {  SET_PLAYLIST,
           RESET_DOWNLOAD_COUNTER,
           DOWNLOAD_STATUS,
           SET_CURRENT_TRACK,
-          SET_SEEK_POSITION} from '../actions/actionTypes';
+          SET_SEEK_POSITION,
+          LOGOUT} from '../actions/actionTypes';
 
 
 export default function playerReducer(state = {
   playlist:["Artist - Title"],
   currentTrack: {
     name: "Artist - Title",
-    duration: "0.00",
-    seek:"0.00"
-  }
+    duration: 0,
+    seek: 0
+  },
+
 }, action){
 
   switch (action.type) {
@@ -58,12 +60,21 @@ export default function playerReducer(state = {
           return({
           ...state,
           currentTrack: { ...state.currentTrack, seek: action.payload}
-          });                    
-    case TEST:
+          });
+    case LOGOUT:
           return({
-            ...state,
-            isConnected: action.payload
-          }); 
+          ...state,
+          playlist: ["Artist - Title"],
+          currentTrack:{
+            name: "Artist - Title",
+            duration: 0,
+            seek: 0
+          },
+          downloadCount: 0,
+          downloadCompleted: false,
+          downloadAmount: 1,
+          playlistPosition: 0
+          });                           
     default:
       return state;
   }

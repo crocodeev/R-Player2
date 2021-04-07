@@ -17,10 +17,6 @@ const Row = ({ data, index, style}) => {
 class TrackList extends Component {
 
   listRef = React.createRef();
-
-  componentDidMount(){
-    console.log("Componet mounted");
-  }
   
   shouldComponentUpdate(nextProps){
    
@@ -29,10 +25,16 @@ class TrackList extends Component {
 
   }
 
+  componentDidMount(){
+    console.log("Mount");
+  }
 
+  componentWillUpdate(){
+    console.log("Will update");
+  }
 
   componentDidUpdate(){
-    console.log("Component update");
+    console.log("Updated");
     this.listRef.current.scrollToItem(this.props.playlistPosition, 'center')
   }
 

@@ -50,3 +50,8 @@ export function resetDownloadedTracksArray(track) {
     }
     }    
 
+export function logout() {
+    return{
+        type: LOGOUT
+    }
+}

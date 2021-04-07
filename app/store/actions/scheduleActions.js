@@ -39,3 +39,9 @@ type: RESER_NEXT_SCHEDULE,
 payload: null
 }
 }
+
+export function logout() {
+    return{
+        type: LOGOUT
+    }
+}

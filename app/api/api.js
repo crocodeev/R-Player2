@@ -12,6 +12,7 @@ class Api extends EventEmitter {
     constructor(obj){
         super();
         Object.assign(this,  obj);
+        this.isContentDownloading = false;
     }
 
     /* setting guid after inizialization api module,
@@ -48,7 +49,7 @@ class Api extends EventEmitter {
                 console.log("REQUEST RESULT :" + result.data.token);
                 this.token = result.data.token;
                 this.setCookies(result.data.token);
-                this.emit('gottoken');
+                this.emit('gotToken');
 
             } catch (error) {
                 console.log("ERROR :" + error);
@@ -70,7 +71,7 @@ class Api extends EventEmitter {
             const result =  await responce.json();
             this.channels = result.data;
 
-            this.emit('gotchannels');
+            this.emit('gotChannels');
 
         } catch (error) {
             console.log(error);
@@ -93,7 +94,7 @@ class Api extends EventEmitter {
                 //нужно поменять имена переменных
                 const tracks = getAllTracksFromSchedule(result.data)
                 this.schedule = tracks; 
-                this.emit('gotschedule', result.data);
+                this.emit('gotSchedule', result.data);
             } catch (e) {
                 console.log(e);
             }
@@ -102,6 +103,7 @@ class Api extends EventEmitter {
     contentDownload(trackArray){
 
       let self = this;
+      self.isContentDownloading = true;
       let counter = 0;
 
       (async function download() {
@@ -114,15 +116,19 @@ class Api extends EventEmitter {
 
           try {
               
+              if(!self.isContentDownloading){
 
+                  self.emit('loadCanceled')
+                  return;
+              }  
               if(isExist){
                 console.log("download skip");  
                 counter++;
-                  self.emit('gottrack', item.id);
+                  self.emit('gotTrack', item.id);
                   if(counter < trackArray.length){
                     download();
                   }else{
-                    self.emit('loadcompleted');
+                    self.emit('loadCompleted');
                   }
               }else{
                 
@@ -136,11 +142,11 @@ class Api extends EventEmitter {
                 dest.on('close', () => {
                     console.log(name);
                     counter++;
-                    self.emit('gottrack', item.id);
+                    self.emit('gotTrack', item.id);
                     if(counter < trackArray.length){
                         download();
                     }else{
-                        self.emit('loadcompleted');
+                        self.emit('loadCompleted');
                     }
                 });
               }
@@ -305,7 +311,7 @@ class Api extends EventEmitter {
         session.defaultSession.cookies.set(cookie)
                           .then(() => {
                             this.token = data;
-                            this.emit('cookiestored')
+                            this.emit('cookieStored')
                           }, (error) => {
                             console.error(error)
                           })

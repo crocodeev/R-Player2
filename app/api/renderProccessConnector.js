@@ -23,6 +23,14 @@ class RPC {
         ipcRenderer.send('guid', guid);
     }
 
+    setGuid(guid){
+        ipcRenderer.send('guid', guid);
+    }
+
+    changeOnlineStatus(status){
+        ipcRenderer.send('online-status-changed', status);
+    }
+
     storeIsReady(arg){
         ipcRenderer.send('store-inited', arg);
     }

@@ -138,7 +138,7 @@ class Api extends EventEmitter {
                 const cipher = crypter.getCipher()
                 responce.body.pipe(cipher).pipe(dest);
                 //how to catch errors, is electron-fetch caugth errors?
-                responce.body.on('error', (e) => console.log(e));
+                responce.body.on('error', (e) => console.log("ERROR FROM DOWNLOAD TRACK", e));
                 dest.on('close', () => {
                     console.log(name);
                     counter++;

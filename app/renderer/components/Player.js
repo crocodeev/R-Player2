@@ -3,6 +3,7 @@ import CurrentTrack from './CurrentTrack';
 import TrackList from './TrackList';
 import ChannelsSelect from './ChannelsSelect';
 import Download from './Download';
+import NetworkStatus from './NetworkStatus';
 import sound from '../sound/soundEmmiter';
 
 
@@ -20,8 +21,13 @@ const Player = (props) => {
 
   return (
     <div className="container">
-    <div className ="row">
+    <div className="row">
+     <div className="col s10 pdleftzero"> 
      <CurrentTrack />
+     </div>
+     <div className="col s2 pdrightzero"> 
+     <NetworkStatus />
+     </div> 
     </div>
     <div className = "row">
       <div className="col s4 pdleftzero">

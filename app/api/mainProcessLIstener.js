@@ -101,6 +101,20 @@ class MPC {
           }
           store.dispatch(setLastModified(lastModified));
         })
+        api.on('disconnected', () => {
+          ipcMain.once('online-status-changed', (event, arg) => {
+            console.log("ARG FROM Online status", arg);
+            if(arg === 'online'){
+              store.dispatch(downloadCountReset());
+              store.dispatch(resetDownloadedTracksArray());
+              store.dispatch(downloadStatus(false));
+          
+              store.dispatch(setNextSchedule(schedule));
+              store.dispatch(setDownloadAmount(api.schedule.length));
+              api.contentDownload(api.schedule);
+            }
+          })
+        })
     }
 }
 

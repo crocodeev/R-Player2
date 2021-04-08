@@ -20,6 +20,7 @@
     "history": "^4.10.1",
     "howler": "^2.2.0",
     "is-equal": "^1.6.1",
+    "material-icons": "^0.6.0",
     "materialize-css": "^1.0.0-rc.2",
     "node-schedule": "^2.0.0",
     "prop-types": "^15.7.2",

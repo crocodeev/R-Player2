@@ -4,7 +4,8 @@ import { GET_TOKEN,
          SET_CURRENT_CHANNEL,
          RESET_DOWNLOADED_TRACKS,
          ADD_DOWNLOADED_TRACK,
-         SET_GUID } from './actionTypes';
+         SET_GUID,
+         SET_NETWORK_STATUS } from './actionTypes';
 
 
 export function getToken(token){
@@ -53,5 +54,12 @@ export function resetDownloadedTracksArray(track) {
 export function logout() {
     return{
         type: LOGOUT
+    }
+}
+
+export function setNetworkStatus(networkStatus) {
+    return{
+        type: SET_NETWORK_STATUS,
+        payload: networkStatus
     }
 }

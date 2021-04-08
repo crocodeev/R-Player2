@@ -17,6 +17,7 @@ import Scheduler from './scheduler/scheduler';
 import createLastModifiedRequest from './helpers/createLastModifiedRequest';
 import setLastModified from './helpers/createDateStamp';
 import addListenersToSound from './helpers/atStartUp/addListenersToSound';
+import addListenerToOnlineStatus from './helpers/atStartUp/addListenerToOnlineStatus';
 
 
 //for test
@@ -45,6 +46,8 @@ const store = configureStore(initialState, routerHistory);
 replayActionRenderer(store);
 syncHistoryWithStore(store, routerHistory);
 
+//network status listeners
+addListenerToOnlineStatus(rpc, store);
 //set channel and token to api on start
 createLastModifiedRequest(store, rpc.storeIsReady);
 //set lastModified at very first start

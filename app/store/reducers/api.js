@@ -4,7 +4,8 @@ import {  GET_TOKEN,
           SET_GUID,
           RESET_DOWNLOADED_TRACKS,
           ADD_DOWNLOADED_TRACK,
-          LOGOUT} from '../actions/actionTypes';
+          LOGOUT,
+          SET_NETWORK_STATUS} from '../actions/actionTypes';
 
 
 export default function webapi(state = {}, action){
@@ -40,6 +41,11 @@ case SET_GUID:
       ...state,
       guid: action.payload
     })
+case SET_NETWORK_STATUS:
+    return({
+      ...state,
+      networkStatus: action.payload
+    })    
 case LOGOUT:
     return({
       ...state,

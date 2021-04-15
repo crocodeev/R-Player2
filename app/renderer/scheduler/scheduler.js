@@ -29,7 +29,7 @@ export default class Scheduler {
 
     createTasks(schedule, typeOfLaunch){
 
-        console.log("START CREATE SCHEDULE");
+        console.time("CREATE SCHEDULE");
         
         const currentDate = dayjs().format('YYYY-MM-HH')
 
@@ -48,6 +48,7 @@ export default class Scheduler {
 
         this._checkForMissedLaunch();
         
+        console.timeEnd("CREATE SCHEDULE");
     }
 
     _createTask(element){

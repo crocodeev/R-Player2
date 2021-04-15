@@ -76,8 +76,10 @@ class Sound  {
   }
 
   setNewPlaylist(playlist){
+    console.time("SET NEW PALYLIST");
     this.playlist = playlist;
     this.index = 0
+    console.timeEnd("SET NEW PALYLIST");
   }
 
 

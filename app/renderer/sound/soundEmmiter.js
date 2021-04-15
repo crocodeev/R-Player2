@@ -54,7 +54,7 @@ class Sound extends EventEmmitter  {
 
     }else{
 
-      console.log("CREATE HOWL");
+      console.time("CREATE HOWL");
       
       sound = data.howl = await this._createHowl(data.src)
 
@@ -62,6 +62,7 @@ class Sound extends EventEmmitter  {
         this.emit('play');
         //load next playlist item
         this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1].src)
+        console.timeEnd("CREATE HOWL");
       })
 
       sound.on('end', () => {

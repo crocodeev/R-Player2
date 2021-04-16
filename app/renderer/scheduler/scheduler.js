@@ -76,8 +76,10 @@ export default class Scheduler {
                 sound.setNewPlaylist(playlist);
                 /*
                 если прервать немедленно, то stop and play
-                если дождаться окончания или теневая загрузка, то once end 
+                если дождаться окончания или теневая загрузка, то once end
+                думаю моэно сделать параметрами setNewPlaylist 
                 */
+
                 sound.play();
         }
 

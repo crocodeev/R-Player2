@@ -38,10 +38,7 @@ const Player = (props) => {
       </div>
     </div>
     <div className="row">
-    <div className="scrolist">
-        <TrackList />
-    </div>
-
+      <TrackList />
     </div>
     
     <div className="row buttonrow">

@@ -1,6 +1,7 @@
 const {Howl, Howler} = require('howler');
 const EventEmmitter = require('events');
 const decryptSource = require('./sourceDecrypter');
+import { timeLog } from 'console';
 import deepcopy from 'deepcopy';
 import { initialApiConfig } from '../../hardcode/initialApiConfig';
 
@@ -26,6 +27,8 @@ class Sound extends EventEmmitter  {
      next track in array  */
   async play(index){
 
+    console.time("PLAY");
+
     let sound;
 
     this.index = typeof index === 'number' ? index : this.index;
@@ -38,6 +41,7 @@ class Sound extends EventEmmitter  {
       sound = data.howl;
 
       sound.on('play', async () => {
+        console.timeEnd("PLAY");
         this.emit('play');
         //load next playlist item
         this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1].src) 
@@ -53,16 +57,14 @@ class Sound extends EventEmmitter  {
 
 
     }else{
-
-      console.time("CREATE HOWL");
       
       sound = data.howl = await this._createHowl(data.src)
 
       sound.on('play', async () => {
+        console.timeEnd("PLAY");
         this.emit('play');
         //load next playlist item
         this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1].src)
-        console.timeEnd("CREATE HOWL");
       })
 
       sound.on('end', () => {
@@ -95,6 +97,7 @@ class Sound extends EventEmmitter  {
 
 
   next(){
+
     const index = this.index + 1;
 
     if (this.playlist[this.index].howl) {
@@ -123,23 +126,44 @@ class Sound extends EventEmmitter  {
     return item;
   }
 
+
   setNewPlaylist(playlist){
-    const withSource = playlist.map((item) => this.addSourceToPlaylistItem(item))
-    this.playlist = deepcopy(withSource);
-    this.index=0;
-    this.emit('change');
+
+    //first start?
+    if(this.playlist.length === 1 && !this.playlist[0].howl){
+      console.log(this.playlist);
+      console.time("NEW PLAYLIST")
+      const withSource = playlist.map((item) => this.addSourceToPlaylistItem(item))
+      this.playlist = deepcopy(withSource);
+      this.index=0;
+      this.emit('change');
+      console.timeEnd("NEW PLAYLIST")
+    }
+
+    console.log(this.playlist);
+      console.time("NEW PLAYLIST")
+      const withSource = playlist.map((item) => this.addSourceToPlaylistItem(item))
+      this.playlist = deepcopy(withSource);
+      this.index=0;
+      this.emit('change');
+      console.timeEnd("NEW PLAYLIST")
+    
   }
 
   async _createHowl(track){
-    const url = await decryptSource(track)
+    console.time("LOAD TRACK");
+    const url = await decryptSource(track);
     const howl = new Howl({
       src: url,
       preload: true,
       format: ["mp3", "wave"]
     })
-    URL.revokeObjectURL(url)
+    URL.revokeObjectURL(url);
+    console.timeEnd("LOAD TRACK");
     return howl
   }
+
+
 
   cancelAutomaticPlayNext(){
     if(this.playlist[this.index].howl){

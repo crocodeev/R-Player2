@@ -12,6 +12,7 @@ export default function addListenersToSound(soundModule, store) {
     soundModule.on('play', () => {
         const name = soundModule.currentTrackName;
         const duration = soundModule.currentTrackDuration;
+        console.log("SOUND MODULE INDEX");
         store.dispatch(setCurrentTrack(name, duration));
         store.dispatch(setPlaylistPosition(soundModule.index));
         raf(renderSeekPos);

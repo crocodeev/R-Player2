@@ -135,7 +135,7 @@ store.subscribe(watchChannelChange(
 const schedule = store.getState().schedule.schedule;
 
 if(schedule){
-   //scheduler.createTasks(schedule);
+   scheduler.createTasks(schedule);
 }
 }
 

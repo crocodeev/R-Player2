@@ -15,11 +15,15 @@ export default function addListenersToSound(soundModule, store) {
         console.log("SOUND MODULE INDEX");
         store.dispatch(setCurrentTrack(name, duration));
         store.dispatch(setPlaylistPosition(soundModule.index));
+        //raf(renderSeekPos);
+      })
+
+      soundModule.once('play', () => {
         raf(renderSeekPos);
       })
       
       soundModule.on('end', () => {
-        clearRAF();
+        //clearRAF();
       })
       
       soundModule.on('change', () => {

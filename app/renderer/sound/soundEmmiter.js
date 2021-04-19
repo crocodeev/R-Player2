@@ -42,9 +42,11 @@ class Sound extends EventEmmitter  {
 
       sound.on('play', async () => {
         console.timeEnd("PLAY");
-        this.emit('play');
+        
         //load next playlist item
-        this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1].src) 
+        this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1].src);
+        this.emit('play');
+
       })
 
       sound.on('end', () => {
@@ -131,7 +133,7 @@ class Sound extends EventEmmitter  {
 
     //first start?
     if(this.playlist.length === 1 && !this.playlist[0].howl){
-      console.log(this.playlist);
+
       console.time("NEW PLAYLIST")
       const withSource = playlist.map((item) => this.addSourceToPlaylistItem(item))
       this.playlist = deepcopy(withSource);
@@ -140,7 +142,6 @@ class Sound extends EventEmmitter  {
       console.timeEnd("NEW PLAYLIST")
     }
 
-    console.log(this.playlist);
       console.time("NEW PLAYLIST")
       const withSource = playlist.map((item) => this.addSourceToPlaylistItem(item))
       this.playlist = deepcopy(withSource);

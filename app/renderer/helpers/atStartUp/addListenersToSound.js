@@ -22,9 +22,9 @@ export default function addListenersToSound(soundModule, store) {
         raf(renderSeekPos);
       })
       
-      soundModule.on('end', () => {
-        //clearRAF();
-      })
+      /*soundModule.on('end', () => {
+        clearRAF();
+      })*/
       
       soundModule.on('change', () => {
         const playlist = soundModule.playlist.map(element => element.name)

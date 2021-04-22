@@ -18,7 +18,7 @@ class Sound extends EventEmmitter  {
 
   constructor(playlist){
     super();
-    this.playlist = playlist.map((item) => this.addSourceToPlaylistItem(item));
+    this.playlist = playlist;
     this.index = 0
   }
 
@@ -44,7 +44,7 @@ class Sound extends EventEmmitter  {
         console.timeEnd("PLAY");
         
         //load next playlist item
-        this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1].src);
+        this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1]);
         this.emit('play');
 
       })
@@ -60,13 +60,13 @@ class Sound extends EventEmmitter  {
 
     }else{
       
-      sound = data.howl = await this._createHowl(data.src)
+      sound = data.howl = await this._createHowl(data)
 
       sound.on('play', async () => {
         console.timeEnd("PLAY");
         this.emit('play');
         //load next playlist item
-        this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1].src)
+        this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1])
       })
 
       sound.on('end', () => {
@@ -135,25 +135,25 @@ class Sound extends EventEmmitter  {
     if(this.playlist.length === 1 && !this.playlist[0].howl){
 
       console.time("NEW PLAYLIST")
-      const withSource = playlist.map((item) => this.addSourceToPlaylistItem(item))
-      this.playlist = deepcopy(withSource);
+
+      this.playlist = deepcopy(playlist);
       this.index=0;
       this.emit('change');
       console.timeEnd("NEW PLAYLIST")
     }
 
       console.time("NEW PLAYLIST")
-      const withSource = playlist.map((item) => this.addSourceToPlaylistItem(item))
-      this.playlist = deepcopy(withSource);
+      this.playlist = deepcopy(playlist);
       this.index=0;
       this.emit('change');
       console.timeEnd("NEW PLAYLIST")
     
   }
 
-  async _createHowl(track){
+  async _createHowl(item){
     console.time("LOAD TRACK");
-    const url = await decryptSource(track);
+    const trackPath = storage + item.checksum;
+    const url = await decryptSource(trackPath);
     const howl = new Howl({
       src: url,
       preload: true,

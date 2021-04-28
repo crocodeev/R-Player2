@@ -1,11 +1,15 @@
 const {Howl, Howler} = require('howler');
 const EventEmmitter = require('events');
 const decryptSource = require('./sourceDecrypter');
-import { timeLog } from 'console';
 import deepcopy from 'deepcopy';
 import { initialApiConfig } from '../../hardcode/initialApiConfig';
 
 const storage = initialApiConfig.storage;
+
+const playlistInteractionTypes = {
+  INSERT:"INSERT",
+  REPLACE: "REPLACE"
+}
 
 /*
 emit
@@ -123,31 +127,31 @@ class Sound extends EventEmmitter  {
     return this.playlist;
   }
 
-  addSourceToPlaylistItem(item){
-    item.src = storage + item.checksum;
-    return item;
+
+  static get playlistInteractionTypes(){
+    return playlistInteractionTypes;
   }
 
+  setNewPlaylist(playlist, type, index = 0){
 
-  setNewPlaylist(playlist){
-
-    //first start?
-    if(this.playlist.length === 1 && !this.playlist[0].howl){
-
-      console.time("NEW PLAYLIST")
-
-      this.playlist = deepcopy(playlist);
-      this.index=0;
-      this.emit('change');
-      console.timeEnd("NEW PLAYLIST")
-    }
-
-      console.time("NEW PLAYLIST")
-      this.playlist = deepcopy(playlist);
-      this.index=0;
-      this.emit('change');
-      console.timeEnd("NEW PLAYLIST")
-    
+      switch (type) {
+        case playlistInteractionTypes.INSERT:
+          console.time("NEW PLAYLIST") 
+          this.playlist.deepcopy(playlist);
+          this.index=0;
+          this.emit('change');
+          console.timeEnd("NEW PLAYLIST")
+          break;
+        case playlistInteractionTypes.REPLACE:
+          console.time("NEW PLAYLIST") 
+          this.playlist.splice(index, this.playlist.length, ...deepcopy(playlist));
+          this.emit('change');
+          console.timeEnd("NEW PLAYLIST")
+          break;
+        default:
+          throw new Error("inccorrect interraction type");
+          break;
+      }
   }
 
   async _createHowl(item){
@@ -165,6 +169,13 @@ class Sound extends EventEmmitter  {
   }
 
 
+
+  unloadSlot(index){
+    if(this.playlist[index] && this.playlist[index].howl){
+      this.playlist[index].howl.stop()
+      this.playlist[index].howl.unload();
+    }
+  }
 
   cancelAutomaticPlayNext(){
     if(this.playlist[this.index].howl){

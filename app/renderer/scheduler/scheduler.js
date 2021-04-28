@@ -4,6 +4,10 @@ import shuffler from './helpers/shuffler';
 import dayjs from 'dayjs';
 import customParseFormat from'dayjs/plugin/customParseFormat'
 import sound from '../sound/soundEmmiter';
+import PlaybackHandler from '../sound/soundTaskController';
+
+const playbackHandler = new PlaybackHandler(sound);
+
 
 dayjs.extend(customParseFormat);
 
@@ -70,17 +74,20 @@ export default class Scheduler {
         //create task 
         const playlist = shuffler(element.playlists[0].tracks)
         
-        const action = () => {
+        const action = (flag) => {
                 
                 //при длительной кампании
-                sound.setNewPlaylist(playlist);
+                //sound.setNewPlaylist(playlist);
                 /*
                 если прервать немедленно, то stop and play
                 если дождаться окончания или теневая загрузка, то once end
                 думаю моэно сделать параметрами setNewPlaylist 
                 */
+               console.log(flag);
 
-                sound.play();
+                //sound.play();
+                //with task controller
+                playbackHandler.replacePlaylist(playlist);
         }
 
         action.getPlaylist = () => playlist;
@@ -101,23 +108,18 @@ export default class Scheduler {
 
     _checkForMissedLaunch(){
 
+        console.log("Checking for missed launch");
+
         // continuous campaign exist and overdue
         const toLaunch = this.tasks.find( element => {
             return element.playbackMode === 1 && element.startTime < dayjs().format('HH:mm:ss') });
 
-        //    
-        if(toLaunch){
-            if(sound.isPlaying){
-                sound.cancelAutomaticPlayNext()
-                sound.once('end', () => {
-                    toLaunch.job();
-                })
-            }else{
-                sound.cancelAutomaticPlayNext();
-                sound.stop();
-                toLaunch.job();
-            }
-        } 
+            console.log("ELEMENT");
+            console.log(toLaunch);
+
+
+        //это нужно убрать, логика будет перенесена в задание   
+        toLaunch.job();
     }
 
 

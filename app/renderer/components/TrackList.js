@@ -19,18 +19,22 @@ class TrackList extends Component {
   listRef = React.createRef();
   
   shouldComponentUpdate(nextProps){
-    
-    return this.props.currentTrack.name !== nextProps.currentTrack.name;
-    //return this.props.currentTrack !== nextProps.currentTrack;
 
+    if(this.props.currentTrack.name !== nextProps.currentTrack.name){
+      return true;
+    }
+
+    if(this.props.playlist !== nextProps.playlist){
+      return true;
+    }
+
+    return false;
+   
   }
 
   componentDidUpdate(){
-   
-    
-    console.log("Component update");
-    console.log(this.props);
-    this.listRef.current.scrollToItem(this.props.playlistPosition, 'center')
+    console.log("update");
+    this.listRef.current.scrollToItem(this.props.playlistPosition, 'center');
   }
 
   render(){

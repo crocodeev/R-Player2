@@ -35,9 +35,6 @@ class PlaybackHandler {
     _insertIntoPlaylist(playlist){
 
         console.log(playlist);
-
-        const arr = [1,2,3,4]
-
         //first start
         this.sound.playlist.splice(0, this.sound.playlist.length, ...arr);
     }

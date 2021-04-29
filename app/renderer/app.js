@@ -67,7 +67,7 @@ addListenersToSound(sound, store);
 
 //initial sheduler module
 
-const scheduler = new Scheduler(sound);
+const scheduler = new Scheduler();
 
 const channelRule = store.getState().schedule.channelRule;
 

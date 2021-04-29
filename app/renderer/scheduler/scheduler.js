@@ -3,8 +3,8 @@ import timeComparator from './helpers/timeComparator';
 import shuffler from './helpers/shuffler';
 import dayjs from 'dayjs';
 import customParseFormat from'dayjs/plugin/customParseFormat'
-import sound from '../sound/soundEmmiter';
 import PlaybackHandler from '../sound/soundTaskController';
+import sound from '../sound/soundEmmiter';
 
 const playbackHandler = new PlaybackHandler(sound);
 
@@ -14,11 +14,16 @@ dayjs.extend(customParseFormat);
 
 export default class Scheduler {
 
-    constructor(sound){
+    constructor(){
+        if(!!Scheduler.instance){
+            return Scheduler.instance;
+        }
+
+        Scheduler.instance = this;
+
         this.channelStartTime = '00:00:00',
         this.channelEndTime = '23:59:59',
         this.tasks = [],
-        this.sound = sound
         this.typeOfLaunch = Object.freeze({
             atStart: "atStart",
             atUpdate: "atUpdate"
@@ -35,11 +40,11 @@ export default class Scheduler {
 
         console.time("CREATE SCHEDULE");
         
-        const currentDate = dayjs().format('YYYY-MM-HH')
+        const currentDate = dayjs().format('YYYY-MM-DD')
 
         schedule.forEach(element => {
         
-            //check company date
+            //check for overdue
             const period = element.period
             if( !(currentDate >= period.start && currentDate <= period.end) ){
                 return;
@@ -65,39 +70,37 @@ export default class Scheduler {
 
         
         //check for time difference with channels rules
-        
         startTime = timeComparator(startTime, this.channelStartTime, "start");
         //console.log("startTime after comparator", startTime);
         endTime = timeComparator(endTime, this.channelEndTime, "end");
         //console.log("endTime after comparator", startTime);
 
+
         //create task 
         const playlist = shuffler(element.playlists[0].tracks)
         
-        const action = (flag) => {
+        const action = () => {
                 
                 //при длительной кампании
-                //sound.setNewPlaylist(playlist);
                 /*
                 если прервать немедленно, то stop and play
                 если дождаться окончания или теневая загрузка, то once end
                 думаю моэно сделать параметрами setNewPlaylist 
                 */
-               console.log(flag);
-
-                //sound.play();
                 //with task controller
                 playbackHandler.replacePlaylist(playlist);
         }
 
+        //может пригодиться для упрощения логики запуска плейлиста, если он пропущен
         action.getPlaylist = () => playlist;
 
-        //здесь создаём job с учётом
+        //здесь создаём job с учётом 
 
         const task = taskScheduleCreator(startTime, endTime, element, action);
 
+        console.log(task);
         //task.name = element.name;
-        task.playbackMode =  element.playbackMode;
+        task.playbackMode = element.playbackMode;
         task.startTime = startTime;
 
         
@@ -105,7 +108,7 @@ export default class Scheduler {
 
     }
 
-
+    // в эту функцию 
     _checkForMissedLaunch(){
 
         console.log("Checking for missed launch");
@@ -114,12 +117,10 @@ export default class Scheduler {
         const toLaunch = this.tasks.find( element => {
             return element.playbackMode === 1 && element.startTime < dayjs().format('HH:mm:ss') });
 
-            console.log("ELEMENT");
-            console.log(toLaunch);
+        if(toLaunch){
+            toLaunch.job();
+        }    
 
-
-        //это нужно убрать, логика будет перенесена в задание   
-        toLaunch.job();
     }
 
 

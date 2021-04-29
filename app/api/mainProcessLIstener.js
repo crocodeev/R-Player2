@@ -102,9 +102,10 @@ class MPC {
           store.dispatch(setLastModified(lastModified));
         })
         api.on('disconnected', () => {
+          console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!DISCONNECTED!!!!!!!!!!!!!!!!!!!!!!!!!!!");
           ipcMain.once('online-status-changed', (event, arg) => {
             console.log("ARG FROM Online status", arg);
-            if(arg === 'online'){
+            if(arg){
               store.dispatch(downloadCountReset());
               store.dispatch(resetDownloadedTracksArray());
               store.dispatch(downloadStatus(false));

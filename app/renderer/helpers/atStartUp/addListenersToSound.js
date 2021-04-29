@@ -27,7 +27,6 @@ export default function addListenersToSound(soundModule, store) {
       
       soundModule.on('change', () => {
         const playlist = soundModule.playlist.map(element => element.name)
-        console.log(playlist);
         store.dispatch(setPlaylist(playlist))
         //reset store current track here
       

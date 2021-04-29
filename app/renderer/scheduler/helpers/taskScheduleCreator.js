@@ -2,52 +2,68 @@ import scheduler from 'node-schedule'
 
 export default function taskScheduleCreator(startTime, endTime, element, action){
 
+    console.log("Create task");
+    console.log(element.name);
+    console.log(startTime);
     //continuous or not
     if( element.playbackMode === 1 ){
-        /*const pattern = createCrontabPattern(startTime);
-        console.log("pattern", pattern);*/
-        return scheduler.scheduleJob(element.name, '0 0 09 * * *', action);
+        const pattern = createCrontabPattern(startTime);
+        return scheduler.scheduleJob(element.name, pattern, action);
         
     }else{
-        throw new Error("Handling reccurence schedule not implemented for now");
+
+        console.log('PERIODIC');
+        const pattern = createCrontabPattern(startTime, element.blockInfo);
+        console.log(pattern);
+        return scheduler.scheduleJob(element.name, pattern, action);
+
     }
 
 }
 
-function createCrontabPattern(time){
+function createCrontabPattern(time, blockInfo){
 
-    const readyTime = new TimeParse(time);
+    const parsedTime = time.split(":").reverse().join(" ");
+    let pattern = `${time} * * *`;
 
-    const pattern = `${readyTime.getSeconds()} ${readyTime.getMinutes()} ${readyTime.getHours()} * * *`;
+    if(!blockInfo){
+        return pattern;
+    }
+
+    // every hour
+    if(blockInfo.timeType){
+        pattern = str.slice(0,8) + `/${blockInfo.time}` + str.slice(8, str.length);
+        return pattern
+    }
+
+    //every n-minute
+    pattern  = str.slice(0,5) + `/${blockInfo.time}` + str.slice(5, str.length);
+
     return pattern;
+
+
 }
 
 
+
+/*
 class TimeParse {
 
 
-    constructor(time){
-        this.time = time;
-        console.log("time to parse", time);
-
+    static get seconds(time){
+   
+        return time.slice(6,8);
+    
     }
 
-    getSeconds(){
+    static get minutes(){
 
-        
-        const ss = this.time.slice(6,8)
-        return  ss == 0 ? 0 : ss
+        return time.slice(3,5);
     }
 
-    getMinutes(){
+    static get hours(){
 
-        const mm = this.time.slice(3,5)
-        return mm == 0 ? 0 : mm
-    }
-
-    getHours(){
-
-        const hh = this.time.slice(0,2)
-        return hh == 0 ? 0 : hh
+        return time.slice(0,2);
     }
 }
+*/

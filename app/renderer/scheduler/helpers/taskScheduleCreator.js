@@ -2,18 +2,18 @@ import scheduler from 'node-schedule'
 
 export default function taskScheduleCreator(startTime, endTime, element, action){
 
-    console.log("Create task");
-    console.log(element.name);
-    console.log(startTime);
     //continuous or not
     if( element.playbackMode === 1 ){
+   
         const pattern = createCrontabPattern(startTime);
+        console.log(pattern);
+        console.log(scheduler.scheduleJob(element.name, pattern, action));
         return scheduler.scheduleJob(element.name, pattern, action);
         
     }else{
 
-        console.log('PERIODIC');
-        const pattern = createCrontabPattern(startTime, element.blockInfo);
+     
+        const pattern = createCrontabPattern(startTime, endTime, element.blockInfo);
         console.log(pattern);
         return scheduler.scheduleJob(element.name, pattern, action);
 
@@ -21,10 +21,31 @@ export default function taskScheduleCreator(startTime, endTime, element, action)
 
 }
 
-function createCrontabPattern(time, blockInfo){
+function createCrontabPattern(){
 
-    const parsedTime = time.split(":").reverse().join(" ");
-    let pattern = `${time} * * *`;
+    let startTime;
+    let endTime;
+    let blockInfo; 
+
+    if(arguments.length < 2 ){
+        startTime = arguments[0];
+    }else{
+        startTime = arguments[0];
+        //take only hours for now, not good solution but ok for now
+        endTime = "-" + arguments[1].slice(0,2);
+        blockInfo = arguments[2];
+    }
+
+
+    
+
+    console.log("createCrontabPattern");
+    console.log(startTime);
+    console.log(endTime);
+    console.log(blockInfo);
+
+    const parsedTime = startTime.split(":").reverse().join(" ");
+    let pattern = endTime ? `${parsedTime}${endTime} * * *` : `${parsedTime} * * *`;
 
     if(!blockInfo){
         return pattern;
@@ -32,12 +53,12 @@ function createCrontabPattern(time, blockInfo){
 
     // every hour
     if(blockInfo.timeType){
-        pattern = str.slice(0,8) + `/${blockInfo.time}` + str.slice(8, str.length);
+        pattern = pattern.slice(0,8) + `/${blockInfo.time}${endTime}` + pattern.slice(8, pattern.length);
         return pattern
     }
 
     //every n-minute
-    pattern  = str.slice(0,5) + `/${blockInfo.time}` + str.slice(5, str.length);
+    pattern  = pattern.slice(0,5) + `/${blockInfo.time}` + pattern.slice(5, pattern.length);
 
     return pattern;
 

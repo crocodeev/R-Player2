@@ -123,6 +123,18 @@ export default class Scheduler {
 
     }
 
+    _createAction(element){
+
+        if(element.playbackMode){
+            return ;
+        }
+
+        else
+
+        
+
+    }
+
 
     _lastModifiedStateHandler(job){
         const name = job.name;

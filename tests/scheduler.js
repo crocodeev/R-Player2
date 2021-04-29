@@ -1,5 +1,13 @@
 const scheduler = require('node-schedule');
+const dayjs = require('dayjs')
+const customParseFormat = require('dayjs/plugin/customParseFormat')
 
-const job = scheduler.scheduleJob("somejob", "04 13 12 * * *", () => console.log("It's ok to using leading zeroes"))
+let counter = 0;
+
+const job = scheduler.scheduleJob("somejob", "00 00/5 10-22 * * *", () => {
+    console.log(dayjs().format());
+    console.log(counter);
+    counter++;
+})
 
 

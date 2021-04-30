@@ -32,11 +32,20 @@ class PlaybackHandler {
 
     }
 
-    _insertIntoPlaylist(playlist){
+    insertIntoPlaylist(playlist){
 
-        console.log(playlist);
-        //first start
-        this.sound.playlist.splice(0, this.sound.playlist.length, ...arr);
+        if(this.sound.isPlaying){
+            this.sound.unloadSlot(this.sound.index + 1);
+            this.sound.once('change', async () => {
+                console.log("UPDATE SCHEDULE");
+                const data = this.sound.playlist[this.sound.index + 1];
+                data.howl = await this.sound._createHowl(data);
+            });
+            this.sound.setNewPlaylist(playlist, "INSERT", this.sound.index + 1);
+        }else{
+            this.sound.setNewPlaylist(playlist, "INSERT", 0);
+            this.sound.play();
+        }
     }
 
 

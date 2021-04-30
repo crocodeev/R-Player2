@@ -21,10 +21,13 @@ class TrackList extends Component {
   shouldComponentUpdate(nextProps){
 
     if(this.props.currentTrack.name !== nextProps.currentTrack.name){
+      console.log("diff name");
       return true;
     }
 
     if(this.props.playlist !== nextProps.playlist){
+      console.log("diff list");
+      console.log(nextProps.playlist);
       return true;
     }
 
@@ -37,7 +40,9 @@ class TrackList extends Component {
     this.listRef.current.scrollToItem(this.props.playlistPosition, 'center');
   }
 
+
   render(){
+
 
 
     return(

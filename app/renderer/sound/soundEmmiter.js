@@ -137,8 +137,7 @@ class Sound extends EventEmmitter  {
       switch (type) {
         case playlistInteractionTypes.INSERT:
           console.time("NEW PLAYLIST") 
-          this.playlist.deepcopy(playlist);
-          this.index=0;
+          this.playlist.splice(index, 0, deepcopy(playlist));
           this.emit('change');
           console.timeEnd("NEW PLAYLIST")
           break;

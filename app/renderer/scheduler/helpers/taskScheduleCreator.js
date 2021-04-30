@@ -6,15 +6,11 @@ export default function taskScheduleCreator(startTime, endTime, element, action)
     if( element.playbackMode === 1 ){
    
         const pattern = createCrontabPattern(startTime);
-        console.log(pattern);
-        console.log(scheduler.scheduleJob(element.name, pattern, action));
         return scheduler.scheduleJob(element.name, pattern, action);
         
     }else{
 
-     
         const pattern = createCrontabPattern(startTime, endTime, element.blockInfo);
-        console.log(pattern);
         return scheduler.scheduleJob(element.name, pattern, action);
 
     }
@@ -36,14 +32,6 @@ function createCrontabPattern(){
         blockInfo = arguments[2];
     }
 
-
-    
-
-    console.log("createCrontabPattern");
-    console.log(startTime);
-    console.log(endTime);
-    console.log(blockInfo);
-
     const parsedTime = startTime.split(":").reverse().join(" ");
     let pattern = endTime ? `${parsedTime}${endTime} * * *` : `${parsedTime} * * *`;
 
@@ -64,27 +52,3 @@ function createCrontabPattern(){
 
 
 }
-
-
-
-/*
-class TimeParse {
-
-
-    static get seconds(time){
-   
-        return time.slice(6,8);
-    
-    }
-
-    static get minutes(){
-
-        return time.slice(3,5);
-    }
-
-    static get hours(){
-
-        return time.slice(0,2);
-    }
-}
-*/

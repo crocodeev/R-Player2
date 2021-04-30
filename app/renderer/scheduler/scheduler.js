@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import customParseFormat from'dayjs/plugin/customParseFormat'
 import PlaybackHandler from '../sound/soundTaskController';
 import sound from '../sound/soundEmmiter';
+import { lazy } from 'react';
 
 const playbackHandler = new PlaybackHandler(sound);
 
@@ -76,29 +77,15 @@ export default class Scheduler {
         //console.log("endTime after comparator", startTime);
 
 
-        //create task 
-        const playlist = shuffler(element.playlists[0].tracks)
-        
-        const action = () => {
-                
-                //при длительной кампании
-                /*
-                если прервать немедленно, то stop and play
-                если дождаться окончания или теневая загрузка, то once end
-                думаю моэно сделать параметрами setNewPlaylist 
-                */
-                //with task controller
-                playbackHandler.replacePlaylist(playlist);
-        }
+
+        const action = this._createAction(element);
 
         //может пригодиться для упрощения логики запуска плейлиста, если он пропущен
-        action.getPlaylist = () => playlist;
 
         //здесь создаём job с учётом 
 
         const task = taskScheduleCreator(startTime, endTime, element, action);
 
-        console.log(task);
         //task.name = element.name;
         task.playbackMode = element.playbackMode;
         task.startTime = startTime;
@@ -125,13 +112,21 @@ export default class Scheduler {
 
     _createAction(element){
 
+        const playlist = shuffler(element.playlists[0].tracks);
+        // check for periodic playbackmode
         if(element.playbackMode){
-            return ;
+
+            return () => {
+                playbackHandler.replacePlaylist(playlist);
+            }
         }
 
-        else
+        let counter = 0;
 
-        
+        return () => {
+            playbackHandler.insertIntoPlaylist(playlist[counter]);
+            counter < playlist.length ? counter++ : counter = 0;  
+        };
 
     }
 

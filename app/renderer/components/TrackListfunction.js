@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -18,28 +18,22 @@ class TrackList extends Component {
 
   listRef = React.createRef();
   
-  shouldComponentUpdate(nextProps){
+ /*shouldComponentUpdate(nextProps){
    
-    return this.props.currentTrack.name !== nextProps.currentTrack.name;
+    return this.props.name !== nextProps.name;
     //return this.props.currentTrack !== nextProps.currentTrack;
 
-  }
+  }*/
 
-  componentDidMount(){
-    console.log("Mount");
-  }
-
-  componentWillUpdate(){
-    console.log("Will update");
-  }
 
   componentDidUpdate(){
     console.log("Updated");
-    this.listRef.current.scrollToItem(this.props.playlistPosition, 'center')
+    this.listRef.current.scrollToItem(this.props.position, 'center')
   }
 
   render(){
 
+    console.log("!!!RENDER!!!");
 
     return(
       <AutoSizer>
@@ -53,7 +47,7 @@ class TrackList extends Component {
         width={width}
         itemData={{
           playlist: this.props.playlist,
-          currentTrack: this.props.currentTrack.name
+          currentTrack: this.props.name
         }}
         >
         {Row}
@@ -68,7 +62,11 @@ class TrackList extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return state.player
+  return {
+    playlist: state.player.playlist,
+    position: state.player.playlistPosition,
+    name: state.player.currentTrack.name
+  }
 }
 
 

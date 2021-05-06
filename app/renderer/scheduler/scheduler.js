@@ -124,6 +124,7 @@ export default class Scheduler {
         let counter = 0;
 
         return () => {
+            console.log("Insert action");
             playbackHandler.insertIntoPlaylist(playlist[counter]);
             counter < playlist.length ? counter++ : counter = 0;  
         };
@@ -147,7 +148,9 @@ export default class Scheduler {
     }
 
     clearTaskQueue(){
-        this.tasks = []
+        console.log("clear schedule queue");
+        this.tasks.forEach(item => item.cancel());
+        this.tasks = [];
     }
 
 

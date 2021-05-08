@@ -139,6 +139,7 @@ class Api extends EventEmitter {
                 responce.body.pipe(cipher).pipe(dest);
                 //how to catch errors, is electron-fetch caugth errors?
                 responce.body.on('error', (e) => { 
+                    console.log(filePath);
                     self.emit('disconnected');
                     console.log("ERROR FROM DOWNLOAD TRACK", e)});
                 dest.on('close', () => {
@@ -151,6 +152,7 @@ class Api extends EventEmitter {
                         self.emit('loadCompleted');
                     }
                 });
+                dest.on('error', (e) => console.log('Error while writing', e));
               }
           } catch (error) {
               console.log(error);

@@ -36,14 +36,14 @@ class TrackList extends Component {
   }*/
 
   componentDidUpdate(){
-    console.log("update");
+    //console.log("update");
     this.listRef.current.scrollToItem(this.props.position, 'center');
   }
 
 
   render(){
 
-    console.log("RENDER LIST");
+    //console.log("RENDER LIST");
 
     return(
       <AutoSizer>

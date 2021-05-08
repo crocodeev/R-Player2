@@ -56,9 +56,10 @@ export default class Scheduler {
 
         });
 
+        console.timeEnd("CREATE SCHEDULE");
+
         this._checkForMissedLaunch();
         
-        console.timeEnd("CREATE SCHEDULE");
     }
 
     _createTask(element){

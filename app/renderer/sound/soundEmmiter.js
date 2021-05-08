@@ -136,16 +136,16 @@ class Sound extends EventEmmitter  {
 
       switch (type) {
         case playlistInteractionTypes.INSERT:
-          console.time("NEW PLAYLIST") 
+          console.time("NEW PLAYLIST INSERT") 
           this.playlist.splice(index, 0, deepcopy(playlist));
           this.emit('change');
-          console.timeEnd("NEW PLAYLIST")
+          console.timeEnd("NEW PLAYLIST INSERT");
           break;
         case playlistInteractionTypes.REPLACE:
-          console.time("NEW PLAYLIST") 
+          console.time("NEW PLAYLIST REPLACE") 
           this.playlist.splice(index, this.playlist.length, ...deepcopy(playlist));
           this.emit('change');
-          console.timeEnd("NEW PLAYLIST")
+          console.timeEnd("NEW PLAYLIST REPLACE");
           break;
         default:
           throw new Error("inccorrect interraction type");

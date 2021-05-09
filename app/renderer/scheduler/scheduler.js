@@ -87,13 +87,15 @@ export default class Scheduler {
 
         const task = taskScheduleCreator(startTime, endTime, element, action);
 
-        //task.name = element.name;
-        task.playbackMode = element.playbackMode;
-        task.startTime = startTime;
+        if(task){
+            //task.name = element.name;
+            task.playbackMode = element.playbackMode;
+            task.startTime = startTime;
+
+            this.tasks.push(task);
+        }
 
         
-        this.tasks.push(task);
-
     }
 
     // в эту функцию 

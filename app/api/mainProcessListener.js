@@ -109,9 +109,8 @@ class MPC {
               store.dispatch(downloadCountReset());
               store.dispatch(resetDownloadedTracksArray());
               store.dispatch(downloadStatus(false));
-              console.log('This is schedue', schedule);
-              store.dispatch(setNextSchedule(schedule));
-              store.dispatch(setDownloadAmount(api.schedule.length));
+              //store.dispatch(setNextSchedule(schedule));
+              //store.dispatch(setDownloadAmount(api.schedule.length));
               api.contentDownload(api.schedule);
             }
           })

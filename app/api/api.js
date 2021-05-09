@@ -1,10 +1,18 @@
 const {session} = require('electron');
 const fetch = require('electron-fetch').default;
 const fs = require('fs');
+const path = require('path');
 const { EventEmitter } = require('events');
 const crypter = require('../utils/crypter');
 const isFileExist = require('./helpers/isFileExist').default;
 const getAllTracksFromSchedule = require('./helpers/getAllTracksFromSchedule').default;
+const util = require('util');
+const stream = require('stream');
+const pipeline = util.promisify(stream.pipeline);
+
+console.log("CHECK IF FUNCTION EXIST", fs.rm);
+console.log("CHECK IF FUNCTION EXIST", fs.unlink);
+
 
 
 class Api extends EventEmitter {
@@ -101,6 +109,72 @@ class Api extends EventEmitter {
     }
 
     contentDownload(trackArray){
+
+        let self = this;
+        self.isContentDownloading = true;
+        let counter = 0;
+  
+        (async function download() {
+  
+          const item = trackArray[counter];
+          const name = item.checksum;
+          const filePath = path.join(self.storage, name);
+          
+          const isExist = await isFileExist(filePath);  
+  
+            try {
+                
+                if(!self.isContentDownloading){
+  
+                    self.emit('loadCanceled')
+                    return;
+                }
+
+                if(isExist){
+                  console.log("download skip");  
+                  counter++;
+                    self.emit('gotTrack', item.id);
+                    if(counter < trackArray.length){
+                      download();
+                    }else{
+                      self.emit('loadCompleted');
+                    }
+                }else{
+                  
+                  console.log("trying download file");
+
+                  const responce = await fetch(item.url);
+
+
+                    await pipeline(
+                        responce.body, //readable stream
+                        crypter.getCipher(), //cipher
+                        fs.createWriteStream(filePath) //destination
+                      )
+                      
+                      console.log(name);
+                      counter++;
+                      self.emit('gotTrack', item.id);
+                      if(counter < trackArray.length){
+                          download();
+                      }else{
+                          self.emit('loadCompleted');
+                      }
+                }
+            } catch (error) {
+                console.log("ERROR DOWNLOAD: ", error);
+                fs.rm(filePath, (error) => {
+                    if(error){
+                        console.log(error);
+                    }
+                    self.emit('disconnected');
+                })
+  
+            }
+          }).apply(self);
+    }
+
+    contentDownload1(trackArray){
 
       let self = this;
       self.isContentDownloading = true;

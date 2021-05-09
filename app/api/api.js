@@ -163,13 +163,12 @@ class Api extends EventEmitter {
                 }
             } catch (error) {
                 console.log("ERROR DOWNLOAD: ", error);
-                fs.rm(filePath, (error) => {
+                fs.unlink(filePath, (error) => {
                     if(error){
                         console.log(error);
                     }
                     self.emit('disconnected');
                 })
-  
             }
           }).apply(self);
     }

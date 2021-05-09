@@ -1,6 +1,7 @@
 const {Howl, Howler} = require('howler');
 const EventEmmitter = require('events');
 const decryptSource = require('./sourceDecrypter');
+const path = require('path');
 import deepcopy from 'deepcopy';
 import { initialApiConfig } from '../../hardcode/initialApiConfig';
 
@@ -155,7 +156,7 @@ class Sound extends EventEmmitter  {
 
   async _createHowl(item){
     console.time("LOAD TRACK");
-    const trackPath = storage + item.checksum;
+    const trackPath = path.join(storage, item.checksum);
     const url = await decryptSource(trackPath);
     const howl = new Howl({
       src: url,

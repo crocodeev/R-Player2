@@ -173,67 +173,6 @@ class Api extends EventEmitter {
           }).apply(self);
     }
 
-    contentDownload1(trackArray){
-
-      let self = this;
-      self.isContentDownloading = true;
-      let counter = 0;
-
-      (async function download() {
-
-        const item = trackArray[counter];
-        const name = item.checksum;
-        const filePath = self.storage + name;
-        
-        const isExist = await isFileExist(filePath);  
-
-          try {
-              
-              if(!self.isContentDownloading){
-
-                  self.emit('loadCanceled')
-                  return;
-              }  
-              if(isExist){
-                console.log("download skip");  
-                counter++;
-                  self.emit('gotTrack', item.id);
-                  if(counter < trackArray.length){
-                    download();
-                  }else{
-                    self.emit('loadCompleted');
-                  }
-              }else{
-                
-                console.log("trying download file");
-                const responce = await fetch(item.url);
-                const dest = fs.createWriteStream(filePath);
-                const cipher = crypter.getCipher()
-                responce.body.pipe(cipher).pipe(dest);
-                //how to catch errors, is electron-fetch caugth errors?
-                responce.body.on('error', (e) => { 
-                    console.log(filePath);
-                    self.emit('disconnected');
-                    console.log("ERROR FROM DOWNLOAD TRACK", e)});
-                dest.on('close', () => {
-                    console.log(name);
-                    counter++;
-                    self.emit('gotTrack', item.id);
-                    if(counter < trackArray.length){
-                        download();
-                    }else{
-                        self.emit('loadCompleted');
-                    }
-                });
-                dest.on('error', (e) => console.log('Error while writing', e));
-              }
-          } catch (error) {
-              console.log(error);
-
-          }
-        }).apply(self);
-  }
-
     async accountCheck(code){
 
         if(!this.isPropertyExist("code") ){

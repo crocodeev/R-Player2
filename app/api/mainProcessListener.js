@@ -65,6 +65,8 @@ class MPC {
 
           if(api.isContentDownloading){
             api.isContentDownloading = false;
+
+            console.log("CANCEL DOWNLOAD FOR NEW ONE, NEW AMOUNT IS: ", api.schedule.length);
             api.once('loadCanceled', () => {
               store.dispatch(downloadCountReset());
               store.dispatch(resetDownloadedTracksArray());
@@ -75,6 +77,9 @@ class MPC {
               api.contentDownload(api.schedule);
             })
           }else{
+
+            console.log("REGULAR DOWNLOAD, NEW AMOUNT IS: ", api.schedule.length);
+
             store.dispatch(downloadCountReset());
             store.dispatch(resetDownloadedTracksArray());
             store.dispatch(downloadStatus(false));
@@ -106,6 +111,9 @@ class MPC {
           ipcMain.once('online-status-changed', (event, arg) => {
             console.log("ARG FROM Online status", arg);
             if(arg){
+
+              console.log("INTERRUPT DOWNLOAD: ", api.schedule.length);
+
               store.dispatch(downloadCountReset());
               store.dispatch(resetDownloadedTracksArray());
               store.dispatch(downloadStatus(false));

@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const folder = process.platform === 'linux' ? linuxMusicPath() : "C:\\MUSIC\\"
+const folder = defineMusicPath();
 console.log("PATH ",folder);
 const machineName = process.env.USERDOMAIN
 console.log("MACHINE ", machineName);
@@ -14,6 +14,12 @@ export const  initialApiConfig = {
             "lastModifiedInterval": 1
 }
 
-function linuxMusicPath(){
-    return path.join(process.env.HOME, 'Music');
+function defineMusicPath(){
+
+    if(process.platform === 'linux'){
+        return path.join(process.env.HOME, 'Music');
+    }
+
+    return path.join(process.env.HOMEDRIVE, process.env.HOMEPATH, 'Music')
+
 }

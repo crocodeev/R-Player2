@@ -1,4 +1,7 @@
 const {ipcMain} = require('electron');
+const connectivity = require('connectivity');
+
+
 import { getTrack,
          downloadCountReset,
          setDownloadAmount,
@@ -63,6 +66,8 @@ class MPC {
         });
         api.on('gotSchedule', (schedule) => {
 
+          console.log("GOT SCHEDULE");
+
           if(api.isContentDownloading){
             api.isContentDownloading = false;
 
@@ -107,21 +112,39 @@ class MPC {
           store.dispatch(setLastModified(lastModified));
         })
         api.on('disconnected', () => {
-          console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!DISCONNECTED!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-          ipcMain.once('online-status-changed', (event, arg) => {
-            console.log("ARG FROM Online status", arg);
-            if(arg){
 
-              console.log("INTERRUPT DOWNLOAD: ", api.schedule.length);
+          console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!DISCONNECTED!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        //in case, if connection already reset
+
+            console.log("API IS DOWNLOADING: ", api.isContentDownloading);
+
+          connectivity((online) => {
+            if(online){
+              console.log("INTERRUPT DOWNLOAD NOW ONLINE: ", api.schedule.length);
 
               store.dispatch(downloadCountReset());
               store.dispatch(resetDownloadedTracksArray());
+              // add, check in store,, change if another
               store.dispatch(downloadStatus(false));
-              //store.dispatch(setNextSchedule(schedule));
-              //store.dispatch(setDownloadAmount(api.schedule.length));
               api.contentDownload(api.schedule);
+            }else{
+              console.log("OFFLINE, CREATE LISTENER");
+            ipcMain.once('online-status-changed', (event, arg) => {
+              console.log("ARG FROM Online status", arg);
+              if(arg){
+  
+                console.log("INTERRUPT DOWNLOAD: ", api.schedule.length);
+  
+                store.dispatch(downloadCountReset());
+                store.dispatch(resetDownloadedTracksArray());
+                store.dispatch(downloadStatus(false));
+                //store.dispatch(setNextSchedule(schedule));
+                //store.dispatch(setDownloadAmount(api.schedule.length));
+                api.contentDownload(api.schedule);
+              }
+            })
             }
-          })
+          })  
         })
     }
 }

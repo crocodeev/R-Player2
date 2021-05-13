@@ -10,9 +10,6 @@ const util = require('util');
 const stream = require('stream');
 const pipeline = util.promisify(stream.pipeline);
 
-console.log("CHECK IF FUNCTION EXIST", fs.rm);
-console.log("CHECK IF FUNCTION EXIST", fs.unlink);
-
 
 
 class Api extends EventEmitter {
@@ -142,7 +139,7 @@ class Api extends EventEmitter {
                 }else{
                   
                   console.log("trying download file");
-
+                  console.log(name);
                   const responce = await fetch(item.url);
 
 
@@ -152,7 +149,6 @@ class Api extends EventEmitter {
                         fs.createWriteStream(filePath) //destination
                       )
                       
-                      console.log(name);
                       counter++;
                       self.emit('gotTrack', item.id);
                       if(counter < trackArray.length){
@@ -167,6 +163,7 @@ class Api extends EventEmitter {
                     if(error){
                         console.log(error);
                     }
+                    console.log(filePath, "SUCCESFULLY DESTROYED");
                     self.emit('disconnected');
                 })
             }

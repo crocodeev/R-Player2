@@ -3,6 +3,7 @@ import Player from '../components/Player';
 import { push } from 'connected-react-router';
 
 
+
 const mapStateToProps = (state) => {
   return state;
 };
@@ -14,4 +15,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 // какие ещё аргументы можно передать в функцию connect?
-export default connect(mapStateToProps, mapDispatchToProps)(Player);
+export default connect(null, mapDispatchToProps)(Player);

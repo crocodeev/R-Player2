@@ -159,6 +159,7 @@ class Api extends EventEmitter {
                 }
             } catch (error) {
                 console.log("ERROR DOWNLOAD: ", error);
+            
                 fs.unlink(filePath, (error) => {
                     if(error){
                         console.log(error);

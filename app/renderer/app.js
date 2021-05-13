@@ -139,6 +139,21 @@ if(schedule){
 }
 }
 
+//is uncomleted download tasks
+{
+const currentChannel = store.getState().webapi.currentChannel;
+
+const isDownloadCompleted = store.getState().player.isDownloadCompleted
+console.log("Download comleted is: ", isDownloadCompleted);
+if(!isDownloadCompleted){
+  //запрашиваем расписание ещё раз
+  const channelID = store.getState().webapi.currentChannel
+  if(channelID){
+    rpc.getSchedule(channelID);
+  }
+}
+}
+
 
 
 const rootElement = document.querySelector(document.currentScript.getAttribute('data-container'));

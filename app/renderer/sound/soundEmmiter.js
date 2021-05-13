@@ -1,6 +1,7 @@
 const {Howl, Howler} = require('howler');
 const EventEmmitter = require('events');
 const decryptSource = require('./sourceDecrypter');
+const path = require('path');
 import deepcopy from 'deepcopy';
 import { initialApiConfig } from '../../hardcode/initialApiConfig';
 
@@ -136,16 +137,16 @@ class Sound extends EventEmmitter  {
 
       switch (type) {
         case playlistInteractionTypes.INSERT:
-          console.time("NEW PLAYLIST") 
+          console.time("NEW PLAYLIST INSERT") 
           this.playlist.splice(index, 0, deepcopy(playlist));
           this.emit('change');
-          console.timeEnd("NEW PLAYLIST")
+          console.timeEnd("NEW PLAYLIST INSERT");
           break;
         case playlistInteractionTypes.REPLACE:
-          console.time("NEW PLAYLIST") 
+          console.time("NEW PLAYLIST REPLACE") 
           this.playlist.splice(index, this.playlist.length, ...deepcopy(playlist));
           this.emit('change');
-          console.timeEnd("NEW PLAYLIST")
+          console.timeEnd("NEW PLAYLIST REPLACE");
           break;
         default:
           throw new Error("inccorrect interraction type");
@@ -155,7 +156,7 @@ class Sound extends EventEmmitter  {
 
   async _createHowl(item){
     console.time("LOAD TRACK");
-    const trackPath = storage + item.checksum;
+    const trackPath = path.join(storage, item.checksum);
     const url = await decryptSource(trackPath);
     const howl = new Howl({
       src: url,

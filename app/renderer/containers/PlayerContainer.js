@@ -4,10 +4,6 @@ import { push } from 'connected-react-router';
 
 
 
-const mapStateToProps = (state) => {
-  return state;
-};
-
 const mapDispatchToProps = (dispatch) => {
   return {
     logout: () => dispatch(push("/"))

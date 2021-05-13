@@ -56,9 +56,10 @@ export default class Scheduler {
 
         });
 
+        console.timeEnd("CREATE SCHEDULE");
+
         this._checkForMissedLaunch();
         
-        console.timeEnd("CREATE SCHEDULE");
     }
 
     _createTask(element){
@@ -86,13 +87,15 @@ export default class Scheduler {
 
         const task = taskScheduleCreator(startTime, endTime, element, action);
 
-        //task.name = element.name;
-        task.playbackMode = element.playbackMode;
-        task.startTime = startTime;
+        if(task){
+            //task.name = element.name;
+            task.playbackMode = element.playbackMode;
+            task.startTime = startTime;
+
+            this.tasks.push(task);
+        }
 
         
-        this.tasks.push(task);
-
     }
 
     // в эту функцию 
@@ -124,6 +127,7 @@ export default class Scheduler {
         let counter = 0;
 
         return () => {
+            console.log("Insert action");
             playbackHandler.insertIntoPlaylist(playlist[counter]);
             counter < playlist.length ? counter++ : counter = 0;  
         };
@@ -147,7 +151,9 @@ export default class Scheduler {
     }
 
     clearTaskQueue(){
-        this.tasks = []
+        console.log("clear schedule queue");
+        this.tasks.forEach(item => item.cancel());
+        this.tasks = [];
     }
 
 

@@ -14,7 +14,7 @@ async function decryptSource(src) {
     console.time("DECRYPT");
     const input = fs.createReadStream(src)
     const decipher = crypter.getDecipher()
-    decipher.on('end', () => console.log("DECIPER END"))
+    //decipher.on('end', () => console.log("DECIPER END"))
 
     const url = await toBlobURL(input.pipe(decipher))
     console.timeEnd("DECRYPT");

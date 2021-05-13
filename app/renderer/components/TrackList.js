@@ -18,7 +18,7 @@ class TrackList extends Component {
 
   listRef = React.createRef();
   
-  shouldComponentUpdate(nextProps){
+  /*shouldComponentUpdate(nextProps){
 
     if(this.props.currentTrack.name !== nextProps.currentTrack.name){
       console.log("diff name");
@@ -33,17 +33,17 @@ class TrackList extends Component {
 
     return false;
    
-  }
+  }*/
 
   componentDidUpdate(){
-    console.log("update");
-    this.listRef.current.scrollToItem(this.props.playlistPosition, 'center');
+    //console.log("update");
+    this.listRef.current.scrollToItem(this.props.position, 'center');
   }
 
 
   render(){
 
-
+    //console.log("RENDER LIST");
 
     return(
       <AutoSizer>
@@ -57,7 +57,7 @@ class TrackList extends Component {
         width={width}
         itemData={{
           playlist: this.props.playlist,
-          currentTrack: this.props.currentTrack.name
+          currentTrack: this.props.name
         }}
         >
         {Row}
@@ -72,7 +72,11 @@ class TrackList extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return state.player
+  return {
+    playlist: state.player.playlist,
+    position: state.player.playlistPosition,
+    name: state.player.currentTrack.name
+  }
 }
 
 

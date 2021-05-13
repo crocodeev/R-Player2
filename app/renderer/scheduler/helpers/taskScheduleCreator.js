@@ -6,11 +6,13 @@ export default function taskScheduleCreator(startTime, endTime, element, action)
     if( element.playbackMode === 1 ){
    
         const pattern = createCrontabPattern(startTime);
+        console.log(pattern);
         return scheduler.scheduleJob(element.name, pattern, action);
         
     }else{
 
         const pattern = createCrontabPattern(startTime, endTime, element.blockInfo);
+        console.log(pattern);
         return scheduler.scheduleJob(element.name, pattern, action);
 
     }

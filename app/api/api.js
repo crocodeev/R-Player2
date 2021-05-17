@@ -10,9 +10,6 @@ const util = require('util');
 const stream = require('stream');
 const pipeline = util.promisify(stream.pipeline);
 
-console.log("CHECK IF FUNCTION EXIST", fs.rm);
-console.log("CHECK IF FUNCTION EXIST", fs.unlink);
-
 
 
 class Api extends EventEmitter {

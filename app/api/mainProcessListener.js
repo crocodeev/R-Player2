@@ -1,4 +1,4 @@
-const {ipcMain} = require('electron');
+const {ipcMain, webContents} = require('electron');
 import { getTrack,
          downloadCountReset,
          setDownloadAmount,
@@ -20,6 +20,7 @@ import { push } from 'connected-react-router';
 class MPC {
 
     init(api, store){
+
         ipcMain.on('test', (event, arg) => {
             console.log(arg);
         });
@@ -27,7 +28,6 @@ class MPC {
         ipcMain.on('token', (event, arg) => {
             api.getToken(arg);
         });
-
 
         ipcMain.on('schedule', (event, arg) => {
             api.channel = arg;
@@ -124,6 +124,19 @@ class MPC {
           })
         })
     }
+
+    //for auto hide
+    enableAutoHide(webContents){
+      webContents.send('window-showed', "Hello world")
+    }
+
+    acceptAutoHide(browserWindow){
+      console.log("AUTOHIDE ACCEPTED");
+      ipcMain.on('hide-window', () => {
+        browserWindow.hide()
+      })
+    }
+
 }
 
 

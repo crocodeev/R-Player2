@@ -1,7 +1,22 @@
-const { ipcRenderer } = window.require("electron");
+const { ipcRenderer } = require("electron");
 
 
-class RPC {
+export default class RPC {
+
+    setWindowStateListener(){
+        ipcRenderer.on('window-showed', (event, arg) => {
+            console.log(arg);
+            setTimeout(() => {
+              console.log("hide window");  
+              this.hideWindow();  
+            }, 1500)
+        })
+    }
+
+    hideWindow(){
+        console.log("SEND TO HIDE");
+        ipcRenderer.send('hide-window');
+    }
 
     testSend(message) {
         ipcRenderer.send('test', message);
@@ -22,11 +37,7 @@ class RPC {
     setGuid(guid){
         ipcRenderer.send('guid', guid);
     }
-
-    setGuid(guid){
-        ipcRenderer.send('guid', guid);
-    }
-
+   
     changeOnlineStatus(status){
         ipcRenderer.send('online-status-changed', status);
     }
@@ -34,6 +45,8 @@ class RPC {
     storeIsReady(arg){
         ipcRenderer.send('store-inited', arg);
     }
+
+
 
 }
 

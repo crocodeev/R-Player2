@@ -23,6 +23,9 @@ import addListenerToOnlineStatus from './helpers/atStartUp/addListenerToOnlineSt
 //for test
 window.sound = sound
 
+//check state of browser window
+rpc.setWindowStateListener();
+
 import {
   setChannelTime
 } from '../store/actions/scheduleActions'

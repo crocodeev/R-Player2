@@ -1,5 +1,5 @@
 import path from 'path';
-import { app, crashReporter, BrowserWindow, Menu } from 'electron';
+import { app, crashReporter, BrowserWindow, Menu, Tray } from 'electron';
 import { createStore,
          applyMiddleware,
          combineReducers } from 'redux';
@@ -43,6 +43,7 @@ import player from '../store/reducers/player';
 import webapi from '../store/reducers/api';
 import schedule from '../store/reducers/schedule';
 import thunk from 'redux-thunk';
+import RPC from '../api/renderProccessConnector';
 
 
 const initialState = {
@@ -59,6 +60,7 @@ replayActionMain(store);
 mpc.init(api, store);
 
 let mainWindow = null;
+let tray = null;
 let forceQuit = false;
 
 const installExtensions = async () => {
@@ -109,9 +111,11 @@ app.on('ready', async () => {
   mainWindow.loadFile(path.resolve(path.join(__dirname, '../renderer/index.html')));
 
   // show window once on first load
+  /*
   mainWindow.webContents.once('did-finish-load', () => {
     mainWindow.show();
   });
+  */
 
   mainWindow.webContents.on('did-finish-load', () => {
     // Handle window logic properly on macOS:
@@ -156,6 +160,25 @@ app.on('ready', async () => {
       ]).popup(mainWindow);
     });
   }
+
+  mainWindow.on('show', () => {
+    console.log("SHOW");
+    mpc.enableAutoHide(mainWindow.webContents);
+  })
+
+
+  try {
+    tray = new Tray(path.join(__dirname, '../icons/tray.png'));
+    tray.setToolTip('Click to hide');
+    tray.on('click', () => {
+      mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+    })
+
+    mpc.acceptAutoHide(mainWindow);
+  } catch (error) {
+    console.error("TRAY ERROR: ", error);
+  }
+  
 
 });
 

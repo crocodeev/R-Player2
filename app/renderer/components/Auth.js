@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { connect } from 'react-redux';
 import rpc from '../../api/renderProccessConnector';
 
-
 function Authorize (){
 
   const { register, handleSubmit, errors } = useForm();

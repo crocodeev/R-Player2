@@ -148,11 +148,10 @@ class MPC {
 
     //for auto hide
     enableAutoHide(webContents){
-      webContents.send('window-showed', "Hello world")
+      webContents.send('window-showed');
     }
 
     acceptAutoHide(browserWindow){
-      console.log("AUTOHIDE ACCEPTED");
       ipcMain.on('hide-window', () => {
         browserWindow.hide()
       })

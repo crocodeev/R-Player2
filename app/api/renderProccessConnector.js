@@ -1,20 +1,29 @@
 const { ipcRenderer } = require("electron");
-
+const isDevToolOpen = require("./helpers/isDevToolOpen").default;
 
 export default class RPC {
 
+
     setWindowStateListener(){
-        ipcRenderer.on('window-showed', (event, arg) => {
-            console.log(arg);
-            setTimeout(() => {
-              console.log("hide window");  
-              this.hideWindow();  
-            }, 1500)
+        ipcRenderer.on('window-showed', () => {
+            let self = this;
+
+            function checkUserActivity() {
+                setTimeout(function(){
+                    if(isDevToolOpen()){
+                        checkUserActivity();
+                    }else{
+                        self.hideWindow();
+                    }
+                },
+                180000)
+            }
+
+            checkUserActivity();
         })
     }
 
     hideWindow(){
-        console.log("SEND TO HIDE");
         ipcRenderer.send('hide-window');
     }
 

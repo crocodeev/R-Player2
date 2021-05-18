@@ -7,7 +7,7 @@ import MPC from '../api/mainProcessListener'
 import API from '../api/api';
 import { initialApiConfig } from '../hardcode/initialApiConfig'
 import AutoLaunch from 'auto-launch'
-import createReqularRequest from '../api/helpers/createReqularRequest'
+
 
 //for activate development mode
 const isDevelopment = process.env.NODE_ENV === 'development';
@@ -43,7 +43,6 @@ import player from '../store/reducers/player';
 import webapi from '../store/reducers/api';
 import schedule from '../store/reducers/schedule';
 import thunk from 'redux-thunk';
-import RPC from '../api/renderProccessConnector';
 
 
 const initialState = {
@@ -146,7 +145,7 @@ app.on('ready', async () => {
 
   if (isDevelopment) {
     // auto-open dev tools
-    mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
 
     // add inspect element on right click menu
     mainWindow.webContents.on('context-menu', (e, props) => {

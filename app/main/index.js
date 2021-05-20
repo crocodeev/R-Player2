@@ -161,14 +161,13 @@ app.on('ready', async () => {
   }
 
   mainWindow.on('show', () => {
-    console.log("SHOW");
     mpc.enableAutoHide(mainWindow.webContents);
   })
 
 
   try {
     tray = new Tray(path.join(__dirname, '../icons/tray.png'));
-    tray.setToolTip('Click to hide');
+    tray.setToolTip('Click to show or hide');
     tray.on('click', () => {
       mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
     })

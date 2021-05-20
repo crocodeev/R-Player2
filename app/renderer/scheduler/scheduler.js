@@ -91,6 +91,7 @@ export default class Scheduler {
             //task.name = element.name;
             task.playbackMode = element.playbackMode;
             task.startTime = startTime;
+            task.endTime = endTime;
 
             this.tasks.push(task);
         }
@@ -103,9 +104,13 @@ export default class Scheduler {
 
         console.log("Checking for missed launch");
 
+        const currentTime = dayjs().format('HH:mm:ss');
         // continuous campaign exist and overdue
         const toLaunch = this.tasks.find( element => {
-            return element.playbackMode === 1 && element.startTime < dayjs().format('HH:mm:ss') });
+
+            return element.playbackMode === 1 && element.startTime <= currentTime && element.endTime >= currentTime; 
+        });
+     
 
         if(toLaunch){
             toLaunch.job();
@@ -149,6 +154,7 @@ export default class Scheduler {
     _toLeadingZero(time) {
         return dayjs(time, 'hh:mm').format('HH:mm:ss')
     }
+
 
     clearTaskQueue(){
         console.log("clear schedule queue");

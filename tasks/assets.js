@@ -20,3 +20,4 @@ copyCss.displayName = 'copy-css';
 exports.copyAll = parallel(copyCss, copyHtml, copyPng);
 exports.copyHtml = copyHtml;
 exports.copyCss = copyCss;
+exports.copyPng = copyPng;

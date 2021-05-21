@@ -37,3 +37,4 @@ linux:
       arch:
         - armv7l
         - x64
+  category: Audio

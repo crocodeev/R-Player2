@@ -67,6 +67,10 @@ class PlaybackHandler {
         }
     }
 
+    stop(){
+        sound.stop();
+    }
+
 }
 
 export default PlaybackHandler

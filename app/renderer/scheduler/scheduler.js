@@ -6,6 +6,7 @@ import customParseFormat from'dayjs/plugin/customParseFormat'
 import PlaybackHandler from '../sound/soundTaskController';
 import sound from '../sound/soundEmmiter';
 import { lazy } from 'react';
+import { task } from 'gulp';
 
 const playbackHandler = new PlaybackHandler(sound);
 
@@ -57,6 +58,8 @@ export default class Scheduler {
         });
 
         console.timeEnd("CREATE SCHEDULE");
+
+        this._setStop();
 
         this._checkForMissedLaunch();
         
@@ -111,6 +114,7 @@ export default class Scheduler {
             return element.playbackMode === 1 && element.startTime <= currentTime && element.endTime >= currentTime; 
         });
      
+        console.log(toLaunch);
 
         if(toLaunch){
             toLaunch.job();
@@ -140,10 +144,6 @@ export default class Scheduler {
     }
 
 
-    _lastModifiedStateHandler(job){
-        const name = job.name;
-    }
-    
 
     //time in object to string
     _timeHandler(timeObject){
@@ -161,8 +161,41 @@ export default class Scheduler {
         this.tasks.forEach(item => item.cancel());
         this.tasks = [];
     }
-
     
+    _setStop() {
+
+        console.log("Setting stop event");
+        
+        /**
+         * first - compare campaign stop time and keep on bigger one
+         * second - compare with channel rule and create task with smaller one
+         */
+        let campaignEndTime = "00:00:00"
+
+        this.tasks.forEach((element) => {
+
+            console.log(element);
+            if(element.playbackMode == 1 && element.endTime > campaignEndTime){
+                campaignEndTime = element.endTime;
+            }
+
+        });
+
+        console.log(campaignEndTime);
+
+        if(campaignEndTime < this.channelEndTime){
+            console.log("CAMPAIGN TIME: ", campaignEndTime);
+            const action = () => { playbackHandler.stop() };
+            const task = taskScheduleCreator(campaignEndTime, "STOP",  action);
+            this.tasks.push(task);
+        }else{
+            console.log("CHANNEL TIME: ", this.channelEndTime);
+            const action = () => { playbackHandler.stop() };
+            const task = taskScheduleCreator(this.channelEndTime, "STOP", action);
+            this.tasks.push(task);
+        }
+
+    }
 
 
 }

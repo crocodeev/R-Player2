@@ -3,6 +3,7 @@ const EventEmmitter = require('events');
 const decryptSource = require('./sourceDecrypter');
 const path = require('path');
 import deepcopy from 'deepcopy';
+import { object } from 'prop-types';
 import { initialApiConfig } from '../../hardcode/initialApiConfig';
 
 const storage = initialApiConfig.storage;
@@ -91,6 +92,10 @@ class Sound extends EventEmmitter  {
   stop(){
   
     //stop and unload current slot
+    this.unloadSlot(this.index);
+    this.unloadSlot(this.index +1);
+
+    /*
     if(this.playlist[this.index].howl){
       this.playlist[this.index].howl.stop();
       this.playlist[this.index].howl.unload();
@@ -100,7 +105,22 @@ class Sound extends EventEmmitter  {
       this.playlist[this.index + 1].howl.stop()
       this.playlist[this.index + 1].howl.unload();
     }
+    */
   }
+
+  unloadSlot(index){
+    if(this.playlist[index] && this.playlist[index].howl){
+      this.playlist[index].howl.stop()
+      this.playlist[index].howl.unload();
+      delete this.playlist[index].howl;
+    }
+  }
+
+  cancelAutomaticPlayNext(){
+    if(this.playlist[this.index].howl){
+      this.playlist[this.index].howl._onend.splice(0,1)
+      }
+    }
 
 
   next(){
@@ -168,20 +188,6 @@ class Sound extends EventEmmitter  {
     return howl
   }
 
-
-
-  unloadSlot(index){
-    if(this.playlist[index] && this.playlist[index].howl){
-      this.playlist[index].howl.stop()
-      this.playlist[index].howl.unload();
-    }
-  }
-
-  cancelAutomaticPlayNext(){
-    if(this.playlist[this.index].howl){
-      this.playlist[this.index].howl._onend.splice(0,1)
-      }
-    }
 
   get isPlaying(){
     if(this.playlist[this.index].howl){

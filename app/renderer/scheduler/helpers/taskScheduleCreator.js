@@ -1,10 +1,22 @@
 import scheduler from 'node-schedule'
 
-export default function taskScheduleCreator(startTime, endTime, element, action){
+//polymorf function
+export default function taskScheduleCreator(...arg){
 
-    //continuous or not
+         //continuous or not
+        if(arguments.length > 3){
+            return createRegularTask(...arg);
+        }else{
+            return createSpecialTask(...arg);
+        }
+ 
+}
+
+// for playback content
+function createRegularTask(startTime, endTime, element, action) {
+
     if( element.playbackMode === 1 ){
-   
+    
         const pattern = createCrontabPattern(startTime);
         console.log(pattern);
         return scheduler.scheduleJob(element.name, pattern, action);
@@ -16,8 +28,17 @@ export default function taskScheduleCreator(startTime, endTime, element, action)
         return scheduler.scheduleJob(element.name, pattern, action);
 
     }
+    
+}
+
+// for special tasks: stop, mute, etc
+function createSpecialTask(time, name, action) {
+    
+    const pattern = createCrontabPattern(time);
+    return scheduler.scheduleJob(name, pattern, action);
 
 }
+
 
 function createCrontabPattern(){
 

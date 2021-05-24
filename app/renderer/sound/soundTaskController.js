@@ -1,7 +1,4 @@
 
-import deepcopy from 'deepcopy';
-import timeComparator from '../scheduler/helpers/timeComparator';
-import { func } from 'prop-types';
 
 //с помощью 
 

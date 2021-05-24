@@ -5,8 +5,6 @@ import dayjs from 'dayjs';
 import customParseFormat from'dayjs/plugin/customParseFormat'
 import PlaybackHandler from '../sound/soundTaskController';
 import sound from '../sound/soundEmmiter';
-import { lazy } from 'react';
-import { task } from 'gulp';
 
 const playbackHandler = new PlaybackHandler(sound);
 

@@ -32,7 +32,7 @@ win:
   target: nsis
 
 linux:
-  icon: app/isons/icon.icns
+  icon: app/icons/icon.icns
   target:
     - target: deb
       arch:

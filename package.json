@@ -1,13 +1,13 @@
 {
   "name": "r-player",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "r-player",
   "main": "init.js",
   "author": {
-    "name": "Jordan Schroter",
-    "email": "email@author.com"
+    "name": "Alexander Kogodeev",
+    "email": "ak@inplay.pro"
   },
-  "repository": "https://github.com/jschr/electron-react-redux-boilerplate",
+  "repository": "https://github.com/crocodeev/R-Player2",
   "license": "MIT",
   "dependencies": {
     "@babel/register": "^7.9.0",

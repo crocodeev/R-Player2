@@ -17,6 +17,7 @@ import  createReqularRequest from './helpers/createReqularRequest';
 import { initialApiConfig } from '../hardcode/initialApiConfig';    
 import deepcopy from 'deepcopy';
 import { push } from 'connected-react-router';
+const connectivity = require('connectivity');
 
 class MPC {
 

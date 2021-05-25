@@ -54,7 +54,7 @@
     "browser-sync": "^2.26.7",
     "chai": "^4.1.0",
     "config": "^3.3.3",
-    "electron": "^8.5.5",
+    "electron": "^9.4.0",
     "electron-builder": "^22.4.1",
     "electron-devtools-installer": "^3.2.0",
     "electron-mocha": "^8.2.1",

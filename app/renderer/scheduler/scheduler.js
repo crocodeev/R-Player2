@@ -109,7 +109,18 @@ export default class Scheduler {
         // continuous campaign exist and overdue
         const toLaunch = this.tasks.find( element => {
 
-            return element.playbackMode === 1 && element.startTime <= currentTime && element.endTime >= currentTime; 
+            if(element.playbackMode !== 1){
+                return false;
+            }
+
+            if(element.startTime <= currentTime && element.endTime < element.startTime ){
+                return true;
+            }
+
+            if(element.startTime <= currentTime && element.endTime >= currentTime){
+                return true;
+            }
+            
         });
      
         console.log(toLaunch);

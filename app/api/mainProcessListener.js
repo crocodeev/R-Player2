@@ -119,7 +119,7 @@ class MPC {
 
             const relaunchDownload = () => {
 
-              connectiviusty((online) => {
+              connectivity((online) => {
                 if(online){
                   store.dispatch(downloadCountReset());
                   store.dispatch(resetDownloadedTracksArray());

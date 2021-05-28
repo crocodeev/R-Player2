@@ -15,6 +15,8 @@ export default function taskScheduleCreator(...arg){
 // for playback content
 function createRegularTask(startTime, endTime, element, action) {
 
+    console.log(element.name);
+
     if( element.playbackMode === 1 ){
     
         const pattern = createCrontabPattern(startTime);
@@ -42,36 +44,54 @@ function createSpecialTask(time, name, action) {
 
 function createCrontabPattern(){
 
-    let startTime;
-    let endTime;
+    const startTime = {};
+    const endTime = {};
     let blockInfo; 
 
+
     if(arguments.length < 2 ){
-        startTime = arguments[0];
+        [startTime.hours, startTime.minutes, startTime.seconds] = arguments[0].split(":");
+        const pattern = `${startTime.seconds} ${startTime.minutes} ${startTime.hours} * * *`;
+        return pattern;
     }else{
-        startTime = arguments[0];
-        //take only hours for now, not good solution but ok for now
-        endTime = "-" + arguments[1].slice(0,2);
+        [startTime.hours, startTime.minutes, startTime.seconds] = arguments[0].split(":");
+        [endTime.hours, endTime.minutes, endTime.seconds] = arguments[1].split(":");
         blockInfo = arguments[2];
     }
 
-    const parsedTime = startTime.split(":").reverse().join(" ");
-    let pattern = endTime ? `${parsedTime}${endTime} * * *` : `${parsedTime} * * *`;
+    let pattern = `${startTime.seconds} ${startTime.minutes}`;
 
-    if(!blockInfo){
-        return pattern;
-    }
+    //add hours
+
+    pattern += midnigthHandler(startTime, endTime);
+
+    //format
+
+    pattern += " * * *"
 
     // every hour
     if(blockInfo.timeType){
-        pattern = pattern.slice(0,8) + `/${blockInfo.time}${endTime}` + pattern.slice(8, pattern.length);
+        pattern = pattern.slice(0,8) + `/${blockInfo.time} ` + pattern.slice(8, pattern.length);
         return pattern
     }
 
     //every n-minute
-    pattern  = pattern.slice(0,5) + `/${blockInfo.time}` + pattern.slice(5, pattern.length);
+    pattern = pattern.slice(0,5) + `/${blockInfo.time} ` + pattern.slice(5, pattern.length);
+
+    console.log("THIS IS PATTERN ", pattern);
 
     return pattern;
 
 
+}
+
+//if schedule start before and finish after midnight
+function midnigthHandler(startTime, endTime){
+
+    //handle only hours part
+    if(startTime.hours > endTime.hours){
+        return `${startTime.hours}-23,00-${endTime.hours}`;
+    }else{
+        return `${startTime.hours}-${endTime.hours}`;
+    }
 }

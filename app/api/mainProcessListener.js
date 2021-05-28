@@ -117,33 +117,21 @@ class MPC {
 
             console.log("API IS DOWNLOADING: ", api.isContentDownloading);
 
-          connectivity((online) => {
-            if(online){
-              console.log("INTERRUPT DOWNLOAD NOW ONLINE: ", api.schedule.length);
+            const relaunchDownload = () => {
 
-              store.dispatch(downloadCountReset());
-              store.dispatch(resetDownloadedTracksArray());
-              // add, check in store,, change if another
-              store.dispatch(downloadStatus(false));
-              api.contentDownload(api.schedule);
-            }else{
-              console.log("OFFLINE, CREATE LISTENER");
-            ipcMain.once('online-status-changed', (event, arg) => {
-              console.log("ARG FROM Online status", arg);
-              if(arg){
-  
-                console.log("INTERRUPT DOWNLOAD: ", api.schedule.length);
-  
-                store.dispatch(downloadCountReset());
-                store.dispatch(resetDownloadedTracksArray());
-                store.dispatch(downloadStatus(false));
-                //store.dispatch(setNextSchedule(schedule));
-                //store.dispatch(setDownloadAmount(api.schedule.length));
-                api.contentDownload(api.schedule);
-              }
-            })
+              connectiviusty((online) => {
+                if(online){
+                  store.dispatch(downloadCountReset());
+                  store.dispatch(resetDownloadedTracksArray());
+                  store.dispatch(downloadStatus(false));
+                  api.contentDownload(api.schedule);
+                }else{
+                  setTimeout(relaunchDownload, 30000);
+                }
+              });
             }
-          })  
+
+            setTimeout(relaunchDownload, 30000);
         })
     }
 
@@ -157,6 +145,8 @@ class MPC {
         browserWindow.hide()
       })
     }
+
+    
 
 }
 

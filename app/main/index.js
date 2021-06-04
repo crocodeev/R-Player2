@@ -9,6 +9,8 @@ import { initialApiConfig } from '../hardcode/initialApiConfig'
 import AutoLaunch from 'auto-launch'
 
 
+
+
 //for activate development mode
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -62,6 +64,23 @@ let mainWindow = null;
 let tray = null;
 let forceQuit = false;
 
+//prevent second instance
+
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    if (mainWindow) {
+      if (!mainWindow.isVisible()){
+        mainWindow.show();
+      } 
+      mainWindow.focus();
+    }
+  })
+}
+
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
   const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
@@ -106,6 +125,7 @@ app.on('ready', async () => {
       nodeIntegration: true,
     },
   });
+
 
   mainWindow.loadFile(path.resolve(path.join(__dirname, '../renderer/index.html')));
 

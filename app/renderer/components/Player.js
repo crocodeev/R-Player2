@@ -41,15 +41,15 @@ const Player = (props) => {
       <Download />
       </div>
     </div>
-    <div className="row">
+    <div className="row listrow">
       <div className="scrolist">
         <TrackList />
       </div>
     </div>
     
     <div className="row buttonrow">
-      <div className="col">
-        <a className="waves-effect waves-light btn-small supersmall" onClick={handleLogOut}>
+      <div className="col pdleftzero">
+        <a className="waves-effect waves-light btn-small" onClick={handleLogOut}>
         LOGOUT
         </a>
       </div>

@@ -49,8 +49,10 @@ class Sound extends EventEmmitter  {
       sound.on('play', async () => {
         console.timeEnd("PLAY");
         
-        //load next playlist item
-        this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1]);
+        //load next playlist item and check is item exist
+        if(!!this.playlist[this.index + 1]){
+          this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1]);
+        }
         this.emit('play');
 
       })
@@ -72,7 +74,9 @@ class Sound extends EventEmmitter  {
         console.timeEnd("PLAY");
         this.emit('play');
         //load next playlist item
-        this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1])
+        if(!!this.playlist[this.index + 1]){
+          this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1]);
+        }
       })
 
       sound.on('end', () => {
@@ -94,18 +98,8 @@ class Sound extends EventEmmitter  {
     //stop and unload current slot
     this.unloadSlot(this.index);
     this.unloadSlot(this.index +1);
+    Howler.unload();
 
-    /*
-    if(this.playlist[this.index].howl){
-      this.playlist[this.index].howl.stop();
-      this.playlist[this.index].howl.unload();
-    }
-    //stop and unload next slot
-    if(this.playlist[this.index + 1] && this.playlist[this.index + 1].howl){
-      this.playlist[this.index + 1].howl.stop()
-      this.playlist[this.index + 1].howl.unload();
-    }
-    */
   }
 
   unloadSlot(index){
@@ -127,13 +121,15 @@ class Sound extends EventEmmitter  {
 
     const index = this.index + 1;
 
-    if (this.playlist[this.index].howl) {
+    if(this.playlist[this.index].howl) {
       this.playlist[this.index].howl.stop();
       this.playlist[this.index].howl.unload();
       delete this.playlist[this.index].howl
     }
-    
-    this.play(index);
+
+    if(!!this.playlist[index]){
+      this.play(index);
+    }
   }
 
   seek(){
@@ -163,20 +159,24 @@ class Sound extends EventEmmitter  {
           console.timeEnd("NEW PLAYLIST INSERT");
           break;
         case playlistInteractionTypes.REPLACE:
-          console.time("NEW PLAYLIST REPLACE") 
-          this.playlist.splice(index, this.playlist.length, ...deepcopy(playlist));
+          console.time("NEW PLAYLIST REPLACE")
+          if(playlist !== Array){
+            this.playlist.splice(index, this.playlist.length, deepcopy(playlist));
+          }else{
+            this.playlist.splice(index, this.playlist.length, ...deepcopy(playlist));
+          }
           this.emit('change');
           console.timeEnd("NEW PLAYLIST REPLACE");
           break;
         default:
           throw new Error("inccorrect interraction type");
-          break;
       }
   }
 
   async _createHowl(item){
     console.time("LOAD TRACK");
     const trackPath = path.join(storage, item.checksum);
+    console.log("TrackPath is ", trackPath);
     const url = await decryptSource(trackPath);
     const howl = new Howl({
       src: url,

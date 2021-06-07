@@ -87,10 +87,12 @@ function createCrontabPattern(){
 
 //if schedule start before and finish after midnight
 function midnigthHandler(startTime, endTime){
-
+    console.log("MIGHTNIGHT HANDLER ", endTime);
     //handle only hours part
     if(startTime.hours > endTime.hours){
-        return `${startTime.hours}-23,00-${endTime.hours}`;
+        const beforeMidnigthPart = `${startTime.hours}-23`;
+        const afterMidnightPart = endTime.hours > "01" ? `00-${endTime.hours}` : "00";
+        return `${beforeMidnigthPart},${afterMidnightPart}`;
     }else{
         return `${startTime.hours}-${endTime.hours}`;
     }

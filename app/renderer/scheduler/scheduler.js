@@ -3,10 +3,10 @@ import timeComparator from './helpers/timeComparator';
 import shuffler from './helpers/shuffler';
 import dayjs from 'dayjs';
 import customParseFormat from'dayjs/plugin/customParseFormat'
-import PlaybackHandler from '../sound/soundTaskController';
+import PlaybackController from '../sound/soundPlaybackController';
 import sound from '../sound/soundEmmiter';
 
-const playbackHandler = new PlaybackHandler(sound);
+const playbackController = new PlaybackController(sound);
 
 
 dayjs.extend(customParseFormat);
@@ -36,9 +36,9 @@ export default class Scheduler {
         this.channelEndTime = this._toLeadingZero(rules.endTime);
     }
 
-    createTasks(schedule, typeOfLaunch){
+    createTasks(schedule){
 
-        console.time("CREATE SCHEDULE");
+        console.time("CREATE SCHEDULE at ", );
         
         const currentDate = dayjs().format('YYYY-MM-DD')
 
@@ -67,16 +67,11 @@ export default class Scheduler {
 
         //check for difference between channels rules 
         let startTime = this._timeHandler(element.weekInfo.allDaysPeriod.startTime);
-        //console.log("startTime before comparator", startTime);
         let endTime = this._timeHandler(element.weekInfo.allDaysPeriod.endTime);
-        //console.log("endTime before comparator", endTime);
-
-        
+    
         //check for time difference with channels rules
         startTime = timeComparator(startTime, this.channelStartTime, "start");
-        //console.log("startTime after comparator", startTime);
         endTime = timeComparator(endTime, this.channelEndTime, "end");
-        //console.log("endTime after comparator", startTime);
 
 
 
@@ -138,7 +133,7 @@ export default class Scheduler {
         if(element.playbackMode){
 
             return () => {
-                playbackHandler.replacePlaylist(playlist);
+                playbackController.replacePlaylist(playlist);
             }
         }
 
@@ -146,7 +141,8 @@ export default class Scheduler {
 
         return () => {
             console.log("Insert action");
-            playbackHandler.insertIntoPlaylist(playlist[counter]);
+            console.log(`Counter: ${counter}, Name: ${playlist[counter].name}, Path: ${playlist[counter].checksum}`);
+            playbackController.insertIntoPlaylist(playlist[counter]);
             counter < playlist.length ? counter++ : counter = 0;  
         };
 
@@ -192,14 +188,17 @@ export default class Scheduler {
 
         console.log(campaignEndTime);
 
+        const action = () => {
+            this.clearTaskQueue();
+            playbackController.stopAndClear();
+        }
+
         if(campaignEndTime < this.channelEndTime){
             console.log("CAMPAIGN TIME: ", campaignEndTime);
-            const action = () => { playbackHandler.stop() };
             const task = taskScheduleCreator(campaignEndTime, "STOP",  action);
             this.tasks.push(task);
         }else{
             console.log("CHANNEL TIME: ", this.channelEndTime);
-            const action = () => { playbackHandler.stop() };
             const task = taskScheduleCreator(this.channelEndTime, "STOP", action);
             this.tasks.push(task);
         }

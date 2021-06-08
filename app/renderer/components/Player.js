@@ -6,6 +6,7 @@ import Download from './Download';
 import NetworkStatus from './NetworkStatus';
 import sound from '../sound/soundEmmiter';
 import Scheduler from '../scheduler/scheduler';
+import TestFunction from '../components/TestButton';
 
 
 const scheduler = new Scheduler();

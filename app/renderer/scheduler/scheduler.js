@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import customParseFormat from'dayjs/plugin/customParseFormat'
 import PlaybackController from '../sound/soundPlaybackController';
 import sound from '../sound/soundEmmiter';
+import rpc from '../../api/renderProccessConnector';
 
 const playbackController = new PlaybackController(sound);
 
@@ -34,11 +35,12 @@ export default class Scheduler {
     set channelRule(rules){
         this.channelStartTime = this._toLeadingZero(rules.startTime);
         this.channelEndTime = this._toLeadingZero(rules.endTime);
+        this.channelRebootTime = this._toLeadingZero(rules.reboot);
     }
 
     createTasks(schedule){
 
-        console.time("CREATE SCHEDULE at ", );
+        console.time("CREATE SCHEDULE");
         
         const currentDate = dayjs().format('YYYY-MM-DD')
 
@@ -59,6 +61,8 @@ export default class Scheduler {
 
         this._setStop();
 
+        this._setRelaunch();
+
         this._checkForMissedLaunch();
         
     }
@@ -73,8 +77,8 @@ export default class Scheduler {
         startTime = timeComparator(startTime, this.channelStartTime, "start");
         endTime = timeComparator(endTime, this.channelEndTime, "end");
 
-
-
+        console.log("ELEMENT :", element.name);
+        
         const action = this._createAction(element);
 
         //может пригодиться для упрощения логики запуска плейлиста, если он пропущен
@@ -82,6 +86,7 @@ export default class Scheduler {
         //здесь создаём job с учётом 
 
         const task = taskScheduleCreator(startTime, endTime, element, action);
+        console.log(task);
 
         if(task){
             //task.name = element.name;
@@ -98,8 +103,6 @@ export default class Scheduler {
     // в эту функцию 
     _checkForMissedLaunch(){
 
-        console.log("Checking for missed launch");
-
         const currentTime = dayjs().format('HH:mm:ss');
         // continuous campaign exist and overdue
         const toLaunch = this.tasks.find( element => {
@@ -108,10 +111,16 @@ export default class Scheduler {
                 return false;
             }
 
+            //midnight checkers, if campaign resume after midnight
+            if(element.startTime > element.endTime && element.endTime > currentTime){
+                return true
+            }
+
             if(element.startTime <= currentTime && element.endTime < element.startTime ){
                 return true;
             }
 
+            //standar campaign
             if(element.startTime <= currentTime && element.endTime >= currentTime){
                 return true;
             }
@@ -203,6 +212,17 @@ export default class Scheduler {
             this.tasks.push(task);
         }
 
+    }
+
+    _setRelaunch(){
+
+        console.log("Setting relaunch event");
+
+        const action = rpc.relaunch;
+
+        const task = taskScheduleCreator(this.channelRebootTime, "REBOOT", action);
+
+        this.tasks.push(task);
     }
 
 

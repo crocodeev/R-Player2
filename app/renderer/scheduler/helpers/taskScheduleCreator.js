@@ -15,8 +15,6 @@ export default function taskScheduleCreator(...arg){
 // for playback content
 function createRegularTask(startTime, endTime, element, action) {
 
-    console.log(element.name);
-
     if( element.playbackMode === 1 ){
     
         const pattern = createCrontabPattern(startTime);
@@ -35,7 +33,7 @@ function createRegularTask(startTime, endTime, element, action) {
 
 // for special tasks: stop, mute, etc
 function createSpecialTask(time, name, action) {
-    
+
     const pattern = createCrontabPattern(time);
     return scheduler.scheduleJob(name, pattern, action);
 

@@ -160,9 +160,12 @@ class Sound extends EventEmmitter  {
           break;
         case playlistInteractionTypes.REPLACE:
           console.time("NEW PLAYLIST REPLACE")
-          if(playlist !== Array){
+          if(playlist.constructor !== Array){
+            console.log(playlist);
+            console.log("NOT ARRAY");
             this.playlist.splice(index, this.playlist.length, deepcopy(playlist));
           }else{
+            console.log("IT IS ARRAY");
             this.playlist.splice(index, this.playlist.length, ...deepcopy(playlist));
           }
           this.emit('change');

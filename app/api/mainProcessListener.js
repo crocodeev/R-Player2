@@ -1,4 +1,5 @@
-const { ipcMain } = require('electron');
+const { ipcMain, app } = require('electron');
+
 
 import { getTrack,
          downloadCountReset,
@@ -43,6 +44,11 @@ class MPC {
 
         ipcMain.on('guid', (event, arg) => {
             api.guid = arg;
+        })
+
+        ipcMain.on('relaunch', (event, arg) => {
+          app.relaunch();
+          app.quit();
         })
 
         ipcMain.once('store-inited', (event, arg) => {

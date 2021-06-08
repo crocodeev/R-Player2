@@ -1,4 +1,4 @@
-const { ipcRenderer } = require("electron");
+const { ipcRenderer, ipcMain } = require("electron");
 const isDevToolOpen = require("./helpers/isDevToolOpen").default;
 
 export default class RPC {
@@ -55,8 +55,9 @@ export default class RPC {
         ipcRenderer.send('store-inited', arg);
     }
 
-
-
+    relaunch(){
+        ipcRenderer.send('relaunch');
+    }
 }
 
 const rpc = new RPC()

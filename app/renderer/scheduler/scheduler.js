@@ -198,7 +198,6 @@ export default class Scheduler {
         console.log(campaignEndTime);
 
         const action = () => {
-            this.clearTaskQueue();
             playbackController.stopAndClear();
         }
 

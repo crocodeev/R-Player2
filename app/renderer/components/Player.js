@@ -5,10 +5,10 @@ import ChannelsSelect from './ChannelsSelect';
 import Download from './Download';
 import NetworkStatus from './NetworkStatus';
 import sound from '../sound/soundEmmiter';
+import soundPlaybackController from '../sound/soundPlaybackController';
 import Scheduler from '../scheduler/scheduler';
-import TestFunction from '../components/TestButton';
 
-
+const playbackController = new soundPlaybackController(sound);
 const scheduler = new Scheduler();
 
 const Player = (props) => {
@@ -19,8 +19,7 @@ const Player = (props) => {
 
   const handleLogOut = () => {
     scheduler.clearTaskQueue();
-    sound.cancelAutomaticPlayNext();
-    sound.stop();
+    playbackController.stopAndClear();
     props.logout();
   }
 

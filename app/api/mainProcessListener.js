@@ -81,7 +81,9 @@ class MPC {
               store.dispatch(downloadCountReset());
               store.dispatch(resetDownloadedTracksArray());
               store.dispatch(downloadStatus(false));
-          
+
+              clearInterval(this.reqularSendDownloadStatus);
+
               store.dispatch(setNextSchedule(schedule));
               store.dispatch(setDownloadAmount(api.schedule.length));
               api.contentDownload(api.schedule);
@@ -98,6 +100,13 @@ class MPC {
             store.dispatch(setDownloadAmount(api.schedule.length));
             api.contentDownload(api.schedule);
           }
+
+          //activate download process api
+          this.reqularSendDownloadStatus = createReqularRequest(() => {
+            console.log("regular request");
+            this.sendDownloadStatus(store, api);
+          }, 1);
+
         });
         api.on('gotTrack', (trackID) => {
           store.dispatch(getTrack());
@@ -106,6 +115,8 @@ class MPC {
         api.on('loadCompleted', () => {
           api.isContentDownloading = false;
           const schedule = deepcopy(store.getState().schedule.nextSchedule);
+          clearInterval(this.reqularSendDownloadStatus);
+          this.sendDownloadStatus(store, api);
           store.dispatch(setSchedule(schedule));
           store.dispatch(downloadStatus(true));
         })
@@ -139,6 +150,14 @@ class MPC {
 
             setTimeout(relaunchDownload, 30000);
         })
+    }
+
+    //for sendDownload status
+
+    sendDownloadStatus(store, api){
+      console.log("Send download status");
+      const downloadedTracks = store.getState().webapi.downloadedTracks;
+      api.sendDownloadStatus(downloadedTracks);
     }
 
     //for auto hide

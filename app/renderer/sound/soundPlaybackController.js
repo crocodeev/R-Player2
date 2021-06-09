@@ -71,6 +71,7 @@ class PlaybackController {
     }
 
     stopAndClear(){
+        this.sound.cancelAutomaticPlayNext();
         this.sound.stop();
         const playlist = [{name:"Artist - Title"}];
         this.sound.setNewPlaylist(playlist, "REPLACE", 0);

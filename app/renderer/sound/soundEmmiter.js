@@ -94,7 +94,7 @@ class Sound extends EventEmmitter  {
   }
 
   stop(){
-  
+    
     //stop and unload current slot
     this.unloadSlot(this.index);
     this.unloadSlot(this.index +1);

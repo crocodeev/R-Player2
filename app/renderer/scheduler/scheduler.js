@@ -110,6 +110,11 @@ export default class Scheduler {
 
             return element.playbackMode === 1 && element.startTime <= currentTime && element.endTime >= currentTime; 
         });
+
+        console.log(currentTime);
+        console.log(toLaunch.startTime);
+        console.log(toLaunch.endTime);
+        console.log(toLaunch.name);
      
 
         if(toLaunch){

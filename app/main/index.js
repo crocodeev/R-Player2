@@ -9,6 +9,8 @@ import { initialApiConfig } from '../hardcode/initialApiConfig'
 import AutoLaunch from 'auto-launch'
 
 
+
+
 //for activate development mode
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -62,6 +64,23 @@ let mainWindow = null;
 let tray = null;
 let forceQuit = false;
 
+//prevent second instance
+
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    if (mainWindow) {
+      if (!mainWindow.isVisible()){
+        mainWindow.show();
+      } 
+      mainWindow.focus();
+    }
+  })
+}
+
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
   const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
@@ -107,14 +126,15 @@ app.on('ready', async () => {
     },
   });
 
+
   mainWindow.loadFile(path.resolve(path.join(__dirname, '../renderer/index.html')));
 
   // show window once on first load
-  /*
+
   mainWindow.webContents.once('did-finish-load', () => {
     mainWindow.show();
   });
-  */
+  
 
   mainWindow.webContents.on('did-finish-load', () => {
     // Handle window logic properly on macOS:
@@ -145,7 +165,7 @@ app.on('ready', async () => {
 
   if (isDevelopment) {
     // auto-open dev tools
-    //mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     // add inspect element on right click menu
     mainWindow.webContents.on('context-menu', (e, props) => {

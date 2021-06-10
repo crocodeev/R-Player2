@@ -5,9 +5,10 @@ import ChannelsSelect from './ChannelsSelect';
 import Download from './Download';
 import NetworkStatus from './NetworkStatus';
 import sound from '../sound/soundEmmiter';
+import soundPlaybackController from '../sound/soundPlaybackController';
 import Scheduler from '../scheduler/scheduler';
 
-
+const playbackController = new soundPlaybackController(sound);
 const scheduler = new Scheduler();
 
 const Player = (props) => {
@@ -18,8 +19,7 @@ const Player = (props) => {
 
   const handleLogOut = () => {
     scheduler.clearTaskQueue();
-    sound.cancelAutomaticPlayNext();
-    sound.stop();
+    playbackController.stopAndClear();
     props.logout();
   }
 
@@ -41,15 +41,15 @@ const Player = (props) => {
       <Download />
       </div>
     </div>
-    <div className="row">
+    <div className="row listrow">
       <div className="scrolist">
         <TrackList />
       </div>
     </div>
     
     <div className="row buttonrow">
-      <div className="col">
-        <a className="waves-effect waves-light btn-small supersmall" onClick={handleLogOut}>
+      <div className="col pdleftzero">
+        <a className="waves-effect waves-light btn-small" onClick={handleLogOut}>
         LOGOUT
         </a>
       </div>

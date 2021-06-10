@@ -1,6 +1,6 @@
-appId: com.example.app
-copyright: Example co
-productName: MyApp
+appId: pro.inplay
+copyright: Inplay
+productName: R-Player
 
 asar: true
 
@@ -29,11 +29,14 @@ mac:
   category: public.app-category.tools
 
 win:
+  icon: app/icons/icon.ico
   target: nsis
 
 linux:
+  icon: app/icons/icon.icns
   target:
     - target: deb
       arch:
         - armv7l
         - x64
+  category: Audio

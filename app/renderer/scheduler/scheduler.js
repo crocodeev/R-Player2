@@ -3,11 +3,11 @@ import timeComparator from './helpers/timeComparator';
 import shuffler from './helpers/shuffler';
 import dayjs from 'dayjs';
 import customParseFormat from'dayjs/plugin/customParseFormat'
-import PlaybackHandler from '../sound/soundTaskController';
+import PlaybackController from '../sound/soundPlaybackController';
 import sound from '../sound/soundEmmiter';
-import { lazy } from 'react';
+import rpc from '../../api/renderProccessConnector';
 
-const playbackHandler = new PlaybackHandler(sound);
+const playbackController = new PlaybackController(sound);
 
 
 dayjs.extend(customParseFormat);
@@ -35,9 +35,10 @@ export default class Scheduler {
     set channelRule(rules){
         this.channelStartTime = this._toLeadingZero(rules.startTime);
         this.channelEndTime = this._toLeadingZero(rules.endTime);
+        this.channelRebootTime = this._toLeadingZero(rules.reboot);
     }
 
-    createTasks(schedule, typeOfLaunch){
+    createTasks(schedule){
 
         console.time("CREATE SCHEDULE");
         
@@ -58,6 +59,10 @@ export default class Scheduler {
 
         console.timeEnd("CREATE SCHEDULE");
 
+        this._setStop();
+
+        this._setRelaunch();
+
         this._checkForMissedLaunch();
         
     }
@@ -66,19 +71,14 @@ export default class Scheduler {
 
         //check for difference between channels rules 
         let startTime = this._timeHandler(element.weekInfo.allDaysPeriod.startTime);
-        //console.log("startTime before comparator", startTime);
         let endTime = this._timeHandler(element.weekInfo.allDaysPeriod.endTime);
-        //console.log("endTime before comparator", endTime);
-
-        
+    
         //check for time difference with channels rules
         startTime = timeComparator(startTime, this.channelStartTime, "start");
-        //console.log("startTime after comparator", startTime);
         endTime = timeComparator(endTime, this.channelEndTime, "end");
-        //console.log("endTime after comparator", startTime);
 
-
-
+        console.log("ELEMENT :", element.name);
+        
         const action = this._createAction(element);
 
         //может пригодиться для упрощения логики запуска плейлиста, если он пропущен
@@ -86,6 +86,7 @@ export default class Scheduler {
         //здесь создаём job с учётом 
 
         const task = taskScheduleCreator(startTime, endTime, element, action);
+        console.log(task);
 
         if(task){
             //task.name = element.name;
@@ -102,13 +103,28 @@ export default class Scheduler {
     // в эту функцию 
     _checkForMissedLaunch(){
 
-        console.log("Checking for missed launch");
-
         const currentTime = dayjs().format('HH:mm:ss');
         // continuous campaign exist and overdue
         const toLaunch = this.tasks.find( element => {
 
-            return element.playbackMode === 1 && element.startTime <= currentTime && element.endTime >= currentTime; 
+            if(element.playbackMode !== 1){
+                return false;
+            }
+
+            //midnight checkers, if campaign resume after midnight
+            if(element.startTime > element.endTime && element.endTime > currentTime){
+                return true
+            }
+
+            if(element.startTime <= currentTime && element.endTime < element.startTime ){
+                return true;
+            }
+
+            //standar campaign
+            if(element.startTime <= currentTime && element.endTime >= currentTime){
+                return true;
+            }
+            
         });
 
         console.log(currentTime);
@@ -116,6 +132,7 @@ export default class Scheduler {
         console.log(toLaunch.endTime);
         console.log(toLaunch.name);
      
+        console.log(toLaunch);
 
         if(toLaunch){
             toLaunch.job();
@@ -130,7 +147,7 @@ export default class Scheduler {
         if(element.playbackMode){
 
             return () => {
-                playbackHandler.replacePlaylist(playlist);
+                playbackController.replacePlaylist(playlist);
             }
         }
 
@@ -138,17 +155,14 @@ export default class Scheduler {
 
         return () => {
             console.log("Insert action");
-            playbackHandler.insertIntoPlaylist(playlist[counter]);
+            console.log(`Counter: ${counter}, Name: ${playlist[counter].name}, Path: ${playlist[counter].checksum}`);
+            playbackController.insertIntoPlaylist(playlist[counter]);
             counter < playlist.length ? counter++ : counter = 0;  
         };
 
     }
 
 
-    _lastModifiedStateHandler(job){
-        const name = job.name;
-    }
-    
 
     //time in object to string
     _timeHandler(timeObject){
@@ -165,6 +179,54 @@ export default class Scheduler {
         console.log("clear schedule queue");
         this.tasks.forEach(item => item.cancel());
         this.tasks = [];
+    }
+    
+    _setStop() {
+
+        console.log("Setting stop event");
+        
+        /**
+         * first - compare campaign stop time and keep on bigger one
+         * second - compare with channel rule and create task with smaller one
+         */
+        let campaignEndTime = "00:00:00"
+
+        this.tasks.forEach((element) => {
+
+            console.log(element);
+            if(element.playbackMode == 1 && element.endTime > campaignEndTime){
+                campaignEndTime = element.endTime;
+            }
+
+        });
+
+        console.log(campaignEndTime);
+
+        const action = () => {
+            playbackController.stopAndClear();
+        }
+
+        if(campaignEndTime < this.channelEndTime){
+            console.log("CAMPAIGN TIME: ", campaignEndTime);
+            const task = taskScheduleCreator(campaignEndTime, "STOP",  action);
+            this.tasks.push(task);
+        }else{
+            console.log("CHANNEL TIME: ", this.channelEndTime);
+            const task = taskScheduleCreator(this.channelEndTime, "STOP", action);
+            this.tasks.push(task);
+        }
+
+    }
+
+    _setRelaunch(){
+
+        console.log("Setting relaunch event");
+
+        const action = rpc.relaunch;
+
+        const task = taskScheduleCreator(this.channelRebootTime, "REBOOT", action);
+
+        this.tasks.push(task);
     }
 
 

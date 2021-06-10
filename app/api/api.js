@@ -226,6 +226,10 @@ class Api extends EventEmitter {
 
     async sendDownloadStatus(tracksIdsArray){
 
+        console.log("SEND DOWNLOAD STATUS");
+        console.log(this.domaiName);
+        console.log(this._channel);
+
         const raw = JSON.stringify(tracksIdsArray);
 
         const requestOptions = {
@@ -239,10 +243,10 @@ class Api extends EventEmitter {
             };
         
             try {
-                const responce = await fetch(`http://${this.domaiName}/api/campaign/tracks/?channel=${this.channel}`, requestOptions);
+                const responce = await fetch(`http://${this.domaiName}/api/campaign/tracks/?channel=${this._channel}`, requestOptions);
                 //const result =  await responce.json();
     
-                console.log(responce.status);
+                console.log("DOWNLOAD STATUS IS SENDED", responce.status);
                 
             } catch (error) {
                 console.log("ERROR FROM sendDownloadStatus:");

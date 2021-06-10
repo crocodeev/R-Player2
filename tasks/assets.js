@@ -8,8 +8,8 @@ function copyCss() {
   return src('app/renderer/css/*.css').pipe(dest('build/renderer/css'));
 }
 
-function copyPng() {
-  return src('app/icons/*.png').pipe(dest('build/icons/'));
+function copyIcons() {
+  return src('app/icons/*').pipe(dest('build/icons/'));
 }
 
 
@@ -17,6 +17,7 @@ function copyPng() {
 copyHtml.displayName = 'copy-html';
 copyCss.displayName = 'copy-css';
 
-exports.copyAll = parallel(copyCss, copyHtml, copyPng);
+exports.copyAll = parallel(copyCss, copyHtml, copyIcons);
 exports.copyHtml = copyHtml;
 exports.copyCss = copyCss;
+exports.copyIcons = copyIcons;

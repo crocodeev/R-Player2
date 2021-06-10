@@ -1,18 +1,15 @@
 
-import deepcopy from 'deepcopy';
-import timeComparator from '../scheduler/helpers/timeComparator';
-import { func } from 'prop-types';
 
 //с помощью 
 
-class PlaybackHandler {
+class PlaybackController {
 
     constructor(sound, timeToLeftThreshold){
-        if(!!PlaybackHandler.instance){
-            return PlaybackHandler.instance
+        if(!!PlaybackController.instance){
+            return PlaybackController.instance
         }
 
-        PlaybackHandler.instance = this;
+        PlaybackController.instance = this;
 
         this.sound = sound;
         this.timeToLeftThreshold = timeToLeftThreshold ? timeToLeftThreshold : 10;
@@ -33,6 +30,12 @@ class PlaybackHandler {
     }
 
     insertIntoPlaylist(playlist){
+
+        if(this._isPlaylistEmpty()){
+            console.log("Playlist is Empty so replace");
+            this.replacePlaylist(playlist);
+            return;
+        }
 
         if(this.sound.isPlaying){
             this.sound.unloadSlot(this.sound.index + 1);
@@ -67,9 +70,22 @@ class PlaybackHandler {
         }
     }
 
+    stopAndClear(){
+        this.sound.cancelAutomaticPlayNext();
+        this.sound.stop();
+        const playlist = [{name:"Artist - Title"}];
+        this.sound.setNewPlaylist(playlist, "REPLACE", 0);
+        this.sound.index = 0;
+    }
+
+    _isPlaylistEmpty(){
+        return this.sound.playlist.length === 1 && this.sound.playlist[0].name === "Artist - Title";
+    }
+
+
 }
 
-export default PlaybackHandler
+export default PlaybackController
 
 
 

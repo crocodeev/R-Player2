@@ -3,6 +3,7 @@ const EventEmmitter = require('events');
 const decryptSource = require('./sourceDecrypter');
 const path = require('path');
 import deepcopy from 'deepcopy';
+import { object } from 'prop-types';
 import { initialApiConfig } from '../../hardcode/initialApiConfig';
 
 const storage = initialApiConfig.storage;
@@ -48,8 +49,10 @@ class Sound extends EventEmmitter  {
       sound.on('play', async () => {
         console.timeEnd("PLAY");
         
-        //load next playlist item
-        this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1]);
+        //load next playlist item and check is item exist
+        if(!!this.playlist[this.index + 1]){
+          this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1]);
+        }
         this.emit('play');
 
       })
@@ -71,7 +74,9 @@ class Sound extends EventEmmitter  {
         console.timeEnd("PLAY");
         this.emit('play');
         //load next playlist item
-        this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1])
+        if(!!this.playlist[this.index + 1]){
+          this.playlist[this.index + 1].howl = await this._createHowl(this.playlist[this.index + 1]);
+        }
       })
 
       sound.on('end', () => {
@@ -89,31 +94,42 @@ class Sound extends EventEmmitter  {
   }
 
   stop(){
-  
+    
     //stop and unload current slot
-    if(this.playlist[this.index].howl){
-      this.playlist[this.index].howl.stop();
-      this.playlist[this.index].howl.unload();
-    }
-    //stop and unload next slot
-    if(this.playlist[this.index + 1] && this.playlist[this.index + 1].howl){
-      this.playlist[this.index + 1].howl.stop()
-      this.playlist[this.index + 1].howl.unload();
+    this.unloadSlot(this.index);
+    this.unloadSlot(this.index +1);
+    Howler.unload();
+
+  }
+
+  unloadSlot(index){
+    if(this.playlist[index] && this.playlist[index].howl){
+      this.playlist[index].howl.stop()
+      this.playlist[index].howl.unload();
+      delete this.playlist[index].howl;
     }
   }
+
+  cancelAutomaticPlayNext(){
+    if(this.playlist[this.index].howl){
+      this.playlist[this.index].howl._onend.splice(0,1)
+      }
+    }
 
 
   next(){
 
     const index = this.index + 1;
 
-    if (this.playlist[this.index].howl) {
+    if(this.playlist[this.index].howl) {
       this.playlist[this.index].howl.stop();
       this.playlist[this.index].howl.unload();
       delete this.playlist[this.index].howl
     }
-    
-    this.play(index);
+
+    if(!!this.playlist[index]){
+      this.play(index);
+    }
   }
 
   seek(){
@@ -143,20 +159,27 @@ class Sound extends EventEmmitter  {
           console.timeEnd("NEW PLAYLIST INSERT");
           break;
         case playlistInteractionTypes.REPLACE:
-          console.time("NEW PLAYLIST REPLACE") 
-          this.playlist.splice(index, this.playlist.length, ...deepcopy(playlist));
+          console.time("NEW PLAYLIST REPLACE")
+          if(playlist.constructor !== Array){
+            console.log(playlist);
+            console.log("NOT ARRAY");
+            this.playlist.splice(index, this.playlist.length, deepcopy(playlist));
+          }else{
+            console.log("IT IS ARRAY");
+            this.playlist.splice(index, this.playlist.length, ...deepcopy(playlist));
+          }
           this.emit('change');
           console.timeEnd("NEW PLAYLIST REPLACE");
           break;
         default:
           throw new Error("inccorrect interraction type");
-          break;
       }
   }
 
   async _createHowl(item){
     console.time("LOAD TRACK");
     const trackPath = path.join(storage, item.checksum);
+    console.log("TrackPath is ", trackPath);
     const url = await decryptSource(trackPath);
     const howl = new Howl({
       src: url,
@@ -168,20 +191,6 @@ class Sound extends EventEmmitter  {
     return howl
   }
 
-
-
-  unloadSlot(index){
-    if(this.playlist[index] && this.playlist[index].howl){
-      this.playlist[index].howl.stop()
-      this.playlist[index].howl.unload();
-    }
-  }
-
-  cancelAutomaticPlayNext(){
-    if(this.playlist[this.index].howl){
-      this.playlist[this.index].howl._onend.splice(0,1)
-      }
-    }
 
   get isPlaying(){
     if(this.playlist[this.index].howl){

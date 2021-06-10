@@ -1,18 +1,19 @@
 {
   "name": "r-player",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "r-player",
   "main": "init.js",
   "author": {
-    "name": "Jordan Schroter",
-    "email": "email@author.com"
+    "name": "Alexander Kogodeev",
+    "email": "ak@inplay.pro"
   },
-  "repository": "https://github.com/jschr/electron-react-redux-boilerplate",
+  "repository": "https://github.com/crocodeev/R-Player2",
   "license": "MIT",
   "dependencies": {
     "@babel/register": "^7.9.0",
     "auto-launch": "^5.0.5",
     "connected-react-router": "^6.8.0",
+    "connectivity": "^1.0.2",
     "dayjs": "^1.10.4",
     "deepcopy": "^2.1.0",
     "devtools-detect": "^3.0.1",
@@ -53,7 +54,6 @@
     "browser-sync": "^2.26.7",
     "chai": "^4.1.0",
     "config": "^3.3.3",
-    "connectivity": "^1.0.2",
     "electron": "^8.5.5",
     "electron-builder": "^22.4.1",
     "electron-devtools-installer": "^3.2.0",

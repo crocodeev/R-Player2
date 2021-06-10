@@ -1,4 +1,5 @@
-const { ipcMain } = require('electron');
+const { ipcMain, app } = require('electron');
+
 
 import { getTrack,
          downloadCountReset,
@@ -17,6 +18,7 @@ import  createReqularRequest from './helpers/createReqularRequest';
 import { initialApiConfig } from '../hardcode/initialApiConfig';    
 import deepcopy from 'deepcopy';
 import { push } from 'connected-react-router';
+const connectivity = require('connectivity');
 
 class MPC {
 
@@ -42,6 +44,11 @@ class MPC {
 
         ipcMain.on('guid', (event, arg) => {
             api.guid = arg;
+        })
+
+        ipcMain.on('relaunch', (event, arg) => {
+          app.relaunch();
+          app.quit();
         })
 
         ipcMain.once('store-inited', (event, arg) => {
@@ -74,7 +81,9 @@ class MPC {
               store.dispatch(downloadCountReset());
               store.dispatch(resetDownloadedTracksArray());
               store.dispatch(downloadStatus(false));
-          
+
+              clearInterval(this.reqularSendDownloadStatus);
+
               store.dispatch(setNextSchedule(schedule));
               store.dispatch(setDownloadAmount(api.schedule.length));
               api.contentDownload(api.schedule);
@@ -91,6 +100,13 @@ class MPC {
             store.dispatch(setDownloadAmount(api.schedule.length));
             api.contentDownload(api.schedule);
           }
+
+          //activate download process api
+          this.reqularSendDownloadStatus = createReqularRequest(() => {
+            console.log("regular request");
+            this.sendDownloadStatus(store, api);
+          }, 1);
+
         });
         api.on('gotTrack', (trackID) => {
           store.dispatch(getTrack());
@@ -99,6 +115,8 @@ class MPC {
         api.on('loadCompleted', () => {
           api.isContentDownloading = false;
           const schedule = deepcopy(store.getState().schedule.nextSchedule);
+          clearInterval(this.reqularSendDownloadStatus);
+          this.sendDownloadStatus(store, api);
           store.dispatch(setSchedule(schedule));
           store.dispatch(downloadStatus(true));
         })
@@ -116,34 +134,30 @@ class MPC {
 
             console.log("API IS DOWNLOADING: ", api.isContentDownloading);
 
-          connectivity((online) => {
-            if(online){
-              console.log("INTERRUPT DOWNLOAD NOW ONLINE: ", api.schedule.length);
+            const relaunchDownload = () => {
 
-              store.dispatch(downloadCountReset());
-              store.dispatch(resetDownloadedTracksArray());
-              // add, check in store,, change if another
-              store.dispatch(downloadStatus(false));
-              api.contentDownload(api.schedule);
-            }else{
-              console.log("OFFLINE, CREATE LISTENER");
-            ipcMain.once('online-status-changed', (event, arg) => {
-              console.log("ARG FROM Online status", arg);
-              if(arg){
-  
-                console.log("INTERRUPT DOWNLOAD: ", api.schedule.length);
-  
-                store.dispatch(downloadCountReset());
-                store.dispatch(resetDownloadedTracksArray());
-                store.dispatch(downloadStatus(false));
-                //store.dispatch(setNextSchedule(schedule));
-                //store.dispatch(setDownloadAmount(api.schedule.length));
-                api.contentDownload(api.schedule);
-              }
-            })
+              connectivity((online) => {
+                if(online){
+                  store.dispatch(downloadCountReset());
+                  store.dispatch(resetDownloadedTracksArray());
+                  store.dispatch(downloadStatus(false));
+                  api.contentDownload(api.schedule);
+                }else{
+                  setTimeout(relaunchDownload, 30000);
+                }
+              });
             }
-          })  
+
+            setTimeout(relaunchDownload, 30000);
         })
+    }
+
+    //for sendDownload status
+
+    sendDownloadStatus(store, api){
+      console.log("Send download status");
+      const downloadedTracks = store.getState().webapi.downloadedTracks;
+      api.sendDownloadStatus(downloadedTracks);
     }
 
     //for auto hide
@@ -156,6 +170,8 @@ class MPC {
         browserWindow.hide()
       })
     }
+
+    
 
 }
 

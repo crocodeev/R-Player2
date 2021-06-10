@@ -19,7 +19,9 @@ function ChannelsSelect({
     function selectChannel(event){
       const value = event.target.value;
       setChannelToStore(value);
-      const channelRule = channels.find(item  => item.id == value).workTime;
+      const channelInfo = channels.find(item  => item.id == value);
+      const channelRule = channelInfo.workTime;
+      channelRule.reboot = channelInfo.reboot;
       setChannelRuleToScheduleStore(channelRule);
       rpc.getSchedule(value);
     }

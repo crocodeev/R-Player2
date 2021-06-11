@@ -126,6 +126,11 @@ export default class Scheduler {
             }
             
         });
+
+        console.log(currentTime);
+        console.log(toLaunch.startTime);
+        console.log(toLaunch.endTime);
+        console.log(toLaunch.name);
      
         console.log(toLaunch);
 
@@ -151,8 +156,9 @@ export default class Scheduler {
         return () => {
             console.log("Insert action");
             console.log(`Counter: ${counter}, Name: ${playlist[counter].name}, Path: ${playlist[counter].checksum}`);
+            console.log(`Counter: ${counter}, Name: ${playlist[counter].name}, Path: ${playlist[counter].checksum}`);
             playbackController.insertIntoPlaylist(playlist[counter]);
-            counter < playlist.length ? counter++ : counter = 0;  
+            counter < playlist.length - 1  ? counter++ : counter = 0;  
         };
 
     }

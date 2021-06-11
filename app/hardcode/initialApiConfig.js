@@ -1,10 +1,11 @@
 
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 
 const folder = defineMusicPath();
 console.log("PATH ",folder);
-const machineName = process.env.USERDOMAIN
+const machineName = defineMachineName();
 console.log("MACHINE ", machineName);
 
 export const  initialApiConfig = {
@@ -21,5 +22,30 @@ function defineMusicPath(){
     }
 
     return path.join(process.env.HOMEDRIVE, process.env.HOMEPATH, 'Music')
+
+}
+
+function defineMachineName(){
+
+    if(process.env.USERDOMAIN){
+        console.log("DOMAIN NAME IS EXIST",process.env.USERDOMAIN);
+        return process.env.USERDOMAIN;
+    }
+
+    const hostname = os.hostname();
+    console.log("DOMAIN NAME DOESN'T EXIST");
+    try {
+
+        const profilePath = path.join(process.env.HOME, '.testfile');
+        const profileFile = fs.createWriteStream(profilePath, { flags: 'a' });
+        profileFile.write(`USERDOMAIN=${hostname} \n export USERDOMAIN`);
+        profileFile.end();
+        profileFile.close();
+        
+    } catch (error) {
+        console.log("ERROR FROM API CONFIG ", error);
+    }
+
+    return hostname;
 
 }

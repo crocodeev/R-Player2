@@ -5,8 +5,9 @@ import { createStore,
          combineReducers } from 'redux';
 import MPC from '../api/mainProcessListener'
 import API from '../api/api';
-import { initialApiConfig } from '../hardcode/initialApiConfig'
-import AutoLaunch from 'auto-launch'
+import { initialApiConfig } from '../hardcode/initialApiConfig';
+import AutoLaunch from 'auto-launch';
+import requestForReboot from '../hardcode/requestForReboot';
 
 
 
@@ -141,6 +142,8 @@ app.on('ready', async () => {
     // 1. App should not terminate if window has been closed
     // 2. Click on icon in dock should re-open the window
     // 3. ⌘+Q should close the window and quit the app
+    requestForReboot(mainWindow);
+
     if (process.platform === 'darwin') {
       mainWindow.on('close', function (e) {
         if (!forceQuit) {

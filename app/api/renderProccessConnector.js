@@ -55,6 +55,10 @@ export default class RPC {
         ipcRenderer.send('store-inited', arg);
     }
 
+    cancelDownload(){
+        ipcRenderer.send('cancel-download');
+    }
+
     relaunch(){
         ipcRenderer.send('relaunch');
     }

@@ -51,6 +51,11 @@ class MPC {
           app.quit();
         })
 
+        ipcMain.on('cancel-download', () => {
+          console.log("USER CANCELLED DOWNLOAD");
+          api.isContentDownloading = false;
+        })
+
         ipcMain.once('store-inited', (event, arg) => {
           api.channel = arg.channel;
           api.setCookies(arg.token);

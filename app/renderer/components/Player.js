@@ -13,7 +13,6 @@ const Player = (props) => {
   };
 
   const handleLogOut = () => {
-    
     props.logout();
   }
 

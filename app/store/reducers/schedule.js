@@ -35,8 +35,8 @@ return ({
     startTime: "00:00:00",
     endTime: "23:59:59"
   },
-  nextSchedule: [],
-  schedule:[],
+  nextSchedule: null,
+  schedule: null,
 });
 default:
     return state;

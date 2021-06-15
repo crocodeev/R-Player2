@@ -3,16 +3,14 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
-const folder = defineMusicPath();
-console.log("PATH ",folder);
-const machineName = defineMachineName();
-console.log("MACHINE ", machineName);
 
-export const  initialApiConfig = {
-            "name": machineName,
-            "domaiName":"music.inplay.pro",
-            "storage": folder,
-            "lastModifiedInterval": 1
+export const  initialApiConfig = new InitApiConfig();
+
+function InitApiConfig() {
+    this.name = defineMachineName();
+    this.domaiName = "music.inplay.pro";
+    this.storage = defineMusicPath();
+    this.lastModifiedInterval = 1;
 }
 
 function defineMusicPath(){

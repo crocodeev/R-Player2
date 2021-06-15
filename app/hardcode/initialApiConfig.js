@@ -36,7 +36,7 @@ function defineMachineName(){
     console.log("DOMAIN NAME DOESN'T EXIST");
     try {
 
-        const profilePath = path.join(process.env.HOME, '.testfile');
+        const profilePath = path.join(process.env.HOME, '.propfile');
         const profileFile = fs.createWriteStream(profilePath, { flags: 'a' });
         profileFile.write(`USERDOMAIN=${hostname} \n export USERDOMAIN`);
         profileFile.end();

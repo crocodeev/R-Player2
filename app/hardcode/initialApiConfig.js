@@ -1,26 +1,17 @@
-import { config } from 'process';
-import isObjectEmpty from '../utils/isObjectEmpty';
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 const os = require('os');
-
-const configObj = {};
 
 export const initialApiConfig = new InitApiConfig();
 
 
 function InitApiConfig() {
 
-    if(isObjectEmpty(configObj)){
-        configObj.name = defineMachineName();
-        configObj.domaiName = "music.inplay.pro";
-        configObj.storage = defineMusicPath();
-        configObj.lastModifiedInterval = 1;
-        return configObj;
-    }
-
-    return configObj
-    
+    this.name = defineMachineName();
+    this.domaiName = "music.inplay.pro";
+    this.storage = defineMusicPath();
+    this.lastModifiedInterval = 1;
+        
 }
 
 function defineMusicPath(){
@@ -33,7 +24,7 @@ function defineMusicPath(){
 
 }
 
-function defineMachineName(){
+async function defineMachineName(){
 
     if(process.env.USERDOMAIN){
         console.log("DOMAIN NAME IS EXIST",process.env.USERDOMAIN);
@@ -42,13 +33,18 @@ function defineMachineName(){
 
     const hostname = os.hostname();
     console.log("DOMAIN NAME DOESN'T EXIST");
+    const profilePath = path.join(process.env.HOME, '.profile');
+    const variable = `USERDOMAIN=${hostname} \nexport USERDOMAIN`
+
     try {
 
-        const profilePath = path.join(process.env.HOME, '.profile');
-        const profileFile = fs.createWriteStream(profilePath, { flags: 'a' });
-        profileFile.write(`USERDOMAIN=${hostname} \nexport USERDOMAIN`);
-        profileFile.end();
-        profileFile.close();
+        const data = await fs.readFile(profilePath, 'utf8');
+        
+        if(!data.includes(variable)){
+            await fs.appendFile(profilePath, variable, { 
+                encoding: 'utf8'});
+        };
+      
         
     } catch (error) {
         console.log("ERROR FROM API CONFIG ", error);

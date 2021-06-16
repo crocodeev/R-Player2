@@ -1,16 +1,26 @@
-
+import { config } from 'process';
+import isObjectEmpty from '../utils/isObjectEmpty';
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
+const configObj = {};
 
-export const  initialApiConfig = new InitApiConfig();
+export const initialApiConfig = new InitApiConfig();
+
 
 function InitApiConfig() {
-    this.name = defineMachineName();
-    this.domaiName = "music.inplay.pro";
-    this.storage = defineMusicPath();
-    this.lastModifiedInterval = 1;
+
+    if(isObjectEmpty(configObj)){
+        configObj.name = defineMachineName();
+        configObj.domaiName = "music.inplay.pro";
+        configObj.storage = defineMusicPath();
+        configObj.lastModifiedInterval = 1;
+        return configObj;
+    }
+
+    return configObj
+    
 }
 
 function defineMusicPath(){
@@ -36,7 +46,7 @@ function defineMachineName(){
 
         const profilePath = path.join(process.env.HOME, '.profile');
         const profileFile = fs.createWriteStream(profilePath, { flags: 'a' });
-        profileFile.write(`USERDOMAIN=${hostname} \n export USERDOMAIN`);
+        profileFile.write(`USERDOMAIN=${hostname} \nexport USERDOMAIN`);
         profileFile.end();
         profileFile.close();
         

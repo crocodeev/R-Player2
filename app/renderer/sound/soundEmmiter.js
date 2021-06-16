@@ -3,7 +3,6 @@ const EventEmmitter = require('events');
 const decryptSource = require('./sourceDecrypter');
 const path = require('path');
 import deepcopy from 'deepcopy';
-import { object } from 'prop-types';
 import { initialApiConfig } from '../../hardcode/initialApiConfig';
 
 

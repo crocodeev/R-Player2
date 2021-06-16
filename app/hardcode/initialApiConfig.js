@@ -11,10 +11,10 @@ const InitApiConfig = {
 
         if(process.platform === 'linux'){
             this.storage =  path.join(process.env.HOME, 'Music');
+        }else{
+            this.storage =  path.join(process.env.HOMEDRIVE, process.env.HOMEPATH, 'Music');
         }
     
-        this.storage =  path.join(process.env.HOMEDRIVE, process.env.HOMEPATH, 'Music');
-
         return this;
     
     },

@@ -1,4 +1,4 @@
-const fs = require('fs').promises;
+const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
@@ -24,7 +24,7 @@ function defineMusicPath(){
 
 }
 
-async function defineMachineName(){
+function defineMachineName(){
 
     if(process.env.USERDOMAIN){
         console.log("DOMAIN NAME IS EXIST",process.env.USERDOMAIN);
@@ -38,10 +38,10 @@ async function defineMachineName(){
 
     try {
 
-        const data = await fs.readFile(profilePath, 'utf8');
+        const data = fs.readFileSync(profilePath, 'utf8');
         
         if(!data.includes(variable)){
-            await fs.appendFile(profilePath, variable, { 
+            fs.appendFileSync(profilePath, variable, { 
                 encoding: 'utf8'});
         };
       

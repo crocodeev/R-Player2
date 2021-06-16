@@ -103,25 +103,31 @@ export default class Scheduler {
     // в эту функцию 
     _checkForMissedLaunch(){
 
+        console.log("check for missed launch");
+
         const currentTime = dayjs().format('HH:mm:ss');
         // continuous campaign exist and overdue
         const toLaunch = this.tasks.find( element => {
 
             if(element.playbackMode !== 1){
+                console.log("nothing to launch");
                 return false;
             }
 
             //midnight checkers, if campaign resume after midnight
             if(element.startTime > element.endTime && element.endTime > currentTime){
+                console.log("launch");
                 return true
             }
 
             if(element.startTime <= currentTime && element.endTime < element.startTime ){
+                console.log("launch");
                 return true;
             }
 
             //standar campaign
             if(element.startTime <= currentTime && element.endTime >= currentTime){
+                console.log("launch");
                 return true;
             }
             

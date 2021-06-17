@@ -9,6 +9,7 @@ const getAllTracksFromSchedule = require('./helpers/getAllTracksFromSchedule').d
 const util = require('util');
 const stream = require('stream');
 const pipeline = util.promisify(stream.pipeline);
+import defineMachineName from './helpers/defineMachineName';
 
 
 
@@ -16,6 +17,11 @@ class Api extends EventEmitter {
 
     constructor(obj){
         super();
+        try {
+            this.name = defineMachineName();
+        } catch (error) {
+            console.log("ERROR FROM API INITIALIZE: ", error);
+        }
         Object.assign(this,  obj);
         this.isContentDownloading = false;
     }

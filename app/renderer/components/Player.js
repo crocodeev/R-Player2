@@ -4,6 +4,7 @@ import TrackList from './TrackList';
 import ChannelsSelect from './ChannelsSelect';
 import Download from './Download';
 import NetworkStatus from './NetworkStatus';
+import TestFunction from './TestButton';
 
 
 const Player = (props) => {
@@ -46,6 +47,7 @@ const Player = (props) => {
         LOGOUT
         </a>
       </div>
+      <TestFunction />
     </div>
 
     </div>

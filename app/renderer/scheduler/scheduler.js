@@ -109,36 +109,43 @@ export default class Scheduler {
         // continuous campaign exist and overdue
         const toLaunch = this.tasks.find( element => {
 
+            console.log(element.playbackMode);
+
             if(element.playbackMode !== 1){
                 console.log("nothing to launch");
                 return false;
             }
 
             //midnight checkers, if campaign resume after midnight
-            if(element.startTime > element.endTime && element.endTime > currentTime){
-                console.log("launch");
-                return true
+
+            if(element.startTime > element.endTime){
+                console.log("check for midnight");
+
+                if(element.endTime > currentTime || element.startTime <= currentTime){
+                    console.log("launch after midhtnight");
+                    return true
+                }
+
             }
 
-            if(element.startTime <= currentTime && element.endTime < element.startTime ){
-                console.log("launch");
-                return true;
-            }
-
-            //standar campaign
+            //standart
             if(element.startTime <= currentTime && element.endTime >= currentTime){
-                console.log("launch");
+                console.log("launch standart company");
                 return true;
             }
+
+            return false;
             
         });
 
-        console.log(currentTime);
-        console.log(toLaunch.startTime);
-        console.log(toLaunch.endTime);
-        console.log(toLaunch.name);
-     
         console.log(toLaunch);
+
+        //console.log(currentTime);
+        //console.log(toLaunch.startTime);
+        //console.log(toLaunch.endTime);
+        //console.log(toLaunch.name);
+     
+        
 
         if(toLaunch){
             toLaunch.job();

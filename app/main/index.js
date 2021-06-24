@@ -1,5 +1,5 @@
 import path from 'path';
-import { app, crashReporter, BrowserWindow, Menu, Tray } from 'electron';
+import { app, crashReporter, BrowserWindow, Menu, Tray, nativeTheme} from 'electron';
 import { createStore,
          applyMiddleware,
          combineReducers } from 'redux';
@@ -8,7 +8,7 @@ import API from '../api/api';
 import { initialApiConfig } from '../hardcode/initialApiConfig';
 import AutoLaunch from 'auto-launch';
 import requestForReboot from '../hardcode/requestForReboot';
-
+import buildMenu  from './helpers/menu/buildMenu';
 
 
 
@@ -118,14 +118,20 @@ app.on('ready', async () => {
 
   mainWindow = new BrowserWindow({
     width: 800,
-    height: 650,
+    height: 620,
     minWidth: 640,
     minHeight: 480,
     show: false,
+    autoHideMenuBar: true,
+    menuBarVisible: false,
     webPreferences: {
       nodeIntegration: true,
     },
   });
+
+  nativeTheme.themeSource = 'dark';
+  //install menu
+  Menu.setApplicationMenu(buildMenu(mainWindow));
 
 
   mainWindow.loadFile(path.resolve(path.join(__dirname, '../renderer/index.html')));

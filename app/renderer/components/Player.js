@@ -18,7 +18,7 @@ const Player = (props) => {
   }
 
   return (
-    <div className="container">
+    <div className="player">
     <div className="row">
      <div className="col s10 pdleftzero"> 
      <CurrentTrack />
@@ -40,16 +40,6 @@ const Player = (props) => {
         <TrackList />
       </div>
     </div>
-    
-    <div className="row buttonrow">
-      <div className="col pdleftzero">
-        <a className="waves-effect waves-light btn-small" onClick={handleLogOut}>
-        LOGOUT
-        </a>
-      </div>
-      <TestFunction />
-    </div>
-
     </div>
   );
 }

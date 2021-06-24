@@ -78,6 +78,9 @@ if(channelRule){
   scheduler.channelRule = channelRule;
 }
 
+//add listener to logout button
+rpc.setLogoutListener(store, scheduler, sound);
+
 //store, add subscribers
 
 let watchScheduleChange = watch(store.getState, 'schedule.schedule', isEqual);

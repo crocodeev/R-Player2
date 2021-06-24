@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router';
 
 import LoginPage from './containers/LoginPage';
 import LoggedInPage from './containers/LoggedInPage';
-import Player from './containers/PlayerContainer';
+import Player from './components/Player';
 import Auth from './components/Auth';
 
 export default (

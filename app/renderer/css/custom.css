@@ -1,3 +1,8 @@
+html{
+  background-color: #3e3d42;
+  color: white;
+}
+
 .scrolist{
     height: 350px;
 }
@@ -57,3 +62,50 @@
   padding-top: 5px;
 }
 
+.player{
+  margin-left: 2%;
+  margin-right: 2%;
+}
+
+
+/* label underline focus color */
+
+.input-field input[type=text]:focus {
+  border-bottom: 1px solid #9f9ea3;
+  color: aliceblue;
+ 
+}
+/* valid color */
+.input-field input[type=text].valid {
+  border-bottom: 1px solid #9f9ea3;;
+}
+/* invalid color */
+.input-field input[type=text].invalid {
+  border-bottom: 1px solid #9f9ea3;;
+}
+/* icon prefix focus color */
+.input-field .prefix.active {
+  border-bottom: 1px solid #9f9ea3;;
+  color: #ffffff;;
+}
+
+.dropdown-content li span,
+.select-wrapper input.select-dropdown {  
+    color: #808080;   
+}
+
+.select-wrapper .caret {
+  
+    fill: white;
+}
+
+/* track list*/
+
+.collection-item{
+  background-color: #9f9ea3;
+  color: #808080;
+}
+
+.collection-item.active{
+  background-color: aqua;
+}

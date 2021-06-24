@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import M from 'materialize-css'
 import { setCurrentChannel } from '../../store/actions/apiActions';

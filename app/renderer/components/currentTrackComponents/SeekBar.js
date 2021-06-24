@@ -10,8 +10,8 @@ const SeekBar = ({seek, duration}) => {
 
     return(
 
-      <div className="progress">
-        <div className="determinate" style={{width: progress() +'%'}}></div>
+      <div className="progress blue-grey lighten-3">
+        <div className="determinate white" style={{width: progress() +'%'}}></div>
       </div>
   );
 

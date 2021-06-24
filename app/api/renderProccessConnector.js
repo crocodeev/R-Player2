@@ -1,8 +1,14 @@
 const { ipcRenderer, ipcMain } = require("electron");
 const isDevToolOpen = require("./helpers/isDevToolOpen").default;
+import logout from "./helpers/logout";
 
 export default class RPC {
 
+    setLogoutListener(store, scheduler, sound){
+        ipcRenderer.on('logout', () => {
+            logout(store, scheduler, sound, this.cancelDownload);
+        })
+    }
 
     setWindowStateListener(){
         ipcRenderer.on('window-showed', () => {

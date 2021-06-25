@@ -14,6 +14,7 @@
     "auto-launch": "^5.0.5",
     "connected-react-router": "^6.8.0",
     "connectivity": "^1.0.2",
+    "custom-electron-titlebar": "^3.2.7",
     "dayjs": "^1.10.4",
     "deepcopy": "^2.1.0",
     "devtools-detect": "^3.0.1",

@@ -16,8 +16,8 @@ function Authorize (){
     <div className="container">
     <div className="row">
     <form className="auth" onSubmit={handleSubmit((data) => onSubmit(data))}>
-    <div className="">
-        <label>PROJECT ID</label>
+    <div className="browser-default">
+        <label className="auth-label">PROJECT ID</label>
         <input
         name="projectId"
         ref={register({
@@ -28,7 +28,7 @@ function Authorize (){
           }
         })}
         type="text"
-        className=""
+        className="browser-default auth-input"
         id="exampleInputEmail1"
         aria-describedby="emailHelp" />
         {errors.projectId && <p>{errors.projectId.message}</p>}
@@ -44,11 +44,11 @@ function Authorize (){
             message:"PLAYER CODE CAN NOT BE LESS THEN 4 SYMBOLS"
         }})}
         type="text"
-        className=""
+        className="browser-default auth-input"
         id="exampleInputPassword1" />
         {errors.playerCode && <p>{errors.playerCode.message}</p>}
     </div>
-    <button type="submit" className="btn btn-primary">Submit</button>
+    <button type="submit" className="btn btn-primary white-text  green darken-3">Submit</button>
     </form>
     </div>
     </div>

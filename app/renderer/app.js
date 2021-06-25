@@ -19,7 +19,6 @@ import setLastModified from './helpers/createDateStamp';
 import addListenersToSound from './helpers/atStartUp/addListenersToSound';
 import addListenerToOnlineStatus from './helpers/atStartUp/addListenerToOnlineStatus';
 
-
 //for test
 window.sound = sound
 

@@ -4,7 +4,6 @@ import TrackList from './TrackList';
 import ChannelsSelect from './ChannelsSelect';
 import Download from './Download';
 import NetworkStatus from './NetworkStatus';
-import TestFunction from './TestButton';
 
 
 const Player = (props) => {

@@ -7,6 +7,7 @@ const InitApiConfig = {
 
     domaiName: "music.inplay.pro",
     lastModifiedInterval: 1, //minutes
+    title: "R-Player",
     defineMusicPath(){
 
         if(process.platform === 'linux'){

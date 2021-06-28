@@ -33,7 +33,7 @@ class Sound extends EventEmmitter  {
      next track in array  */
   async play(index){
 
-    console.time("PLAY");
+    //console.time("PLAY");
 
     let sound;
 
@@ -47,7 +47,7 @@ class Sound extends EventEmmitter  {
       sound = data.howl;
 
       sound.on('play', async () => {
-        console.timeEnd("PLAY");
+        //console.timeEnd("PLAY");
         
         //load next playlist item and check is item exist
         if(!!this.playlist[this.index + 1]){
@@ -71,7 +71,7 @@ class Sound extends EventEmmitter  {
       sound = data.howl = await this._createHowl(data)
 
       sound.on('play', async () => {
-        console.timeEnd("PLAY");
+        //console.timeEnd("PLAY");
         this.emit('play');
         //load next playlist item
         if(!!this.playlist[this.index + 1]){
@@ -153,13 +153,13 @@ class Sound extends EventEmmitter  {
 
       switch (type) {
         case playlistInteractionTypes.INSERT:
-          console.time("NEW PLAYLIST INSERT") 
+          //console.time("NEW PLAYLIST INSERT") 
           this.playlist.splice(index, 0, deepcopy(playlist));
           this.emit('change');
-          console.timeEnd("NEW PLAYLIST INSERT");
+          //console.timeEnd("NEW PLAYLIST INSERT");
           break;
         case playlistInteractionTypes.REPLACE:
-          console.time("NEW PLAYLIST REPLACE")
+          //console.time("NEW PLAYLIST REPLACE")
           if(playlist.constructor !== Array){
             console.log(playlist);
             console.log("NOT ARRAY");
@@ -169,7 +169,7 @@ class Sound extends EventEmmitter  {
             this.playlist.splice(index, this.playlist.length, ...deepcopy(playlist));
           }
           this.emit('change');
-          console.timeEnd("NEW PLAYLIST REPLACE");
+          //console.timeEnd("NEW PLAYLIST REPLACE");
           break;
         default:
           throw new Error("inccorrect interraction type");
@@ -177,7 +177,7 @@ class Sound extends EventEmmitter  {
   }
 
   async _createHowl(item){
-    console.time("LOAD TRACK");
+    //console.time("LOAD TRACK");
     const trackPath = path.join(storage, item.checksum);
     console.log("TrackPath is ", trackPath);
     const url = await decryptSource(trackPath);
@@ -187,7 +187,7 @@ class Sound extends EventEmmitter  {
       format: ["mp3", "wave"]
     })
     URL.revokeObjectURL(url);
-    console.timeEnd("LOAD TRACK");
+    //console.timeEnd("LOAD TRACK");
     return howl
   }
 

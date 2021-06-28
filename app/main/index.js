@@ -116,12 +116,15 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
+
+
   mainWindow = new BrowserWindow({
     width: 800,
     height: 620,
     minWidth: 640,
     minHeight: 480,
     show: false,
+    title: initialApiConfig.title,
     autoHideMenuBar: true,
     menuBarVisible: false,
     webPreferences: {

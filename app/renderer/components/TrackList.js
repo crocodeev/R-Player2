@@ -5,6 +5,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 
 
 const Row = ({ data, index, style}) => {
+  
   const { playlist, currentTrack } = data;
   return(
     <div className={playlist[index] === currentTrack ? "collection-item active" : "collection-item"} style={style}>
@@ -17,6 +18,8 @@ const Row = ({ data, index, style}) => {
 class TrackList extends Component {
 
   listRef = React.createRef();
+
+
   
   /*shouldComponentUpdate(nextProps){
 

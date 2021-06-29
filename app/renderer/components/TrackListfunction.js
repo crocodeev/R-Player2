@@ -1,39 +1,63 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
 
 const Row = ({ data, index, style}) => {
-  const { playlist, currentTrack } = data;
+  
+  const { playlist, currentTrack, position } = data;
+
   return(
-    <div className={playlist[index] === currentTrack ? "collection-item active" : "collection-item"} style={style}>
+    <div className={index === position ? "collection-item active" : "collection-item"} style={style}>
       {playlist[index]}
     </div>
   )
   }
 
 
+
 class TrackList extends Component {
 
-  listRef = React.createRef();
-  
- /*shouldComponentUpdate(nextProps){
-   
-    return this.props.name !== nextProps.name;
-    //return this.props.currentTrack !== nextProps.currentTrack;
+    constructor(props){
+      super(props);
 
+      this.listRef = React.createRef();
+      this.state = {
+        position: props.position
+      }
+    }
+
+    
+
+
+  
+  /*shouldComponentUpdate(nextProps){
+
+    if(this.props.currentTrack.name !== nextProps.currentTrack.name){
+      console.log("diff name");
+      return true;
+    }
+
+    if(this.props.playlist !== nextProps.playlist){
+      console.log("diff list");
+      console.log(nextProps.playlist);
+      return true;
+    }
+
+    return false;
+   
   }*/
 
-
   componentDidUpdate(){
-    console.log("Updated");
-    this.listRef.current.scrollToItem(this.props.position, 'center')
+    //console.log("update");
+    this.listRef.current.scrollToItem(this.props.position, 'center');
   }
+
 
   render(){
 
-    console.log("!!!RENDER!!!");
+    //console.log("RENDER LIST");
 
     return(
       <AutoSizer>
@@ -47,7 +71,9 @@ class TrackList extends Component {
         width={width}
         itemData={{
           playlist: this.props.playlist,
-          currentTrack: this.props.name
+          currentTrack: this.props.name,
+          lastPosition: this.currentPosition,
+          position: this.props.position
         }}
         >
         {Row}

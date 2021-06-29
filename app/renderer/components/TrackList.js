@@ -6,18 +6,29 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 
 const Row = ({ data, index, style}) => {
   
-  const { playlist, currentTrack } = data;
+  const { playlist, position } = data;
+
   return(
-    <div className={playlist[index] === currentTrack ? "collection-item active" : "collection-item"} style={style}>
+    <div className={index === position ? "collection-item active" : "collection-item"} style={style}>
       {playlist[index]}
     </div>
   )
   }
 
 
+
 class TrackList extends Component {
 
-  listRef = React.createRef();
+    constructor(props){
+      super(props);
+
+      this.listRef = React.createRef();
+      this.state = {
+        position: props.position
+      }
+    }
+
+    
 
 
   
@@ -60,7 +71,7 @@ class TrackList extends Component {
         width={width}
         itemData={{
           playlist: this.props.playlist,
-          currentTrack: this.props.name
+          position: this.props.position
         }}
         >
         {Row}
@@ -78,7 +89,6 @@ const mapStateToProps = (state) => {
   return {
     playlist: state.player.playlist,
     position: state.player.playlistPosition,
-    name: state.player.currentTrack.name
   }
 }
 

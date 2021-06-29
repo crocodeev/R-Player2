@@ -25,9 +25,11 @@ window.sound = sound
 //check state of browser window
 rpc.setWindowStateListener();
 
+/*
 import {
   setChannelTime
 } from '../store/actions/scheduleActions'
+*/
 
 import {
   logout

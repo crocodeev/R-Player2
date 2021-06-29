@@ -4,6 +4,7 @@ const decryptSource = require('./sourceDecrypter');
 const path = require('path');
 import deepcopy from 'deepcopy';
 import { initialApiConfig } from '../../hardcode/initialApiConfig';
+import addCaption from './helpers/addCaption';
 
 
 const storage = initialApiConfig.storage;
@@ -151,6 +152,14 @@ class Sound extends EventEmmitter  {
 
   setNewPlaylist(playlist, type, index = 0){
 
+      if(playlist.constructor === Array){
+        playlist.forEach(element => {
+          addCaption(element);
+      });
+      }else{
+          addCaption(playlist);
+      }
+
       switch (type) {
         case playlistInteractionTypes.INSERT:
           //console.time("NEW PLAYLIST INSERT") 
@@ -161,11 +170,8 @@ class Sound extends EventEmmitter  {
         case playlistInteractionTypes.REPLACE:
           //console.time("NEW PLAYLIST REPLACE")
           if(playlist.constructor !== Array){
-            console.log(playlist);
-            console.log("NOT ARRAY");
             this.playlist.splice(index, this.playlist.length, deepcopy(playlist));
           }else{
-            console.log("IT IS ARRAY");
             this.playlist.splice(index, this.playlist.length, ...deepcopy(playlist));
           }
           this.emit('change');
@@ -201,13 +207,14 @@ class Sound extends EventEmmitter  {
   }  
 
   get currentTrackName () {
-    return this.playlist[this.index].name;
+    return this.playlist[this.index].caption;
   }
 
   get currentTrackDuration(){
     let rawDuration = this.playlist[this.index].howl.duration();
     return (rawDuration).toFixed();
   }
+
 
 }
 

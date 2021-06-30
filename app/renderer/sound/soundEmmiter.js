@@ -185,7 +185,7 @@ class Sound extends EventEmmitter  {
   async _createHowl(item){
     //console.time("LOAD TRACK");
     const trackPath = path.join(storage, item.checksum);
-    console.log("TrackPath is ", trackPath);
+    //console.log("TrackPath is ", trackPath);
     const url = await decryptSource(trackPath);
     const howl = new Howl({
       src: url,

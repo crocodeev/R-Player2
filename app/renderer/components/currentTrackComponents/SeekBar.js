@@ -1,18 +1,16 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { connect } from 'react-redux';
 
 const SeekBar = ({seek, duration}) => {
 
-    console.log("render");
 
     function progress() {
         return seek*100/duration
     }
 
     return(
-
       <div className="progress blue-grey lighten-3">
-        <div className="determinate white" style={{width: progress() +'%'}}></div>
+        <div className="determinate white" style={{width: progress() +'%'}} ></div>
       </div>
   );
 

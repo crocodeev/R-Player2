@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 
-export default function CurrentTrack({name})  {
+function CurrentTrack({name})  {
 
     return (
         <div>
@@ -8,3 +9,9 @@ export default function CurrentTrack({name})  {
         </div>
     );
 }
+
+const mapStateToProps = (state) => {
+    return { name: state.player.currentTrack.name}
+  };
+
+export default connect(mapStateToProps)(CurrentTrack);

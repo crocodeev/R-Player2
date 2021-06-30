@@ -18,7 +18,7 @@ export default function addListenersToSound(soundModule, store) {
       })
 
       soundModule.once('play', () => {
-        raf(renderSeekPos);
+        const handle = raf(renderSeekPos);
       })
       
       /*soundModule.on('end', () => {

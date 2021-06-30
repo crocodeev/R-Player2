@@ -5,7 +5,6 @@ import Current from './seekNumberComponents/Current';
 
 const SeekNumber = (props) => {
 
-
     return (
         <div>
             <Current seek={ props.seek } />

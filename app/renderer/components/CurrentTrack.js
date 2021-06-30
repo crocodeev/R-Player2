@@ -3,18 +3,22 @@ import { connect } from 'react-redux';
 import TrackName from './currentTrackComponents/TrackName' ;
 import SeekNumber from './currentTrackComponents/SeekNumber';
 import SeekBar from './currentTrackComponents/SeekBar'
-
+import TestCompanent from './currentTrackComponents/TestCompanent';
 
 const CurrentTrack = React.memo(
   //component
   ({
     name,
   }) => {
+
+
+    console.log("render current track");
     
     return (
       <div>
         <TrackName name={name} />
         <SeekNumber />
+        <TestCompanent />
         <SeekBar />
       </div>
     );

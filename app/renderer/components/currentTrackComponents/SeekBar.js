@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import SeekNumber from './SeekNumber';
 
 const SeekBar = ({seek, duration}) => {
+
+    console.log("render");
 
     function progress() {
         return seek*100/duration

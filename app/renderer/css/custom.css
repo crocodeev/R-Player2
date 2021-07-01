@@ -1,6 +1,7 @@
 html{
   background-color: #3e3d42;
   color: white;
+  user-select: none;
 }
 
 .scrolist{
@@ -105,6 +106,7 @@ html{
 .collection-item{
   background-color: #9f9ea3;
   color: #808080;
+
 }
 
 .collection-item.active{

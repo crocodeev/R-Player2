@@ -5,7 +5,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 
 
 const Row = ({ data, index, style}) => {
-  
+
   const { playlist, position } = data;
 
   return(

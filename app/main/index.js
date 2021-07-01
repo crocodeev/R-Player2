@@ -119,9 +119,9 @@ app.on('ready', async () => {
 
 
   mainWindow = new BrowserWindow({
-    width: 800,
+    width: 640,
     height: 620,
-    minWidth: 640,
+    minWidth: 600,
     minHeight: 480,
     show: false,
     title: initialApiConfig.title,
